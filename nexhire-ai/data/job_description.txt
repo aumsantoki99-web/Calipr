@@ -1,0 +1,20 @@
+Job Title: Senior Backend Engineer
+Seniority Level: Senior
+Required Years of Experience: 3
+Industry Domain: SaaS
+
+Job Summary:
+We are looking for a Senior Backend Engineer to design, build, and maintain our scalable cloud application services. You will be building API services using Python and FastAPI, managing data stores with PostgreSQL, and containerizing deployment packages with Docker. You should have experience with Git and microservices architectures. Experience with React, Redis, or Kubernetes is highly preferred. You will be expected to work collaboratively in a fast-paced SaaS product development team and mentor junior developers.
+
+Required Technical Skills:
+- Python
+- FastAPI
+- PostgreSQL
+- Docker
+- Git
+
+Preferred Technical Skills:
+- React
+- Kubernetes
+- Redis
+- AWS

@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NexHire Candidate Schema",
+  "description": "Schema for validating candidate profiles in the NexHire AI recruitment pipeline.",
+  "type": "object",
+  "required": ["candidate_id", "name", "email", "skills", "resume_text"],
+  "properties": {
+    "candidate_id": {
+      "type": "string",
+      "description": "Unique identifier for the candidate"
+    },
+    "name": {
+      "type": "string",
+      "description": "Full name of the candidate",
+      "minLength": 1
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Candidate email address, used for deduplication"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone number"
+    },
+    "skills": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1,
+      "description": "List of technical and soft skills"
+    },
+    "resume_text": {
+      "type": "string",
+      "description": "Full text content of the resume",
+      "minLength": 10
+    },
+    "resume_embedding": {
+      "type": "array",
+      "items": {"type": "number"},
+      "description": "Pre-computed embedding vector for the resume"
+    },
+    "years_experience": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Total years of professional experience"
+    },
+    "current_title": {
+      "type": "string",
+      "description": "Current or most recent job title"
+    },
+    "previous_titles": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "List of previous job titles for trajectory analysis"
+    },
+    "education": {
+      "type": "object",
+      "properties": {
+        "degree": {"type": "string"},
+        "field": {"type": "string"},
+        "institution": {"type": "string"},
+        "graduation_year": {"type": "integer"}
+      },
+      "description": "Educational background"
+    },
+    "domains": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Industry domains the candidate has experience in"
+    },
+    "leadership_examples": {
+      "type": "string",
+      "description": "Behavioral: examples of leadership demonstrated"
+    },
+    "conflict_resolution": {
+      "type": "string",
+      "description": "Behavioral: approach to conflict resolution"
+    },
+    "collaboration_style": {
+      "type": "string",
+      "description": "Behavioral: description of collaboration and teamwork style"
+    },
+    "flags": {
+      "type": "object",
+      "properties": {
+        "visa_required": {"type": "boolean", "default": false},
+        "remote_only": {"type": "boolean", "default": false},
+        "notice_period_days": {"type": "integer", "minimum": 0},
+        "salary_expectation": {"type": "number"},
+        "willing_to_relocate": {"type": "boolean", "default": true},
+        "background_check_clear": {"type": "boolean"}
+      },
+      "description": "Additional flags for filtering and compliance"
+    },
+    "location": {
+      "type": "string",
+      "description": "Current location or preferred work location"
+    },
+    "linkedin_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "LinkedIn profile URL"
+    },
+    "portfolio_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Portfolio or personal website URL"
+    }
+  },
+  "additionalProperties": false
+}

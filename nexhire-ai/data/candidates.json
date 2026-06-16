@@ -1,0 +1,392 @@
+[
+  {
+    "candidate_id": "cand_01",
+    "name": "Alex Chen",
+    "email": "alex.chen@example.com",
+    "phone": "+1-555-0101",
+    "skills": ["Python", "React", "FastAPI", "PostgreSQL", "Docker", "Git", "Kubernetes", "AWS"],
+    "resume_text": "Alex Chen is a Staff Software Engineer with 10 years of experience. Expert in Python backend development using FastAPI and Django. Strong frontend capabilities with React. Experienced in database design with PostgreSQL and container orchestration with Docker and Kubernetes. Spearheaded architectural changes at previous roles leading to 40% performance gains. Strong leadership and team collaboration.",
+    "years_experience": 10,
+    "current_title": "Staff Software Engineer",
+    "previous_titles": ["Senior Software Engineer", "Software Engineer", "Junior Developer"],
+    "education": {
+      "degree": "Masters",
+      "field": "Computer Science",
+      "institution": "Stanford University",
+      "graduation_year": 2016
+    },
+    "domains": ["SaaS", "FinTech", "AI"],
+    "leadership_examples": "Led a team of 6 engineers to rebuild the core ingestion platform, improving scalability.",
+    "conflict_resolution": "Facilitate open discussion and base decisions on data and metrics rather than personal opinions.",
+    "collaboration_style": "Collaborative, active in peer review, mentoring junior engineers.",
+    "flags": {
+      "visa_required": false,
+      "notice_period_days": 30,
+      "willing_to_relocate": true
+    }
+  },
+  {
+    "candidate_id": "cand_02",
+    "name": "Maria Santos",
+    "email": "maria.santos@example.com",
+    "phone": "+1-555-0102",
+    "skills": ["Python", "PyTorch", "scikit-learn", "AWS", "Kubernetes", "FastAPI", "SQL", "Git"],
+    "resume_text": "Maria Santos is a Senior Machine Learning Engineer with 6 years of experience. Specialized in training and deploying deep learning models using PyTorch and scikit-learn. Expert in building low-latency ML APIs with FastAPI and deploying on AWS using Kubernetes. Strong background in data pipelines and PostgreSQL database management.",
+    "years_experience": 6,
+    "current_title": "Senior ML Engineer",
+    "previous_titles": ["ML Engineer", "Data Scientist"],
+    "education": {
+      "degree": "PhD",
+      "field": "Artificial Intelligence",
+      "institution": "MIT",
+      "graduation_year": 2020
+    },
+    "domains": ["AI", "Cloud", "Healthcare"],
+    "leadership_examples": "Mentored 3 junior ML engineers and led the transition of models to production pipelines.",
+    "conflict_resolution": "I encourage retrospective meetings to address process gaps and keep conversations professional.",
+    "collaboration_style": "Cross-functional collaborator, working closely with product managers and backend devs.",
+    "flags": {
+      "visa_required": false,
+      "notice_period_days": 15,
+      "willing_to_relocate": false
+    }
+  },
+  {
+    "candidate_id": "cand_03",
+    "name": "Rohan Gupta",
+    "email": "rohan.gupta@example.com",
+    "phone": "+91-99999-0103",
+    "skills": ["Java", "C++", "SQL", "Git", "HTML", "CSS", "Python"],
+    "resume_text": "Rohan Gupta is an Associate Software Engineer with 1 year of experience. Experienced in Java development, C++ programming, and database queries with SQL. Strong foundation in HTML, CSS, and basic scripting with Python. Graduated with honors in Computer Science. Looking to contribute and grow in a fast-paced environment.",
+    "years_experience": 1,
+    "current_title": "Associate Software Engineer",
+    "previous_titles": ["Intern"],
+    "education": {
+      "degree": "Bachelors",
+      "field": "Information Technology",
+      "institution": "IIT Delhi",
+      "graduation_year": 2025
+    },
+    "domains": ["EdTech", "FinTech"],
+    "leadership_examples": "Led a university project team to build a campus portal.",
+    "conflict_resolution": "Listen to all points of view and seek compromise or refer to the advisor's guidance.",
+    "collaboration_style": "Eager to learn, supportive teammate, communicates progress transparently.",
+    "flags": {
+      "visa_required": false,
+      "notice_period_days": 0,
+      "willing_to_relocate": true
+    }
+  },
+  {
+    "candidate_id": "cand_04",
+    "name": "Sarah Jenkins",
+    "email": "sarah.j@example.com",
+    "phone": "+1-555-0104",
+    "skills": ["React", "TypeScript", "Node.js", "Express", "MongoDB", "CSS", "Git"],
+    "resume_text": "Sarah Jenkins is a Frontend Engineer with 4 years of experience. Expert in React and TypeScript. Well-versed in Node.js and Express backend development. Built and maintained several web applications with MongoDB as database. Dedicated to creating responsive, accessible user interfaces with rich user experiences.",
+    "years_experience": 4,
+    "current_title": "Frontend Engineer",
+    "previous_titles": ["Junior Frontend Developer"],
+    "education": {
+      "degree": "Bachelors",
+      "field": "Computer Science",
+      "institution": "UT Austin",
+      "graduation_year": 2022
+    },
+    "domains": ["Web Development", "E-commerce"],
+    "leadership_examples": "Led the redesign of the user onboarding flow, reducing bounce rate by 15%.",
+    "conflict_resolution": "Discuss design options with team members and choose the one that benefits the user most.",
+    "collaboration_style": "Active communicator, pair programmer, values design feedback.",
+    "flags": {
+      "visa_required": false,
+      "notice_period_days": 30,
+      "willing_to_relocate": false
+    }
+  },
+  {
+    "candidate_id": "cand_05",
+    "name": "Devin Murphy",
+    "email": "devin.murphy@example.com",
+    "phone": "+1-555-0105",
+    "skills": ["Go", "Docker", "Kubernetes", "AWS", "gRPC", "PostgreSQL", "Git"],
+    "resume_text": "Devin Murphy is a Cloud Infrastructure Engineer with 5 years of experience. Specialized in building highly concurrent microservices in Go. Expert in Docker containerization and Kubernetes orchestration. Skilled in AWS cloud deployments, gRPC communications, and PostgreSQL query tuning.",
+    "years_experience": 5,
+    "current_title": "Cloud Engineer",
+    "previous_titles": ["Systems Administrator", "Junior DevOps"],
+    "education": {
+      "degree": "Bachelors",
+      "field": "Software Engineering",
+      "institution": "University of Washington",
+      "graduation_year": 2021
+    },
+    "domains": ["Cloud", "DevOps"],
+    "leadership_examples": "Spearheaded migration of legacy services to Kubernetes, reducing hosting costs by 20%.",
+    "conflict_resolution": "I look for technical root causes and set up automated checks to prevent recurring arguments.",
+    "collaboration_style": "Documentation-focused, automates everything, supports operations teams.",
+    "flags": {
+      "visa_required": false,
+      "notice_period_days": 30,
+      "willing_to_relocate": true
+    }
+  },
+  {
+    "candidate_id": "cand_06",
+    "name": "Ananya Sharma",
+    "email": "ananya.sharma@example.com",
+    "phone": "+91-99999-0106",
+    "skills": ["Python", "FastAPI", "SQLAlchemy", "MySQL", "Redis", "Git", "Docker"],
+    "resume_text": "Ananya Sharma is a Backend Engineer with 3 years of experience. Focuses on building reliable web services in Python using FastAPI, SQLAlchemy, and MySQL. Experienced in using Redis for caching and session management. Proficient with Git and Docker.",
+    "years_experience": 3,
+    "current_title": "Backend Developer",
+    "previous_titles": ["Software Engineer"],
+    "education": {
+      "degree": "Bachelors",
+      "field": "Computer Science",
+      "institution": "BITS Pilani",
+      "graduation_year": 2023
+    },
+    "domains": ["FinTech", "SaaS"],
+    "leadership_examples": "Designed and implemented a database migration plan that minimized downtime.",
+    "conflict_resolution": "I bring technical design alternatives to the whiteboard and evaluate trade-offs together.",
+    "collaboration_style": "Detail-oriented, thorough coder, values clean code and unit testing.",
+    "flags": {
+      "visa_required": false,
+      "notice_period_days": 60,
+      "willing_to_relocate": true
+    }
+  },
+  {
+    "candidate_id": "cand_07",
+    "name": "Jane Smith",
+    "email": "jane.smith@example.com",
+    "phone": "+1-555-0107",
+    "skills": ["HR", "Recruitment", "Communication", "Management", "Negotiation"],
+    "resume_text": "Jane Smith is an HR Manager with 8 years of experience. Experienced in corporate recruiting, talent sourcing, employee onboarding, performance management, and salary negotiations. Strong verbal and written communication skills. Seeking to lead an HR team.",
+    "years_experience": 8,
+    "current_title": "HR Manager",
+    "previous_titles": ["Recruiter", "HR Specialist"],
+    "education": {
+      "degree": "Bachelors",
+      "field": "Human Resources",
+      "institution": "Boston University",
+      "graduation_year": 2018
+    },
+    "domains": ["Corporate Services", "Recruitment"],
+    "leadership_examples": "Managed a team of 3 recruiters, increasing hiring speed by 25%.",
+    "conflict_resolution": "Listen actively, demonstrate empathy, and find a win-win solution for both employees and management.",
+    "collaboration_style": "People-oriented, encouraging, open and clear communicator.",
+    "flags": {
+      "visa_required": false,
+      "notice_period_days": 30,
+      "willing_to_relocate": false
+    }
+  },
+  {
+    "candidate_id": "cand_08",
+    "name": "Mark Zuckerberg",
+    "email": "mark.z@example.com",
+    "phone": "+1-555-0108",
+    "skills": ["C++", "PHP", "System Design", "Product Strategy", "Management"],
+    "resume_text": "Mark Zuckerberg is a Tech Founder and Executive. Strong technical background in C++, PHP, and web systems design. Led product strategy and grew platforms to billions of users. Expert in scaling organizations and engineering operations.",
+    "years_experience": 22,
+    "current_title": "CEO",
+    "previous_titles": ["Founder", "Lead Developer"],
+    "education": {
+      "degree": "High School",
+      "field": "Computer Science",
+      "institution": "Exeter",
+      "graduation_year": 2002
+    },
+    "domains": ["Social Media", "AI", "VR"],
+    "leadership_examples": "Founded and scaled a global tech company, overseeing thousands of engineers.",
+    "conflict_resolution": "Focus on high-leverage outcomes and alignment on the mission.",
+    "collaboration_style": "Strategic, fast-paced, sets clear objectives and key results.",
+    "flags": {
+      "visa_required": false,
+      "notice_period_days": 90,
+      "willing_to_relocate": true
+    }
+  },
+  {
+    "candidate_id": "cand_09",
+    "name": "Tanya Peterson",
+    "email": "tanya.p@example.com",
+    "phone": "+1-555-0109",
+    "skills": ["Python", "Pandas", "SQL", "Tableau", "Excel", "Data Analysis"],
+    "resume_text": "Tanya Peterson is a Data Analyst with 2 years of experience. Proficient in Python (Pandas, NumPy) for data manipulation, SQL queries for extraction, and Tableau/Excel for reporting. Enjoys translating complex data into business insights.",
+    "years_experience": 2,
+    "current_title": "Data Analyst",
+    "previous_titles": ["Junior Analyst"],
+    "education": {
+      "degree": "Bachelors",
+      "field": "Mathematics",
+      "institution": "University of Michigan",
+      "graduation_year": 2024
+    },
+    "domains": ["Analytics", "Marketing"],
+    "leadership_examples": "Created an automated dashboard for the marketing team, saving 10 hours a week.",
+    "conflict_resolution": "Show the data to resolve opinions and stay objective.",
+    "collaboration_style": "Analytical, curious, communicates data clearly to non-tech partners.",
+    "flags": {
+      "visa_required": false,
+      "notice_period_days": 15,
+      "willing_to_relocate": false
+    }
+  },
+  {
+    "candidate_id": "cand_10",
+    "name": "Emily Watson",
+    "email": "emily.watson@example.com",
+    "phone": "+1-555-0110",
+    "skills": ["Product Management", "Jira", "Agile", "User Research", "Roadmapping"],
+    "resume_text": "Emily Watson is a Technical Product Manager with 5 years of experience. Skilled in leading cross-functional engineering teams in Agile environments. Expert in Jira, user research, product strategy, and roadmapping for SaaS products.",
+    "years_experience": 5,
+    "current_title": "Technical Product Manager",
+    "previous_titles": ["Product Owner", "Business Analyst"],
+    "education": {
+      "degree": "MBA",
+      "field": "Business & Technology",
+      "institution": "UC Berkeley",
+      "graduation_year": 2021
+    },
+    "domains": ["SaaS", "E-commerce"],
+    "leadership_examples": "Defined product roadmap and successfully launched an AI search feature.",
+    "conflict_resolution": "Align the team around user needs and product metrics.",
+    "collaboration_style": "Facilitator, customer-focused, communicates product vision clearly.",
+    "flags": {
+      "visa_required": false,
+      "notice_period_days": 30,
+      "willing_to_relocate": false
+    }
+  },
+  {
+    "candidate_id": "cand_11",
+    "name": "Vikram Patel",
+    "email": "vikram.patel@example.com",
+    "phone": "+91-99999-0111",
+    "skills": ["Python", "Django", "PostgreSQL", "Redis", "Docker", "Git"],
+    "resume_text": "Vikram Patel is a Senior Backend Developer with 7 years of experience. Expert in Python and Django framework. Strong database skills with PostgreSQL optimization and caching with Redis. Experienced with Docker setups for local development and CI/CD integrations.",
+    "years_experience": 7,
+    "current_title": "Senior Backend Developer",
+    "previous_titles": ["Backend Developer", "Software Engineer"],
+    "education": {
+      "degree": "Bachelors",
+      "field": "Computer Science",
+      "institution": "IIT Bombay",
+      "graduation_year": 2019
+    },
+    "domains": ["SaaS", "FinTech"],
+    "leadership_examples": "Led the backend team to migrate database from MySQL to PostgreSQL with zero downtime.",
+    "conflict_resolution": "Conduct code reviews and design sessions to build consensus.",
+    "collaboration_style": "Process-oriented, constructive code reviewer, values clean architecture.",
+    "flags": {
+      "visa_required": false,
+      "notice_period_days": 45,
+      "willing_to_relocate": true
+    }
+  },
+  {
+    "candidate_id": "cand_12",
+    "name": "Lisa Vance",
+    "email": "lisa.vance@example.com",
+    "phone": "+1-555-0112",
+    "skills": ["UI/UX Design", "Figma", "Sketch", "Prototyping", "User Testing"],
+    "resume_text": "Lisa Vance is a UI/UX Designer with 4 years of experience. Passionate about creating elegant, intuitive interfaces in Figma and Sketch. Strong focus on user testing, wireframing, high-fidelity prototyping, and design systems.",
+    "years_experience": 4,
+    "current_title": "UI/UX Designer",
+    "previous_titles": ["Junior Designer"],
+    "education": {
+      "degree": "Bachelors",
+      "field": "Design",
+      "institution": "Rhode Island School of Design",
+      "graduation_year": 2022
+    },
+    "domains": ["Design", "Mobile Apps"],
+    "leadership_examples": "Created and launched a unified design system that sped up frontend development by 30%.",
+    "conflict_resolution": "I test multiple design options with users to let real user feedback resolve the conflict.",
+    "collaboration_style": "Highly collaborative, works closely with frontend developers and product owners.",
+    "flags": {
+      "visa_required": false,
+      "notice_period_days": 30,
+      "willing_to_relocate": false
+    }
+  },
+  {
+    "candidate_id": "cand_13",
+    "name": "Tom Brady",
+    "email": "tom.brady@example.com",
+    "phone": "+1-555-0113",
+    "skills": ["Management", "Leadership", "Teamwork", "Strategy", "Execution"],
+    "resume_text": "Tom Brady is an experienced Program Manager and Team Leader with 15 years of experience in leadership, team coordination, strategy execution, and operational management. Proven track record of guiding high-performing teams under pressure.",
+    "years_experience": 15,
+    "current_title": "Director of Operations",
+    "previous_titles": ["Program Manager", "Team Captain"],
+    "education": {
+      "degree": "Bachelors",
+      "field": "Organizational Leadership",
+      "institution": "University of Michigan",
+      "graduation_year": 2011
+    },
+    "domains": ["Management", "Sports Operations"],
+    "leadership_examples": "Led cross-functional teams to deliver massive projects under tight deadlines and extreme public scrutiny.",
+    "conflict_resolution": "Direct communication, building trust, and establishing clear roles and responsibilities.",
+    "collaboration_style": "Inspirational leader, team-first mentality, holds teammates accountable.",
+    "flags": {
+      "visa_required": false,
+      "notice_period_days": 60,
+      "willing_to_relocate": true
+    }
+  },
+  {
+    "candidate_id": "cand_14",
+    "name": "Rachel Green",
+    "email": "rachel.green@example.com",
+    "phone": "+1-555-0114",
+    "skills": ["Marketing", "Public Relations", "Fashion Merchandising", "Social Media"],
+    "resume_text": "Rachel Green is a Marketing and Public Relations Specialist with 6 years of experience in fashion merchandising, retail marketing, and social media brand management. Skilled in customer engagement and campaign execution.",
+    "years_experience": 6,
+    "current_title": "Marketing Manager",
+    "previous_titles": ["Personal Buyer", "Merchandising Coordinator"],
+    "education": {
+      "degree": "Associate",
+      "field": "Liberal Arts",
+      "institution": "NYU",
+      "graduation_year": 2020
+    },
+    "domains": ["Marketing", "Retail", "Fashion"],
+    "leadership_examples": "Managed a social media campaign that increased brand engagement by 50%.",
+    "conflict_resolution": "I prefer open discussions to share creative ideas and resolve branding issues.",
+    "collaboration_style": "Creative, outgoing, communicates visually and verbally.",
+    "flags": {
+      "visa_required": false,
+      "notice_period_days": 30,
+      "willing_to_relocate": false
+    }
+  },
+  {
+    "candidate_id": "cand_15",
+    "name": "Niels Bohr",
+    "email": "niels.bohr@example.com",
+    "phone": "+45-555-0115",
+    "skills": ["Physics", "Research", "Mathematics", "Quantum Mechanics", "Teaching"],
+    "resume_text": "Niels Bohr is a Research Physicist and Academic. Expert in quantum mechanics, mathematical modeling, and experimental physics. Nobel laureate with decades of research and teaching experience. Deep analytical mindset.",
+    "years_experience": 40,
+    "current_title": "Director of Research",
+    "previous_titles": ["Professor", "Researcher"],
+    "education": {
+      "degree": "PhD",
+      "field": "Physics",
+      "institution": "Copenhagen University",
+      "graduation_year": 1911
+    },
+    "domains": ["Scientific Research", "Education"],
+    "leadership_examples": "Founded the Institute of Theoretical Physics in Copenhagen and mentored generations of physicists.",
+    "conflict_resolution": "Discuss fundamental physical principles and mathematical logic in depth.",
+    "collaboration_style": "Intellectual, encouraging of questioning and rigorous debates, collaborative.",
+    "flags": {
+      "visa_required": false,
+      "notice_period_days": 90,
+      "willing_to_relocate": true
+    }
+  }
+]
