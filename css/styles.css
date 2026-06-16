@@ -107,7 +107,7 @@
 
   /* Layout */
   --max-width: 1072px;
-  --nav-height: 72px;
+  --nav-height: 96px;
 }
 
 /* ---------- RESET & BASE ---------- */
@@ -307,14 +307,14 @@ p {
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 32px);
-  max-width: var(--max-width);
+  max-width: 900px; /* Further decreased starting width */
   z-index: 1000;
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .navbar.scrolled {
   top: 16px;
-  max-width: 900px; /* Shrinks the navbar width on scroll like Framer! */
+  max-width: 780px; /* Further decreased scrolled width */
 }
 
 .navbar .container {
@@ -326,7 +326,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 28px;
+  padding: 20px 32px; /* Further increased padding for starting height */
   border-radius: 9999px; /* Absolute pill shape */
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -342,7 +342,7 @@ p {
 }
 
 .navbar.scrolled .nav-inner {
-  padding: 8px 20px;
+  padding: 14px 24px; /* Further increased padding for scrolled height */
 
   /* Scrolled State: The Liquid Glass */
   background: rgba(255, 255, 255, 0.05); /* Highly transparent base */
@@ -379,18 +379,29 @@ p {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 32px; /* Spaced out nicely like Dreelio */
+  gap: 6px; /* Reduced gap to accommodate padding without spacing issues */
 }
 
 .nav-links a {
   font-size: 14px;
   font-weight: 500;
   color: var(--text-body);
-  transition: color var(--duration-fast) ease;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  transition: all var(--duration-fast) var(--ease-out);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-links a:hover {
   color: var(--text-dark);
+  background: rgba(26, 22, 21, 0.05); /* Premium hover pill overlay */
+}
+
+/* Light glass hover style when navbar is scrolled */
+.navbar.scrolled .nav-links a:hover {
+  background: rgba(255, 255, 255, 0.12); /* Subtle glow on glass */
 }
 
 .nav-actions {
@@ -636,12 +647,22 @@ p {
   right: -150px;
   animation: cloud-drift 36s ease-in-out infinite reverse;
 }
+
+.cloud-5 {
+  width: 550px;
+  height: 350px;
+  background: radial-gradient(ellipse, rgba(244, 230, 218, 0.45) 0%, transparent 75%);
+  top: 15%;
+  left: -100px;
+  animation: cloud-drift 28s ease-in-out infinite;
+}
  
 /* Layering fix to keep text crisp in front of background clouds */
 .features .container,
 .pricing .container,
 .pipeline .container,
 .clients .container,
+.benefits .container,
 .demo-section .container {
   position: relative;
   z-index: 2;
@@ -766,6 +787,87 @@ p {
   transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
   border-color: var(--primary-lighter);
+}
+
+/* ---------- BENEFITS SECTION ---------- */
+.benefits {
+  background: transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.benefits-header {
+  text-align: center;
+  margin-bottom: var(--space-5xl);
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xl);
+}
+
+.benefit-card {
+  background: var(--bg-pure-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-3xl);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: all var(--duration-normal) var(--ease-out);
+  position: relative;
+}
+
+.benefit-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-lighter);
+}
+
+.benefit-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-lg);
+  font-size: 22px;
+}
+
+.benefit-icon.blue { background: var(--primary-light); color: var(--primary-dark); }
+.benefit-icon.green { background: #e6f6ed; color: var(--accent-green); }
+.benefit-icon.amber { background: #fef3e0; color: var(--accent-amber); }
+
+.benefit-card h3 {
+  margin-bottom: var(--space-sm);
+  font-weight: 500;
+}
+
+.benefit-card p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: var(--space-xl);
+  flex-grow: 1;
+}
+
+.benefit-pill {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: var(--bg-cream);
+  color: var(--text-body);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  transition: all var(--duration-fast) ease;
+}
+
+.benefit-card:hover .benefit-pill {
+  background: var(--primary-light);
+  border-color: var(--primary-lighter);
+  color: var(--primary-dark);
 }
 
 /* ---------- DEMO SECTION ---------- */
@@ -1424,6 +1526,139 @@ p {
   transform: translateY(-1px);
 }
 
+/* ---------- CONTACT SECTION ---------- */
+.contact {
+  background: transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: var(--space-4xl);
+  align-items: center;
+}
+
+.contact-info {
+  text-align: left;
+}
+
+.contact-subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: var(--space-3xl);
+  line-height: 1.7;
+}
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-base);
+}
+
+.info-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.info-item h5 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.info-item p {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.info-item a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+/* Glassy Contact Card Form */
+.contact-card {
+  background: var(--bg-pure-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4xl);
+  box-shadow: var(--shadow-xl);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.contact-card:hover {
+  box-shadow: var(--shadow-xl), 0 20px 40px rgba(132, 185, 239, 0.1);
+  border-color: var(--primary-lighter);
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  text-align: left;
+}
+
+.form-group label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group textarea {
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: #fafafa;
+  color: var(--text-dark);
+  transition: all var(--duration-fast) var(--ease-out);
+  outline: none;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #a09d9c;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--primary);
+  background: var(--bg-pure-white);
+  box-shadow: 0 0 0 3px rgba(132, 185, 239, 0.25);
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  font-size: 15px;
+  margin-top: var(--space-sm);
+}
+
 /* ---------- FOOTER ---------- */
 .footer {
   background: var(--text-dark);
@@ -1764,9 +1999,11 @@ p {
   .bento-card.large,
   .bento-card.full-width { grid-column: span 1; }
   .signal-grid { grid-template-columns: 1fr; }
+  .benefits-grid { grid-template-columns: 1fr; }
   .ps-grid { grid-template-columns: 1fr; }
   .pricing-grid { grid-template-columns: 1fr; }
   .metrics-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; gap: var(--space-2xl); }
   .team-grid { grid-template-columns: repeat(2, 1fr); }
   .pipeline-flow { flex-direction: column; align-items: center; }
   .pipeline-connector { display: none; }
