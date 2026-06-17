@@ -14,5 +14,8 @@ nexhire-ai/data/history.json
 # Node modules and build output in frontend
 frontend/node_modules/
 frontend/dist/
-frontend/dist-ssr/
 frontend/*.local
+
+# Large dataset files for hackathon
+verdikt/candidates.jsonl
+verdikt/sample_candidates.jsonl

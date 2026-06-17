@@ -1,0 +1,50 @@
+{
+  "core_skills": [
+    "Python",
+    "Embeddings",
+    "Vector Databases",
+    "Retrieval Systems",
+    "Ranking Systems",
+    "LLMs",
+    "Fine-tuning",
+    "Evaluation Frameworks",
+    "NLP",
+    "IR",
+    "Hybrid Search"
+  ],
+  "adjacent_skills": [
+    "Docker",
+    "AWS",
+    "LangChain",
+    "OpenAI",
+    "Pinecone",
+    "Weaviate",
+    "Qdrant",
+    "Milvus",
+    "OpenSearch",
+    "Elasticsearch",
+    "FAISS"
+  ],
+  "domain_keywords": [
+    "AI",
+    "ML",
+    "NLP",
+    "IR",
+    "Recruiting Tech",
+    "HR-tech",
+    "Marketplace Products",
+    "Distributed Systems",
+    "Large-scale Inference Optimization",
+    "Open-source Contributions",
+    "Computer Vision",
+    "Speech",
+    "Robotics",
+    "Closed-source Proprietary Systems",
+    "Product Companies",
+    "Consulting Firms",
+    "Title-chasers",
+    "Framework Enthusiasts"
+  ],
+  "min_years_experience": 5,
+  "seniority_level": "mid"
+}

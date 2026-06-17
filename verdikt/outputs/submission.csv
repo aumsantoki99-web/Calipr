@@ -1,0 +1,101 @@
+candidate_id,rank,score,reasoning
+CAND_0088025,1,0.4624,Staff Machine Learning Engineer with 8.6 yrs; 3 core skills matched; response rate 0.83.
+CAND_0039754,2,0.4532,Senior Applied Scientist with 16.2 yrs; 3 core skills matched; response rate 0.81.
+CAND_0086022,3,0.4509,Senior Applied Scientist with 5.3 yrs; 2 core skills matched; response rate 0.55.
+CAND_0037944,4,0.4459,Senior Data Scientist with 4.9 yrs; 4 core skills matched; response rate 0.42.
+CAND_0045250,5,0.4441,Applied ML Engineer with 6.6 yrs; 3 core skills matched; response rate 0.74.
+CAND_0075318,6,0.4348,Operations Manager with 9.0 yrs; 2 core skills matched; response rate 0.61.
+CAND_0018722,7,0.4327,Recommendation Systems Engineer with 6.6 yrs; 2 core skills matched; response rate 0.79.
+CAND_0034880,8,0.4320,Project Manager with 8.4 yrs; 2 core skills matched; response rate 0.41.
+CAND_0039329,9,0.4309,Operations Manager with 2.9 yrs; 2 core skills matched; response rate 0.57.
+CAND_0052682,10,0.4264,NLP Engineer with 6.6 yrs; 3 core skills matched; response rate 0.88.
+CAND_0059678,11,0.4256,HR Manager with 5.5 yrs; 2 core skills matched; response rate 0.43.
+CAND_0024216,12,0.4251,Operations Manager with 7.1 yrs; 2 core skills matched; response rate 0.18.
+CAND_0094943,13,0.4239,HR Manager with 5.2 yrs; 2 core skills matched; response rate 0.68.
+CAND_0068351,14,0.4228,Lead AI Engineer with 6.4 yrs; 3 core skills matched; response rate 0.86.
+CAND_0002025,15,0.4203,Senior AI Engineer with 5.9 yrs; 2 core skills matched; response rate 0.80.
+CAND_0007009,16,0.4201,Recommendation Systems Engineer with 7.9 yrs; 3 core skills matched; response rate 0.62.
+CAND_0090339,17,0.4197,HR Manager with 12.7 yrs; 2 core skills matched; response rate 0.37.
+CAND_0082237,18,0.4194,HR Manager with 9.3 yrs; 2 core skills matched; response rate 0.31.
+CAND_0049538,19,0.4191,Applied ML Engineer with 5.8 yrs; 2 core skills matched; response rate 0.72.
+CAND_0052324,20,0.4182,HR Manager with 4.7 yrs; 2 core skills matched; response rate 0.75.
+CAND_0021888,21,0.4180,Project Manager with 5.6 yrs; 2 core skills matched; response rate 0.37.
+CAND_0055905,22,0.4180,Senior Machine Learning Engineer with 8.1 yrs; 3 core skills matched; response rate 0.87.
+CAND_0047431,23,0.4178,Project Manager with 11.3 yrs; 1 core skills matched; response rate 0.45.
+CAND_0050454,24,0.4165,AI Engineer with 6.8 yrs; 2 core skills matched; response rate 0.77.
+CAND_0081846,25,0.4162,Lead AI Engineer with 6.7 yrs; 2 core skills matched; response rate 0.73.
+CAND_0055164,26,0.4152,Operations Manager with 13.7 yrs; 2 core skills matched; response rate 0.53.
+CAND_0017552,27,0.4151,Project Manager with 7.6 yrs; 2 core skills matched; response rate 0.47.
+CAND_0077337,28,0.4137,Staff Machine Learning Engineer with 7.0 yrs; 2 core skills matched; response rate 0.95.
+CAND_0029759,29,0.4136,HR Manager with 13.1 yrs; 2 core skills matched; response rate 0.73.
+CAND_0005510,30,0.4135,Marketing Manager with 6.2 yrs; 2 core skills matched; response rate 0.20.
+CAND_0039382,31,0.4129,Marketing Manager with 7.8 yrs; 2 core skills matched; response rate 0.20.
+CAND_0048737,32,0.4127,HR Manager with 3.6 yrs; 2 core skills matched; response rate 0.32.
+CAND_0033451,33,0.4123,HR Manager with 6.1 yrs; 2 core skills matched; response rate 0.05.
+CAND_0060624,34,0.4119,HR Manager with 6.1 yrs; 2 core skills matched; response rate 0.57.
+CAND_0071139,35,0.4117,HR Manager with 8.3 yrs; 2 core skills matched; response rate 0.59.
+CAND_0073246,36,0.4094,HR Manager with 3.1 yrs; 1 core skills matched; response rate 0.42.
+CAND_0079064,37,0.4091,Senior Data Scientist with 5.2 yrs; 1 core skills matched; response rate 0.91.
+CAND_0018525,38,0.4089,HR Manager with 6.9 yrs; 1 core skills matched; response rate 0.62.
+CAND_0031354,39,0.4088,HR Manager with 5.5 yrs; 1 core skills matched; response rate 0.74.
+CAND_0001980,40,0.4087,Operations Manager with 8.7 yrs; 2 core skills matched; response rate 0.74.
+CAND_0093912,41,0.4087,Senior Data Scientist with 5.3 yrs; 1 core skills matched; response rate 0.66.
+CAND_0005260,42,0.4076,Senior NLP Engineer with 5.2 yrs; 3 core skills matched; response rate 0.86.
+CAND_0036591,43,0.4075,Operations Manager with 8.5 yrs; 2 core skills matched; response rate 0.11.
+CAND_0039347,44,0.4068,HR Manager with 6.4 yrs; 2 core skills matched; response rate 0.22.
+CAND_0012209,45,0.4065,HR Manager with 4.3 yrs; 2 core skills matched; response rate 0.44.
+CAND_0053125,46,0.4064,Operations Manager with 3.0 yrs; 2 core skills matched; response rate 0.10.
+CAND_0066628,47,0.4059,HR Manager with 10.4 yrs; 2 core skills matched; response rate 0.77.
+CAND_0029367,48,0.4057,Senior Data Scientist with 5.7 yrs; 1 core skills matched; response rate 0.77.
+CAND_0062762,49,0.4052,Operations Manager with 5.7 yrs; 2 core skills matched; response rate 0.64.
+CAND_0011229,50,0.4045,Project Manager with 10.3 yrs; 1 core skills matched; response rate 0.37.
+CAND_0082307,51,0.4031,Marketing Manager with 10.3 yrs; 1 core skills matched; response rate 0.32.
+CAND_0082963,52,0.4022,Project Manager with 7.6 yrs; 2 core skills matched; response rate 0.50.
+CAND_0046300,53,0.4018,Project Manager with 5.3 yrs; 2 core skills matched; response rate 0.40.
+CAND_0057736,54,0.4011,Computer Vision Engineer with 6.2 yrs; 2 core skills matched; response rate 0.92.
+CAND_0008593,55,0.4010,HR Manager with 2.8 yrs; 2 core skills matched; response rate 0.61.
+CAND_0021477,56,0.4010,Project Manager with 12.0 yrs; 2 core skills matched; response rate 0.48.
+CAND_0093888,57,0.4008,HR Manager with 10.5 yrs; 1 core skills matched; response rate 0.60.
+CAND_0026621,58,0.4003,Operations Manager with 8.2 yrs; 2 core skills matched; response rate 0.62.
+CAND_0092033,59,0.4001,Operations Manager with 5.2 yrs; 2 core skills matched; response rate 0.23.
+CAND_0042029,60,0.3994,Senior Data Scientist with 6.5 yrs; 2 core skills matched; response rate 0.67.
+CAND_0033385,61,0.3992,HR Manager with 6.0 yrs; 2 core skills matched; response rate 0.65.
+CAND_0044855,62,0.3992,Senior Data Scientist with 6.6 yrs; 2 core skills matched; response rate 0.57.
+CAND_0086548,63,0.3992,HR Manager with 5.5 yrs; 2 core skills matched; response rate 0.25.
+CAND_0014195,64,0.3990,Project Manager with 13.6 yrs; 2 core skills matched; response rate 0.25.
+CAND_0049823,65,0.3989,Marketing Manager with 13.3 yrs; 2 core skills matched; response rate 0.52.
+CAND_0035945,66,0.3977,Marketing Manager with 8.4 yrs; 2 core skills matched; response rate 0.74.
+CAND_0074735,67,0.3974,Applied ML Engineer with 5.5 yrs; 0 core skills matched; response rate 0.77.
+CAND_0020708,68,0.3973,Search Engineer with 4.2 yrs; 3 core skills matched; response rate 0.84.
+CAND_0020903,69,0.3973,Project Manager with 9.5 yrs; 2 core skills matched; response rate 0.63.
+CAND_0074450,70,0.3973,Project Manager with 9.4 yrs; 1 core skills matched; response rate 0.41.
+CAND_0034222,71,0.3968,HR Manager with 6.8 yrs; 2 core skills matched; response rate 0.12.
+CAND_0094783,72,0.3968,HR Manager with 9.6 yrs; 2 core skills matched; response rate 0.09.
+CAND_0060856,73,0.3967,Operations Manager with 9.1 yrs; 2 core skills matched; response rate 0.32.
+CAND_0091145,74,0.3962,Project Manager with 7.6 yrs; 2 core skills matched; response rate 0.25.
+CAND_0018764,75,0.3960,Sales Executive with 13.1 yrs; 2 core skills matched; response rate 0.73.
+CAND_0030784,76,0.3956,Data Scientist with 4.4 yrs; 2 core skills matched; response rate 0.90.
+CAND_0046525,77,0.3956,Senior Machine Learning Engineer with 6.1 yrs; 2 core skills matched; response rate 0.88.
+CAND_0096142,78,0.3955,Applied ML Engineer with 5.0 yrs; 2 core skills matched; response rate 0.84.
+CAND_0014067,79,0.3954,Operations Manager with 6.7 yrs; 1 core skills matched; response rate 0.46.
+CAND_0063737,80,0.3954,HR Manager with 7.7 yrs; 1 core skills matched; response rate 0.41.
+CAND_0016303,81,0.3950,Marketing Manager with 9.5 yrs; 2 core skills matched; response rate 0.59.
+CAND_0043009,82,0.3950,Project Manager with 6.1 yrs; 1 core skills matched; response rate 0.48.
+CAND_0047091,83,0.3948,Marketing Manager with 10.2 yrs; 2 core skills matched; response rate 0.15.
+CAND_0008425,84,0.3946,Senior NLP Engineer with 7.8 yrs; 2 core skills matched; response rate 0.66.
+CAND_0010108,85,0.3946,Operations Manager with 12.0 yrs; 1 core skills matched; response rate 0.71.
+CAND_0040553,86,0.3943,Project Manager with 7.0 yrs; 2 core skills matched; response rate 0.39.
+CAND_0065856,87,0.3942,Marketing Manager with 3.7 yrs; 1 core skills matched; response rate 0.77.
+CAND_0037980,88,0.3940,Senior Applied Scientist with 9.0 yrs; 1 core skills matched; response rate 0.63.
+CAND_0042618,89,0.3939,HR Manager with 14.7 yrs; 1 core skills matched; response rate 0.78.
+CAND_0091364,90,0.3939,HR Manager with 10.0 yrs; 2 core skills matched; response rate 0.62.
+CAND_0075486,91,0.3937,Graphic Designer with 5.1 yrs; 2 core skills matched; response rate 0.27.
+CAND_0064326,92,0.3936,Search Engineer with 7.6 yrs; 1 core skills matched; response rate 0.94.
+CAND_0001999,93,0.3931,Marketing Manager with 4.2 yrs; 2 core skills matched; response rate 0.15.
+CAND_0047470,94,0.3929,HR Manager with 4.6 yrs; 2 core skills matched; response rate 0.74.
+CAND_0048174,95,0.3926,HR Manager with 10.0 yrs; 2 core skills matched; response rate 0.26.
+CAND_0036715,96,0.3922,Project Manager with 3.6 yrs; 2 core skills matched; response rate 0.71.
+CAND_0060802,97,0.3921,Civil Engineer with 11.2 yrs; 2 core skills matched; response rate 0.47.
+CAND_0066945,98,0.3920,HR Manager with 11.5 yrs; 1 core skills matched; response rate 0.77.
+CAND_0079244,99,0.3920,HR Manager with 10.6 yrs; 2 core skills matched; response rate 0.56.
+CAND_0078318,100,0.3915,HR Manager with 8.5 yrs; 1 core skills matched; response rate 0.50.

@@ -1,0 +1,6 @@
+sentence-transformers
+rank_bm25
+python-docx
+groq
+numpy
+jsonschema
