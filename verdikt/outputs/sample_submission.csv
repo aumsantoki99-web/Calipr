@@ -1,0 +1,41 @@
+candidate_id,rank,score,reasoning
+CAND_0000045,1,0.3698,Project Manager with 12 yrs; 1 core skills matched; response rate 0.62.
+CAND_0000036,2,0.3580,Project Manager with 11 yrs; 0 core skills matched; response rate 0.40.
+CAND_0000041,3,0.3345,Operations Manager with 13 yrs; 1 core skills matched; response rate 0.07.
+CAND_0000031,4,0.3296,Recommendation Systems Engineer with 6 yrs; 1 core skills matched; response rate 0.91.
+CAND_0000002,5,0.3128,Operations Manager with 12 yrs; 0 core skills matched; response rate 0.29.
+CAND_0000013,6,0.2992,Civil Engineer with 1 yrs; 0 core skills matched; response rate 0.28.
+CAND_0000025,7,0.2985,Frontend Engineer with 7 yrs; 0 core skills matched; response rate 0.74.
+CAND_0000027,8,0.2983,DevOps Engineer with 3 yrs; 0 core skills matched; response rate 0.58.
+CAND_0000001,9,0.2965,Backend Engineer with 6 yrs; 3 core skills matched; response rate 0.34.
+CAND_0000022,10,0.2953,Mechanical Engineer with 1 yrs; 0 core skills matched; response rate 0.27.
+CAND_0000033,11,0.2918,Graphic Designer with 8 yrs; 1 core skills matched; response rate 0.08.
+CAND_0000015,12,0.2848,Software Engineer with 5 yrs; 0 core skills matched; response rate 0.32.
+CAND_0000038,13,0.2815,Java Developer with 6 yrs; 0 core skills matched; response rate 0.20.
+CAND_0000048,14,0.2800,Mobile Developer with 9 yrs; 0 core skills matched; response rate 0.65.
+CAND_0000021,15,0.2619,Project Manager with 14 yrs; 3 core skills matched; response rate 0.49.
+CAND_0000019,16,0.2475,Project Manager with 6 yrs; 0 core skills matched; response rate 0.34.
+CAND_0000023,17,0.2423,Software Engineer with 3 yrs; 0 core skills matched; response rate 0.57.
+CAND_0000011,18,0.2381,QA Engineer with 2 yrs; 0 core skills matched; response rate 0.56.
+CAND_0000028,19,0.2348,Operations Manager with 1 yrs; 0 core skills matched; response rate 0.14.
+CAND_0000007,20,0.2329,Civil Engineer with 5 yrs; 0 core skills matched; response rate 0.62.
+CAND_0000014,21,0.2317,Frontend Engineer with 8 yrs; 0 core skills matched; response rate 0.80.
+CAND_0000010,22,0.2271,Data Engineer with 4 yrs; 1 core skills matched; response rate 0.40.
+CAND_0000012,23,0.2250,Operations Manager with 1 yrs; 1 core skills matched; response rate 0.16.
+CAND_0000049,24,0.2246,Mechanical Engineer with 11 yrs; 0 core skills matched; response rate 0.59.
+CAND_0000008,25,0.2237,Operations Manager with 3 yrs; 0 core skills matched; response rate 0.42.
+CAND_0000047,26,0.2217,Project Manager with 2 yrs; 0 core skills matched; response rate 0.39.
+CAND_0000032,27,0.2203,.NET Developer with 8 yrs; 2 core skills matched; response rate 0.69.
+CAND_0000020,28,0.2196,Mechanical Engineer with 6 yrs; 0 core skills matched; response rate 0.55.
+CAND_0000026,29,0.2194,Graphic Designer with 6 yrs; 1 core skills matched; response rate 0.59.
+CAND_0000035,30,0.2156,Full Stack Developer with 4 yrs; 0 core skills matched; response rate 0.34.
+CAND_0000046,31,0.2154,Mechanical Engineer with 7 yrs; 0 core skills matched; response rate 0.41.
+CAND_0000009,32,0.2127,Mechanical Engineer with 11 yrs; 0 core skills matched; response rate 0.53.
+CAND_0000043,33,0.2099,Cloud Engineer with 8 yrs; 3 core skills matched; response rate 0.04.
+CAND_0000037,34,0.2051,Business Analyst with 14 yrs; 0 core skills matched; response rate 0.78.
+CAND_0000029,35,0.1990,Business Analyst with 7 yrs; 0 core skills matched; response rate 0.12.
+CAND_0000044,36,0.1989,Frontend Engineer with 5 yrs; 1 core skills matched; response rate 0.66.
+CAND_0000018,37,0.1985,Frontend Engineer with 6 yrs; 0 core skills matched; response rate 0.16.
+CAND_0000050,38,0.1983,Business Analyst with 13 yrs; 0 core skills matched; response rate 0.42.
+CAND_0000006,39,0.1982,Business Analyst with 6 yrs; 0 core skills matched; response rate 0.12.
+CAND_0000034,40,0.1889,Business Analyst with 14 yrs; 0 core skills matched; response rate 0.15.

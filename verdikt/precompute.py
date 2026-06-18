@@ -95,29 +95,60 @@ JD: {jd_text}"""
 
     raise ValueError("Neither GROQ_API_KEY nor GEMINI_API_KEY found in environment or .env files.")
 
+VERIFIED_JD_SKILLS = {
+    "core_skills": [
+        "Python", "Embeddings", "Vector Databases", "Retrieval Systems", "Ranking Systems",
+        "LLMs", "Fine-tuning", "Evaluation Frameworks", "NLP", "IR", "Hybrid Search"
+    ],
+    "adjacent_skills": [
+        "Docker", "AWS", "LangChain", "OpenAI", "Pinecone", "Weaviate",
+        "Qdrant", "Milvus", "OpenSearch", "Elasticsearch", "FAISS"
+    ],
+    "domain_keywords": [
+        "AI", "ML", "NLP", "IR", "Recruiting Tech", "HR-tech", "Marketplace Products",
+        "Distributed Systems", "Large-scale Inference Optimization", "Open-source Contributions",
+        "Computer Vision", "Speech", "Robotics", "Closed-source Proprietary Systems",
+        "Product Companies", "Consulting Firms", "Title-chasers", "Framework Enthusiasts"
+    ],
+    "min_years_experience": 5,
+    "seniority_level": "mid"
+}
+
 def main():
     print("Reading job_description.docx...")
     jd_text = get_jd_text()
     
+    verified_skills = VERIFIED_JD_SKILLS
+    use_fallback = True
+    
     print("Extracting skills and keywords via LLM...")
     try:
         jd_config = parse_jd_with_llm(jd_text)
-        with open("jd_skills.json", "w", encoding="utf-8") as f:
-            json.dump(jd_config, f, indent=2)
-        print("Saved jd_skills.json successfully!")
+        print("\n=== LLM-EXTRACTED SKILLS & KEYWORDS ===")
+        print(json.dumps(jd_config, indent=2))
+        print("=======================================\n")
+        
+        # Check if stdin is interactive (terminal) and ask for confirmation
+        import sys
+        if sys.stdin.isatty():
+            try:
+                ans = input("Use LLM-extracted skills? (y/n, default 'n' to use verified hardcoded skills): ").strip().lower()
+                if ans == 'y':
+                    use_fallback = False
+                    verified_skills = jd_config
+            except Exception:
+                pass
     except Exception as e:
         print(f"Error parsing JD via LLM: {e}")
-        print("Creating a fallback jd_skills.json...")
-        fallback = {
-            "core_skills": ["Python", "Machine Learning", "FastAPI", "React", "Docker", "SQL"],
-            "adjacent_skills": ["AWS", "Git", "PyTorch", "Tailwind CSS"],
-            "domain_keywords": ["Software Engineer", "AI", "Developer", "Full Stack"],
-            "min_years_experience": 2,
-            "seniority_level": "mid"
-        }
-        with open("jd_skills.json", "w", encoding="utf-8") as f:
-            json.dump(fallback, f, indent=2)
-        print("Saved fallback jd_skills.json")
+        print("Proceeding with verified fallback skills.")
+        
+    if use_fallback:
+        print("\nUsing verified hardcoded skills:")
+        print(json.dumps(verified_skills, indent=2))
+        
+    with open("jd_skills.json", "w", encoding="utf-8") as f:
+        json.dump(verified_skills, f, indent=2)
+    print("Saved jd_skills.json successfully!")
 
     print("Loading sentence-transformers model...")
     model = SentenceTransformer("all-MiniLM-L6-v2")
