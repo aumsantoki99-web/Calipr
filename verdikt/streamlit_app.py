@@ -218,17 +218,54 @@ h3 {
 }
 
 /* ── TEXT INPUTS & TEXTAREAS ── */
-.stTextArea textarea, .stTextInput input {
+.stTextArea > div,
+.stTextInput > div,
+.stTextInput div[data-baseweb="input"],
+.stTextInput div[data-testid="stTextInputRootElement"] {
+    border: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+}
+
+.stTextArea textarea,
+.stTextInput div[data-testid="stTextInputRootElement"],
+.stTextInput div[data-baseweb="input"] {
     background: rgba(255, 255, 255, 0.7) !important;
     border: 1px solid #e4e2e2 !important;
     border-radius: 12px !important;
     font-family: 'Inter', sans-serif !important;
     font-size: 14px !important;
     color: #1a1615 !important;
-    padding: 12px 16px !important;
     transition: all 0.2s ease !important;
 }
-.stTextArea textarea:focus, .stTextInput input:focus {
+
+.stTextArea textarea {
+     padding: 12px 16px !important;
+}
+
+.stTextInput div[data-testid="stTextInputRootElement"],
+.stTextInput div[data-baseweb="input"] {
+    height: 42px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.stTextInput input {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 14px !important;
+    color: #1a1615 !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 16px !important;
+}
+
+.stTextArea textarea:focus,
+.stTextInput div[data-testid="stTextInputRootElement"]:focus-within,
+.stTextInput div[data-baseweb="input"]:focus-within {
     border-color: #84b9ef !important;
     box-shadow: 0 0 0 3px rgba(132, 185, 239, 0.2) !important;
     background: #ffffff !important;

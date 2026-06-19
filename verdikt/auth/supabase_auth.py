@@ -43,27 +43,76 @@ AUTH_CSS = """
 }
 
 /* ── INPUTS ── */
-.stTextInput input {
-    background: #F8FAFC !important;
+.stTextInput > div,
+.stTextInput div[data-baseweb="input"],
+.stTextInput div[data-testid="stTextInputRootElement"] {
+    border: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+}
+
+.stTextInput div[data-testid="stTextInputRootElement"],
+.stTextInput div[data-baseweb="input"] {
     border: 1px solid #E5E7EB !important;
+    background-color: #F8FAFC !important;
     border-radius: 10px !important;
+    height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+}
+
+.stTextInput div[data-testid="stTextInputRootElement"]:focus-within,
+.stTextInput div[data-baseweb="input"]:focus-within {
+    border-color: #84b9ef !important;
+    box-shadow: 0 0 0 3px rgba(132, 185, 239, 0.3) !important;
+    background-color: #FFFFFF !important;
+}
+
+.stTextInput input {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
     font-family: 'Inter', sans-serif !important;
     font-size: 15px !important;
-    color: #0A0A0A !important;
-    padding: 13px 16px !important;
-    height: 48px !important;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    color: #1a1615 !important;
     width: 100% !important;
+    height: 100% !important;
+    padding: 0 16px !important;
 }
+
 .stTextInput input:focus {
-    border-color: #4A90FF !important;
-    box-shadow: 0 0 0 3px rgba(74,144,255,0.12) !important;
+    border: none !important;
+    box-shadow: none !important;
     outline: none !important;
-    background: #FFFFFF !important;
 }
+
 .stTextInput input::placeholder {
     color: #9CA3AF !important;
     font-weight: 400 !important;
+}
+
+/* Style password visibility eye toggle button to be completely transparent with no background or border */
+.stTextInput button[title="Show password text"],
+.stTextInput button[title="Hide password text"],
+.stTextInput div[data-baseweb="input"] button {
+    background-color: transparent !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #9CA3AF !important;
+    padding: 0 12px !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+.stTextInput button[title="Show password text"]:hover,
+.stTextInput button[title="Hide password text"]:hover,
+.stTextInput div[data-baseweb="input"] button:hover {
+    background-color: transparent !important;
+    color: #4A90FF !important;
 }
 
 /* ── INPUT LABELS ── */
