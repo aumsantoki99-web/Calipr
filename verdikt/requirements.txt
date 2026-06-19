@@ -8,4 +8,4 @@ streamlit
 pypdf
 plotly
 pandas
-supabase
+supabase>=2.4.6

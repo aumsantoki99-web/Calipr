@@ -1,0 +1,411 @@
+import os
+from supabase import create_client, Client
+import streamlit as st
+
+AUTH_CSS = """
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ── GLOBAL ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.stApp {
+    background: #FFFFFF !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ── HIDE ALL STREAMLIT CHROME ── */
+#MainMenu, footer, header { visibility: hidden !important; }
+.stDeployButton { display: none !important; }
+[data-testid="stToolbar"] { display: none !important; }
+[data-testid="stSidebar"] { display: none !important; }
+
+/* ── CENTER EVERYTHING ── */
+.block-container {
+    max-width: 440px !important;
+    margin: 0 auto !important;
+    padding: 60px 24px 40px !important;
+}
+
+/* ── INPUTS ── */
+.stTextInput input {
+    background: #F8FAFC !important;
+    border: 1px solid #E5E7EB !important;
+    border-radius: 10px !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 15px !important;
+    color: #0A0A0A !important;
+    padding: 13px 16px !important;
+    height: 48px !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    width: 100% !important;
+}
+.stTextInput input:focus {
+    border-color: #4A90FF !important;
+    box-shadow: 0 0 0 3px rgba(74,144,255,0.12) !important;
+    outline: none !important;
+    background: #FFFFFF !important;
+}
+.stTextInput input::placeholder {
+    color: #9CA3AF !important;
+    font-weight: 400 !important;
+}
+
+/* ── INPUT LABELS ── */
+.stTextInput label {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    margin-bottom: 6px !important;
+    letter-spacing: -0.01em !important;
+}
+
+/* ── PRIMARY BUTTON ── */
+.stButton > button {
+    background: #0A0A0A !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    padding: 0 24px !important;
+    height: 48px !important;
+    width: 100% !important;
+    transition: all 0.2s ease !important;
+    letter-spacing: -0.01em !important;
+    cursor: pointer !important;
+}
+.stButton > button:hover {
+    background: #1A1A1A !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18) !important;
+}
+.stButton > button:active {
+    transform: translateY(0) !important;
+    box-shadow: none !important;
+}
+
+/* ── ALERTS ── */
+.stSuccess {
+    background: rgba(0,212,170,0.06) !important;
+    border: 1px solid rgba(0,212,170,0.25) !important;
+    border-radius: 10px !important;
+    color: #065f46 !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 14px !important;
+}
+.stError {
+    background: rgba(239,68,68,0.06) !important;
+    border: 1px solid rgba(239,68,68,0.25) !important;
+    border-radius: 10px !important;
+    color: #991b1b !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 14px !important;
+}
+.stWarning {
+    background: rgba(245,158,11,0.06) !important;
+    border: 1px solid rgba(245,158,11,0.25) !important;
+    border-radius: 10px !important;
+}
+.stInfo {
+    background: rgba(74,144,255,0.06) !important;
+    border: 1px solid rgba(74,144,255,0.25) !important;
+    border-radius: 10px !important;
+    color: #1e40af !important;
+}
+
+/* ── SPINNER ── */
+.stSpinner > div {
+    border-top-color: #4A90FF !important;
+}
+
+/* ── DIVIDER ── */
+hr {
+    border: none !important;
+    border-top: 1px solid #F3F4F6 !important;
+    margin: 24px 0 !important;
+}
+
+/* ── AUTH CARD ── */
+.auth-card {
+    background: rgba(255,255,255,0.90);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid #E5E7EB;
+    border-radius: 20px;
+    padding: 40px 36px;
+    box-shadow:
+        0 0 0 1px rgba(0,0,0,0.02),
+        0 4px 40px rgba(0,0,0,0.08),
+        0 1px 0 rgba(255,255,255,0.9) inset;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shimmer on card */
+.auth-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255,255,255,0.8),
+        transparent
+    );
+}
+
+/* ── LOGO ── */
+.auth-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 28px;
+}
+.auth-logo-mark {
+    width: 52px;
+    height: 52px;
+    background: #0A0A0A;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 900;
+    color: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.06em;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+.auth-logo-name {
+    font-size: 22px;
+    font-weight: 800;
+    color: #0A0A0A;
+    letter-spacing: -0.04em;
+    font-family: 'Inter', sans-serif;
+}
+.auth-logo-tagline {
+    font-size: 13px;
+    color: #9CA3AF;
+    font-family: 'Inter', sans-serif;
+    margin-top: 4px;
+    text-align: center;
+}
+
+/* ── HEADING ── */
+.auth-heading {
+    font-size: 24px;
+    font-weight: 800;
+    color: #0A0A0A;
+    letter-spacing: -0.03em;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    margin-bottom: 6px;
+}
+.auth-subheading {
+    font-size: 14px;
+    color: #6B7280;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    margin-bottom: 28px;
+    line-height: 1.5;
+}
+
+/* ── GOOGLE BUTTON ── */
+.google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 48px;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+.google-btn:hover {
+    background: #F8FAFC;
+    border-color: #D1D5DB;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* ── DIVIDER WITH TEXT ── */
+.or-divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 24px 0;
+}
+.or-divider::before, .or-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #E5E7EB;
+}
+.or-divider span {
+    font-size: 12px;
+    font-weight: 600;
+    color: #9CA3AF;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+}
+
+/* ── LINKS ── */
+.auth-link {
+    color: #4A90FF;
+    font-weight: 600;
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: color 0.15s;
+}
+.auth-link:hover {
+    color: #2563EB;
+    text-decoration: underline;
+}
+
+/* ── FORM HELPER TEXT ── */
+.helper-text {
+    font-size: 12px;
+    color: #9CA3AF;
+    font-family: 'Inter', sans-serif;
+    margin-top: 6px;
+    line-height: 1.5;
+}
+
+/* ── SWITCH ROW (Sign in / Sign up toggle) ── */
+.switch-row {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 14px;
+    color: #6B7280;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ── FORGOT PASSWORD ROW ── */
+.forgot-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 4px;
+    margin-bottom: 20px;
+}
+
+/* ── BACKGROUND BLOBS (cloud ambient) ── */
+.auth-bg {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+.auth-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+}
+.blob-1 { width:500px;height:500px;background:rgba(219,234,254,0.5);
+           top:-100px;left:-100px; }
+.blob-2 { width:400px;height:400px;background:rgba(241,245,249,0.6);
+           top:100px;right:-80px; }
+.blob-3 { width:600px;height:400px;background:rgba(248,250,252,0.5);
+           bottom:0;left:30%; }
+
+/* ── TERMS TEXT ── */
+.terms-text {
+    font-size: 11px;
+    color: #9CA3AF;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    margin-top: 20px;
+}
+.terms-text a {
+    color: #6B7280;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* ── PASSWORD STRENGTH INDICATOR ── */
+.pwd-strength {
+    display: flex;
+    gap: 4px;
+    margin-top: 8px;
+}
+.pwd-bar {
+    flex: 1;
+    height: 3px;
+    border-radius: 100px;
+    background: #F3F4F6;
+    transition: background 0.3s;
+}
+.pwd-bar.weak   { background: #EF4444; }
+.pwd-bar.medium { background: #F59E0B; }
+.pwd-bar.strong { background: #00D4AA; }
+</style>
+"""
+
+def get_supabase_client() -> Client:
+    url  = st.secrets.get("SUPABASE_URL") or os.environ.get("SUPABASE_URL")
+    key  = st.secrets.get("SUPABASE_ANON_KEY") or st.secrets.get("SUPABASE_KEY") or os.environ.get("SUPABASE_ANON_KEY") or os.environ.get("SUPABASE_KEY")
+    if not url or not key:
+        st.error("Supabase credentials not found. Add SUPABASE_URL and SUPABASE_ANON_KEY to secrets or environment.")
+        st.stop()
+    return create_client(url, key)
+
+def sign_in(email: str, password: str) -> dict:
+    """Sign in with email and password. Returns user dict or raises."""
+    client = get_supabase_client()
+    response = client.auth.sign_in_with_password({
+        "email": email,
+        "password": password
+    })
+    return response
+
+def sign_up(email: str, password: str, full_name: str = "") -> dict:
+    """Register new user. Returns user dict or raises."""
+    client = get_supabase_client()
+    response = client.auth.sign_up({
+        "email": email,
+        "password": password,
+        "options": {
+            "data": {"full_name": full_name}
+        }
+    })
+    return response
+
+def sign_out():
+    """Sign out current user and clear session."""
+    try:
+        client = get_supabase_client()
+        client.auth.sign_out()
+    except:
+        pass
+    for key in ["user", "access_token", "user_email", "user_name"]:
+        st.session_state.pop(key, None)
+
+def get_current_user():
+    """Return current user from session_state or None."""
+    return st.session_state.get("user", None)
+
+def is_authenticated() -> bool:
+    return "user" in st.session_state and st.session_state.user is not None
+
+def reset_password(email: str):
+    """Send password reset email."""
+    client = get_supabase_client()
+    client.auth.reset_password_email(email)
