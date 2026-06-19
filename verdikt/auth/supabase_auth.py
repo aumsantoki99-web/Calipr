@@ -460,6 +460,51 @@ hr {
 .pwd-bar.weak   { background: #EF4444; }
 .pwd-bar.medium { background: #F59E0B; }
 .pwd-bar.strong { background: #00D4AA; }
+
+/* ── CHECKBOX STYLING ── */
+/* Checkbox Text Color */
+[data-testid="stCheckbox"] [data-testid="stMarkdownContainer"] p,
+[data-testid="stCheckbox"] [data-testid="stWidgetLabel"] p,
+[data-testid="stCheckbox"] label p,
+[data-testid="stCheckbox"] p {
+    color: #374151 !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 13.5px !important;
+    font-weight: 500 !important;
+}
+
+/* Checkbox Square Border & Background (Unchecked) */
+[data-testid="stCheckbox"] label > span:first-child,
+[data-testid="stCheckbox"] div[role="checkbox"] {
+    border: 1px solid #D1D5DB !important;
+    border-radius: 6px !important;
+    background-color: #FFFFFF !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Checkbox Hover */
+[data-testid="stCheckbox"]:hover label > span:first-child,
+[data-testid="stCheckbox"]:hover div[role="checkbox"] {
+    border-color: #4A90FF !important;
+    box-shadow: 0 0 0 3px rgba(74, 144, 255, 0.15) !important;
+}
+
+/* Checked Checkbox state */
+[data-testid="stCheckbox"] input:checked + div,
+[data-testid="stCheckbox"] input:checked + div > span,
+[data-testid="stCheckbox"] input:checked + span,
+[data-testid="stCheckbox"] div[role="checkbox"][aria-checked="true"] {
+    background-color: #4A90FF !important;
+    border-color: #4A90FF !important;
+}
+
+/* Checkmark color (make it white) */
+[data-testid="stCheckbox"] svg,
+[data-testid="stCheckbox"] [role="checkbox"] svg {
+    color: #FFFFFF !important;
+    fill: #FFFFFF !important;
+    stroke: #FFFFFF !important;
+}
 </style>
 """
 
