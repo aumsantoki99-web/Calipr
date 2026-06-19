@@ -10,7 +10,7 @@ AUTH_CSS = """
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 .stApp {
-    background: #FFFFFF !important;
+    background: linear-gradient(180deg, #fafafa 0%, #f9f8f8 36%, #f4f1ee 45%, #f4f1ee 51%, #e2ecf6 73%, #a7cbf2 125%) fixed !important;
     font-family: 'Inter', system-ui, sans-serif !important;
     -webkit-font-smoothing: antialiased;
 }
@@ -21,11 +21,25 @@ AUTH_CSS = """
 [data-testid="stToolbar"] { display: none !important; }
 [data-testid="stSidebar"] { display: none !important; }
 
-/* ── CENTER EVERYTHING ── */
+/* ── CENTER EVERYTHING (Liquid Glass Card) ── */
 .block-container {
     max-width: 440px !important;
-    margin: 0 auto !important;
-    padding: 60px 24px 40px !important;
+    margin: 80px auto !important;
+    padding: 40px 36px !important;
+    background: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    
+    /* Rim Light Thickness */
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.45) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 20px !important;
+    
+    /* Soft Depth & Shine */
+    box-shadow: 
+      0 12px 40px rgba(26, 22, 21, 0.06),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.15) !important;
 }
 
 /* ── INPUTS ── */
