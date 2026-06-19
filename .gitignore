@@ -19,3 +19,14 @@ frontend/*.local
 # Large dataset files for hackathon
 verdikt/candidates.jsonl
 verdikt/sample_candidates.jsonl
+
+# Streamlit secrets and config overrides
+.streamlit/*secrets.toml
+*secrets.toml
+
+# Temp deployment folders
+hf_deploy_tmp/
+
+# Task list
+task.md
+

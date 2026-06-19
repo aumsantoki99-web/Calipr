@@ -13,6 +13,7 @@ try:
     import pandas as pd
     import uuid
     import plotly.graph_objects as go
+    from supabase import create_client, Client
 except Exception as e:
     st.error(f"🚨 Calipr Diagnostic Error — Import Failure: {e}")
     st.write("### Diagnostics Information")
@@ -729,43 +730,105 @@ try:
 except Exception as e:
     pass
 
+# ── SUPABASE CLIENT ───────────────────────────────────────────────
+@st.cache_resource
+def get_supabase_client() -> Client:
+    url = st.secrets.get("SUPABASE_URL") or st.getenv("SUPABASE_URL")
+    key = st.secrets.get("SUPABASE_KEY") or st.getenv("SUPABASE_KEY")
+    if not url or not key:
+        st.error("🔒 Supabase credentials missing! Please configure SUPABASE_URL and SUPABASE_KEY secrets.")
+        st.stop()
+    return create_client(url, key)
+
 # ── PASSWORD PROTECTION ───────────────────────────────────────────
 def check_password():
-    """Returns True if the user had the correct password."""
+    """Returns True if the user is authenticated via Supabase."""
     if "password_correct" not in st.session_state:
         st.session_state["password_correct"] = False
+    if "user_email" not in st.session_state:
+        st.session_state["user_email"] = None
 
     if st.session_state["password_correct"]:
+        # Sidebar logout button
+        with st.sidebar:
+            st.markdown("---")
+            st.markdown(f"""
+            <div style="background: rgba(255, 255, 255, 0.6); border: 1px solid #e4e2e2; padding: 12px; border-radius: 12px; margin-bottom: 12px;">
+                <div style="font-family: 'Fragment Mono', monospace; font-size: 9px; text-transform: uppercase; color: #757170;">Logged In User</div>
+                <div style="font-size: 13px; font-weight: 600; color: #1a1615; word-break: break-all;">{st.session_state['user_email']}</div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("Logout", use_container_width=True, key="auth_logout"):
+                st.session_state["password_correct"] = False
+                st.session_state["user_email"] = None
+                st.rerun()
         return True
 
     # Show login UI
     st.markdown("""
-    <div style="max-width: 400px; margin: 80px auto 20px; padding: 40px; background: #FFFFFF; border-radius: 16px; 
+    <div style="max-width: 420px; margin: 80px auto 20px; padding: 40px; background: #FFFFFF; border-radius: 16px; 
                 box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e4e2e2; text-align: center; font-family: Inter, sans-serif;">
         <span style="font-size: 40px;">🏆</span>
         <h2 style="margin-top: 15px; margin-bottom: 8px; color: #1a1615; font-family: 'Open Runde', sans-serif; letter-spacing: -0.02em;">Calipr AI Sandbox</h2>
-        <p style="font-size: 13.5px; color: #757170; margin-bottom: 30px; line-height: 1.5;">
-            Enter the hackathon preview password to access the candidate ranking dashboard.
+        <p style="font-size: 13.5px; color: #757170; margin-bottom: 24px; line-height: 1.5;">
+            Securely access the candidate ranking dashboard with Supabase Auth.
         </p>
     </div>
     """, unsafe_allow_html=True)
-    
-    col1, col2, col3 = st.columns([1, 1.2, 1])
+
+    supabase = get_supabase_client()
+
+    col1, col2, col3 = st.columns([1, 1.4, 1])
     with col2:
-        password = st.text_input("Enter Password", type="password", label_visibility="collapsed", placeholder="Enter Password...")
-        if password:
-            if password == "calipr-demo":
-                st.session_state["password_correct"] = True
-                st.rerun()
-            else:
-                st.error("😕 Password incorrect")
-                
-    st.markdown("""
-    <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #757170; font-family: Inter, sans-serif;">
-        Tip for Hackathon Judges: Use password <strong>calipr-demo</strong>
-    </div>
-    """, unsafe_allow_html=True)
-    
+        tab_login, tab_signup = st.tabs(["Log In", "Sign Up"])
+        
+        with tab_login:
+            login_email = st.text_input("Email Address", placeholder="email@example.com", key="login_email")
+            login_password = st.text_input("Password", type="password", placeholder="••••••••", key="login_password")
+            
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+            if st.button("Log In", use_container_width=True, key="btn_login"):
+                if not login_email or not login_password:
+                    st.error("Please fill in all fields.")
+                else:
+                    try:
+                        response = supabase.auth.sign_in_with_password({
+                            "email": login_email,
+                            "password": login_password
+                        })
+                        if response.user:
+                            st.session_state["password_correct"] = True
+                            st.session_state["user_email"] = response.user.email
+                            st.success("🎉 Logged in successfully!")
+                            st.rerun()
+                    except Exception as e:
+                        err_msg = str(e)
+                        if "Invalid login credentials" in err_msg:
+                            st.error("😕 Invalid email or password.")
+                        else:
+                            st.error(f"😕 Auth Error: {err_msg}")
+                            
+        with tab_signup:
+            signup_email = st.text_input("Email Address", placeholder="email@example.com", key="signup_email")
+            signup_password = st.text_input("Password", type="password", placeholder="Min 6 characters", key="signup_password")
+            
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+            if st.button("Create Account", use_container_width=True, key="btn_signup"):
+                if not signup_email or not signup_password:
+                    st.error("Please fill in all fields.")
+                elif len(signup_password) < 6:
+                    st.error("Password must be at least 6 characters.")
+                else:
+                    try:
+                        response = supabase.auth.sign_up({
+                            "email": signup_email,
+                            "password": signup_password
+                        })
+                        if response.user:
+                            st.success("✉️ Account created! Please check your inbox for confirmation or log in.")
+                    except Exception as e:
+                        st.error(f"😕 Registration Error: {str(e)}")
+
     return False
 
 if not check_password():

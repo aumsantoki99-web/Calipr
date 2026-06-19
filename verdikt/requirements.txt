@@ -8,3 +8,4 @@ streamlit
 pypdf
 plotly
 pandas
+supabase
