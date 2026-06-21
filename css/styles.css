@@ -2635,3 +2635,21 @@ p {
   45%      { transform: translate(35px, -25px) scale(1.03); }
   75%      { transform: translate(-20px, 18px) scale(0.97); }
 }
+
+.cta-cloud-back {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+  background-image: url('/images/cloud-back.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.cta-cloud-front {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+  background-image: url('/images/cloud-front.png');
+  background-size: cover;
+  background-position: center;
+}
