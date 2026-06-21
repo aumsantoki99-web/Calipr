@@ -2,11 +2,17 @@ import os
 from supabase import create_client, Client
 import streamlit as st
 
-def get_supabase_url() -> str:
+def get_secret(name: str) -> str:
     try:
-        return st.secrets.get("SUPABASE_URL") or os.environ.get("SUPABASE_URL") or ""
+        val = st.secrets.get(name)
+        if val is not None:
+            return str(val)
     except Exception:
-        return os.environ.get("SUPABASE_URL") or ""
+        pass
+    return os.environ.get(name) or ""
+
+def get_supabase_url() -> str:
+    return get_secret("SUPABASE_URL")
 
 AUTH_CSS = """
 <style>
@@ -546,8 +552,8 @@ hr {
 """
 
 def get_supabase_client() -> Client:
-    url  = st.secrets.get("SUPABASE_URL") or os.environ.get("SUPABASE_URL")
-    key  = st.secrets.get("SUPABASE_ANON_KEY") or st.secrets.get("SUPABASE_KEY") or os.environ.get("SUPABASE_ANON_KEY") or os.environ.get("SUPABASE_KEY")
+    url  = get_secret("SUPABASE_URL")
+    key  = get_secret("SUPABASE_ANON_KEY") or get_secret("SUPABASE_KEY")
     if not url or not key:
         st.error("Supabase credentials not found. Add SUPABASE_URL and SUPABASE_ANON_KEY to secrets or environment.")
         st.stop()

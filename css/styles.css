@@ -300,10 +300,45 @@ p {
 .btn:hover svg {
   transform: translateX(2px);
 }
+/* ---------- HACKATHON DEMO BANNER ---------- */
+.hackathon-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10001;
+  background: linear-gradient(135deg, #0d9488 0%, #0891b2 50%, #0284c7 100%);
+  color: #fff;
+  text-align: center;
+  padding: 10px 16px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 12px rgba(13, 148, 136, 0.3);
+}
+
+.hackathon-banner span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hackathon-banner strong {
+  font-weight: 700;
+}
+
+@keyframes banner-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.hackathon-banner span::first-letter {
+  animation: banner-pulse 2s ease-in-out infinite;
+}
 
 .navbar {
   position: fixed;
-  top: 24px;
+  top: 62px;
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 32px);
@@ -490,7 +525,7 @@ p {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: calc(var(--nav-height) + 80px);
+  padding-top: calc(var(--nav-height) + 120px); /* Extra space for hackathon banner */
   padding-bottom: var(--space-5xl);
   background: transparent;
   overflow: hidden;
@@ -1361,6 +1396,15 @@ p {
   flex-shrink: 0;
   font-size: 11px;
   margin-top: 1px;
+}
+
+.pricing-feature.disabled {
+  opacity: 0.5;
+}
+
+.pricing-feature.disabled .check {
+  background: #fde8e8;
+  color: #e53e3e;
 }
 
 .pricing-card .btn {

@@ -1,0 +1,75 @@
+{
+  "_description": "Recruiter memory file for Calipr AI. Stores learned preferences, disqualifiers, and hiring patterns.",
+  "disqualifiers": [
+    {
+      "rule_id": "no_python",
+      "description": "Disqualify candidates who lack Python when Python is a required skill",
+      "condition": {
+        "check_field": "skills",
+        "operator": "not_contains",
+        "value": "python",
+        "applies_when": {
+          "jd_field": "required_skills",
+          "operator": "contains",
+          "value": "python"
+        }
+      },
+      "action": "disqualify",
+      "severity": "hard",
+      "rationale": "Python is a non-negotiable requirement when listed in JD required skills",
+      "active": true
+    },
+    {
+      "rule_id": "insufficient_experience",
+      "description": "Disqualify candidates with less than minimum required experience",
+      "condition": {
+        "check_field": "years_experience",
+        "operator": "less_than",
+        "value_from": "jd.min_years_experience"
+      },
+      "action": "disqualify",
+      "severity": "hard",
+      "rationale": "Candidate does not meet minimum experience threshold",
+      "active": true
+    },
+    {
+      "rule_id": "no_relevant_domain",
+      "description": "Flag candidates with no overlapping domain experience",
+      "condition": {
+        "check_field": "domains",
+        "operator": "no_overlap",
+        "value_from": "jd.domain"
+      },
+      "action": "flag",
+      "severity": "soft",
+      "rationale": "Candidate lacks direct domain experience but may have transferable skills",
+      "active": true
+    }
+  ],
+  "preferences": {
+    "prefer_leadership": {
+      "description": "Boost candidates with demonstrated leadership for senior roles",
+      "condition": {
+        "jd_level": ["senior", "lead", "staff", "principal", "director"],
+        "candidate_field": "leadership_examples",
+        "operator": "is_not_empty"
+      },
+      "boost": 0.05,
+      "active": true
+    },
+    "prefer_collaboration": {
+      "description": "Slight boost for candidates with clear collaboration style",
+      "condition": {
+        "candidate_field": "collaboration_style",
+        "operator": "is_not_empty"
+      },
+      "boost": 0.02,
+      "active": true
+    }
+  },
+  "hiring_patterns": {
+    "last_updated": "2026-06-21T00:00:00Z",
+    "successful_hires": [],
+    "notes": "This section is populated as the system learns from recruiter feedback over time."
+  }
+}

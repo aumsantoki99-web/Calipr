@@ -9,3 +9,4 @@ pypdf
 plotly
 pandas
 supabase>=2.4.6
+requests
