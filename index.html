@@ -19,6 +19,8 @@
   <!-- Favicon (inline SVG) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231a1615'/%3E%3Cpath d='M8 5v22M8 17h18M20 13v14' stroke='white' stroke-width='3' stroke-linecap='square'/%3E%3C/svg%3E">
   
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -52,7 +54,7 @@
         </div>
         
         <div class="nav-actions">
-          <a href="/frontend/" class="btn btn-primary btn-sm btn-pill" id="nav-try-demo">Try Demo</a>
+          <a href="https://huggingface.co/spaces/Aumus/calipr" target="_blank" class="btn btn-primary btn-sm btn-pill" id="nav-try-demo">Try Demo</a>
         </div>
         
         <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
@@ -69,14 +71,43 @@
     <a href="#how-it-works" class="mobile-link">How It Works</a>
     <a href="#pricing" class="mobile-link">Pricing</a>
     <a href="#contact" class="mobile-link">Contact</a>
-    <a href="/frontend/" class="btn btn-primary btn-pill" id="mobile-try-demo">Try Demo</a>
+    <a href="https://huggingface.co/spaces/Aumus/calipr" target="_blank" class="btn btn-primary btn-pill" id="mobile-try-demo">Try Demo</a>
   </div>
 
   <!-- ===== HERO ===== -->
   <section class="hero" id="hero">
+    <div class="cloud-scene" aria-hidden="true">
+      <!-- Layer 1 — slowest, furthest back, largest -->
+      <div class="cloud-layer cloud-layer-1">
+        <div class="cloud cloud-a"></div>
+        <div class="cloud cloud-b"></div>
+        <div class="cloud cloud-c"></div>
+      </div>
+
+      <!-- Layer 2 — medium speed, mid-depth -->
+      <div class="cloud-layer cloud-layer-2">
+        <div class="cloud cloud-d"></div>
+        <div class="cloud cloud-e"></div>
+      </div>
+
+      <!-- Layer 3 — fastest, closest, smallest -->
+      <div class="cloud-layer cloud-layer-3">
+        <div class="cloud cloud-f"></div>
+        <div class="cloud cloud-g"></div>
+      </div>
+    </div>
+
     <!-- Floating clouds -->
     <div class="cloud cloud-1"></div>
     <div class="cloud cloud-2"></div>
+    
+    <!-- Ambient blobs -->
+    <div class="hero-blob-container">
+      <div class="hero-blob blob-1"></div>
+      <div class="hero-blob blob-2"></div>
+      <div class="hero-blob blob-3"></div>
+      <div class="hero-blob blob-4"></div>
+    </div>
     
     <div class="hero-content reveal">
       <div class="section-label">AI-Powered Recruitment</div>
@@ -85,7 +116,7 @@
         Calipr uses multi-dimensional AI scoring and Reciprocal Rank Fusion to evaluate candidates the way expert recruiters do — with nuance, context, and precision.
       </p>
       <div class="hero-ctas">
-        <a href="/frontend/" class="btn btn-primary btn-pill" id="hero-get-started">
+        <a href="https://huggingface.co/spaces/Aumus/calipr" target="_blank" class="btn btn-primary btn-pill" id="hero-get-started">
           Get Started Free
           <svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8h9M8.5 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
@@ -477,7 +508,7 @@
             <div class="pricing-feature"><div class="check">✓</div> Radar chart visualization</div>
             <div class="pricing-feature disabled"><div class="check">✗</div> No CSV export</div>
           </div>
-          <a href="/frontend/" class="btn btn-secondary btn-pill" style="width:100%;" id="pricing-get-started">Get Started</a>
+          <a href="https://huggingface.co/spaces/Aumus/calipr" target="_blank" class="btn btn-secondary btn-pill" style="width:100%;" id="pricing-get-started">Get Started</a>
         </div>
         
         <!-- Pro -->
@@ -494,7 +525,7 @@
             <div class="pricing-feature"><div class="check">✓</div> Skill adjacency mapping</div>
             <div class="pricing-feature"><div class="check">✓</div> API access</div>
           </div>
-          <a href="/frontend/" class="btn btn-primary btn-pill" style="width:100%;" id="pricing-start-trial">Start Free Trial</a>
+          <a href="https://huggingface.co/spaces/Aumus/calipr" target="_blank" class="btn btn-primary btn-pill" style="width:100%;" id="pricing-start-trial">Start Free Trial</a>
         </div>
         
         <!-- Enterprise -->
@@ -617,18 +648,45 @@
 
   <!-- ===== CTA ===== -->
   <section class="cta-section" id="cta">
-    <div class="container">
-      <div class="reveal">
-        <h2>Ready to Hire Smarter?</h2>
-        <p class="section-subtitle mx-auto" style="margin-bottom:40px;">
-          Calipr is open-source and built to prove that AI recruitment can be transparent, auditable, and genuinely useful.
-        </p>
-        <div class="cta-buttons">
-          <a href="https://github.com/aumsantoki99-web/Calipr" target="_blank" class="btn btn-cta btn-pill">
-            View on GitHub
-            <svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8h9M8.5 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <a href="/frontend/" class="btn btn-outline-white btn-pill" id="cta-try-demo">Try the Live Demo</a>
+    <!-- Cloud background layers — positioned absolute behind all content -->
+    <div class="cta-cloud-bg" aria-hidden="true">
+      <!-- Sky gradient base -->
+      <div class="cta-sky"></div>
+
+      <!-- Cloud layer 1 — back, slower parallax -->
+      <div class="cta-cloud-back">
+        <div class="cta-cloud cb-1"></div>
+        <div class="cta-cloud cb-2"></div>
+        <div class="cta-cloud cb-3"></div>
+        <div class="cta-cloud cb-4"></div>
+      </div>
+
+      <!-- Cloud layer 2 — front, faster parallax -->
+      <div class="cta-cloud-front">
+        <div class="cta-cloud cf-1"></div>
+        <div class="cta-cloud cf-2"></div>
+        <div class="cta-cloud cf-3"></div>
+      </div>
+
+      <!-- Light vignette overlay -->
+      <div class="cta-vignette"></div>
+    </div>
+
+    <!-- Actual CTA content sits above clouds -->
+    <div class="cta-content">
+      <div class="container">
+        <div>
+          <h2>Ready to Hire Smarter?</h2>
+          <p class="section-subtitle mx-auto" style="margin-bottom:40px;">
+            Calipr is open-source and built to prove that AI recruitment can be transparent, auditable, and genuinely useful.
+          </p>
+          <div class="cta-buttons">
+            <a href="https://github.com/aumsantoki99-web/Calipr" target="_blank" class="btn btn-cta btn-pill">
+              View on GitHub
+              <svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8h9M8.5 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a href="https://huggingface.co/spaces/Aumus/calipr" target="_blank" class="btn btn-outline-white btn-pill" id="cta-try-demo">Try the Live Demo</a>
+          </div>
         </div>
       </div>
     </div>
@@ -682,5 +740,6 @@
   </footer>
 
   <script src="js/script.js"></script>
+  <script src="js/gsap-animations.js"></script>
 </body>
 </html>
