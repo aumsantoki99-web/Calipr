@@ -1138,7 +1138,7 @@ def integrations_page():
                         st.info("To disconnect, remove SLACK_WEBHOOK_URL from HuggingFace Space secrets.")
 
                 with col_test:
-                    if st.button("📨 Test Slack", use_container_width=True):
+                    if st.button("💬 Test Slack", use_container_width=True):
                         with st.spinner("Sending to Slack..."):
                             result = send_test_notification(SANDBOX_URL)
                         if result.get("success"):
