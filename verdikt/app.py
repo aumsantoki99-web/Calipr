@@ -26,8 +26,20 @@ st.set_page_config(
     page_title="Calipr AI — Redrob Ranker Sandbox",
     page_icon="calipr_logo.svg",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
+
+# Initialize Session and Auth Gate
+from auth import init_session, render_sign_in, render_sign_up, sign_out, render_navbar_user, is_pro, get_plan
+
+init_session()
+
+if not st.session_state.authenticated:
+    if st.session_state.auth_page == "signup":
+        render_sign_up()
+    else:
+        render_sign_in()
+    st.stop()
 
 # ── FULL CSS INJECTION ────────────────────────────────────────────
 st.markdown("""
@@ -1118,7 +1130,23 @@ def parse_resume_offline(text, filename="Resume"):
     }
     return candidate
 
-# ── DASHBOARD NAVIGATION HEADER ───────────────────────────────────
+# Show hackathon banner for all users during demo
+st.markdown(f"""
+<div style="background:linear-gradient(135deg, #0A0A0A 0%, #1F2937 100%);
+            padding:10px 20px; border-radius:10px; margin-bottom:20px;
+            display:flex; align-items:center; gap:12px;">
+  <span style="font-size:16px;">🏆</span>
+  <span style="font-size:13px; color:white; font-weight:500;">
+    <strong>Hackathon Demo Mode</strong> — All Pro features unlocked.
+    Sponsored by <strong>Redrob AI</strong>.
+  </span>
+  <span style="margin-left:auto; background:#16A34A; color:white; font-size:11px;
+               font-weight:700; padding:3px 10px; border-radius:9999px;">
+    IITRAM FLUX 2.0
+  </span>
+</div>
+""", unsafe_allow_html=True)
+
 st.markdown("""
 <style>
 /* Hide the radio button circles to make it look like a nav bar */
@@ -1150,30 +1178,22 @@ st.markdown("""
     font-weight: 600;
     border-bottom: 2px solid #1a1615;
 }
-.hackathon-banner {
-    background: linear-gradient(90deg, #156cc2 0%, #4f46e5 100%);
-    color: #ffffff;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    text-align: center;
-    padding: 8px 16px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 8px rgba(21, 108, 194, 0.15);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    z-index: 100;
-}
-.hackathon-banner strong {
-    font-weight: 700;
-}
 </style>
-<div class="hackathon-banner">
-  <span>🏆 <strong>Hackathon Demo Mode</strong> — All Pro features unlocked. Sponsored by <strong>Redrob AI</strong>.</span>
-</div>
+""", unsafe_allow_html=True)
+
+# Render HTML navigation dynamically from session state
+plan     = st.session_state.get("user_plan", "free")
+name     = st.session_state.get("user_name", "User")
+initials = st.session_state.get("user_initials", "?")
+
+plan_badge = {
+    "free":       ("FREE",       "#6B7280", "#F3F4F6"),
+    "pro":        ("PRO",        "#FFFFFF",  "#0A0A0A"),
+    "enterprise": ("ENTERPRISE", "#7C3AED", "#F5F3FF"),
+}
+badge_label, badge_text, badge_bg = plan_badge.get(plan, plan_badge["free"])
+
+st.markdown(f"""
 <div class="dashboard-nav">
   <div class="nav-logo">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #1a1615;">
@@ -1182,12 +1202,12 @@ st.markdown("""
       <path d="M13.5 9V22" stroke="currentColor" stroke-width="3.2" stroke-linecap="square"/>
     </svg>
     <span>Calipr</span>
-    <span class="nav-badge">PRO</span>
+    <span class="nav-badge" style="background:{badge_bg}; color:{badge_text}; font-size:9px; font-weight:800; padding:2px 7px; border-radius:4px; letter-spacing:0.05em; margin-left:6px;">{badge_label}</span>
   </div>
   <div style="flex:1;"></div>
   <div class="nav-user">
-    <div class="user-avatar">AS</div>
-    <span class="user-name">Aum Santoki</span>
+    <div class="user-avatar">{initials}</div>
+    <span class="user-name">{name}</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -1213,8 +1233,43 @@ elif selected_page == "Recruiter Memory":
     [data-testid="stSidebarCollapseButton"] { display: none !important; }
     </style>
     """, unsafe_allow_html=True)
-    from pages.recruiter_memory_page import render_recruiter_memory_page
-    render_recruiter_memory_page()
+    if is_pro():
+        from pages.recruiter_memory_page import render_recruiter_memory_page
+        render_recruiter_memory_page()
+    else:
+        st.markdown("""
+        <div style="max-width: 600px; margin: 80px auto; padding: 40px; background: #ffffff; border: 1px solid #F3F4F6; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); text-align: center; font-family: 'Inter', sans-serif;">
+            <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: rgba(74, 144, 255, 0.08); border-radius: 50%; color: #4A90FF; font-size: 30px; margin-bottom: 24px;">
+                🔒
+            </div>
+            <h2 style="font-size: 24px; font-weight: 700; color: #0A0A0A; margin-bottom: 8px;">Recruiter Memory is Locked</h2>
+            <p style="font-size: 15px; color: #6B7280; line-height: 1.6; margin-bottom: 32px; max-width: 460px; margin-left: auto; margin-right: auto;">
+                Calipr Recruiter Memory allows you to eliminate systematic hiring biases, calibrate custom evaluation rules, and build a persistent memory of your hiring criteria.
+            </p>
+            
+            <div style="background: #F9FAFB; border-radius: 12px; padding: 20px; text-align: left; margin-bottom: 32px; max-width: 440px; margin-left: auto; margin-right: auto;">
+                <div style="font-weight: 600; color: #0A0A0A; font-size: 14px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em;">Pro Features Unlocked:</div>
+                <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px; color: #4B5563; line-height: 1.8;">
+                    <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                        <span style="color: #0D9488; font-weight: bold;">✓</span> Bias Transparency & Mitigation
+                    </li>
+                    <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                        <span style="color: #0D9488; font-weight: bold;">✓</span> Core/Adjacent Skill Weight Tuner
+                    </li>
+                    <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                        <span style="color: #0D9488; font-weight: bold;">✓</span> Persistent Recruiter Memory Audit Log
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 8px;">
+                        <span style="color: #0D9488; font-weight: bold;">✓</span> Live Disqualification Rule Sandbox
+                    </li>
+                </ul>
+            </div>
+            
+            <a href="https://calipr-4fnf.vercel.app/#pricing" target="_blank" style="display: inline-block; background: #4A90FF; color: #ffffff; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 15px; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(74, 144, 255, 0.2), 0 2px 4px -1px rgba(74, 144, 255, 0.1);">
+                Upgrade to Pro Plan
+            </a>
+        </div>
+        """, unsafe_allow_html=True)
     st.stop()
 elif selected_page == "Analytics":
     st.markdown("""
@@ -1311,8 +1366,14 @@ st.sidebar.markdown(f"""
   <div style="display:flex;justify-content:space-between;"><span>Behavioral Signals</span><span style="font-weight:700;color:#1a1615;">{w_beh}%</span></div>
   <div style="display:flex;justify-content:space-between;"><span>Domain Alignment</span><span style="font-weight:700;color:#1a1615;">{w_dom}%</span></div>
 </div>
-<hr style="margin:30px 0 16px;border-top:1px solid #e4e2e2;">
-<div style="font-size:11px;color:#757170;font-family:Inter,sans-serif;line-height:1.5;">
+""", unsafe_allow_html=True)
+
+st.sidebar.markdown('<hr style="margin:20px 0 16px;border-top:1px solid #e4e2e2;">', unsafe_allow_html=True)
+if st.sidebar.button("🚪 Sign Out", key="sidebar_signout_btn", use_container_width=True):
+    sign_out()
+
+st.sidebar.markdown("""
+<div style="font-size:11px;color:#757170;font-family:Inter,sans-serif;line-height:1.5;margin-top:15px;">
   Built for Redrob Hackathon<br>
   Sponsored by Redrob AI
 </div>
@@ -1346,6 +1407,10 @@ if run_pipeline:
         candidates = load_sample_candidates()
         if st.session_state.uploaded_candidates:
             candidates = st.session_state.uploaded_candidates + candidates
+            
+        # Free Tier Gating: Limit candidates to 50
+        if not is_pro():
+            candidates = candidates[:50]
             
         from rank import is_non_tech_candidate
         filtered_candidates = [c for c in candidates if not is_non_tech_candidate(c, core_skills, adjacent_skills)]
@@ -1484,10 +1549,27 @@ if st.session_state.scored_candidates is not None:
     <div style="background: rgba(14, 161, 88, 0.08); border: 1px solid rgba(14, 161, 88, 0.25); border-radius: 12px; color: #0c7540; padding: 15px; margin-bottom: 12px; font-weight:600; font-family:Inter,sans-serif;">
         ✅ Ranking Complete — {st.session_state.run_runtime}s · Evaluated {st.session_state.total_candidates_evaluated:,} candidates
     </div>
-    <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 12px; color: #b45309; padding: 12px 15px; margin-bottom: 24px; font-weight:500; font-family:Inter,sans-serif; font-size: 13px;">
-        ⚠️ <strong>Note:</strong> Sample pool contains general candidates. Run with full 106K dataset for accurate ML engineer ranking.
-    </div>
     """, unsafe_allow_html=True)
+    
+    if not is_pro():
+        st.markdown("""
+        <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 12px; padding: 16px; margin-bottom: 24px; font-family:Inter,sans-serif; display: flex; align-items: flex-start; gap: 12px;">
+            <div style="font-size: 20px; margin-top: -2px;">⚠️</div>
+            <div>
+                <div style="font-weight: 600; color: #b45309; margin-bottom: 4px; font-size: 14px;">Free Plan Limit Reached (50 Candidates Only)</div>
+                <div style="color: #c27829; font-size: 13px; line-height: 1.5; margin-bottom: 8px;">
+                    You are currently on the Free Plan, which restricts candidate evaluation to the first 50 entries. To evaluate the full 106,039 candidates, please upgrade.
+                </div>
+                <a href="https://calipr-4fnf.vercel.app/#pricing" target="_blank" style="display: inline-block; background: #b45309; color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; transition: all 0.2s;">Upgrade to Professional</a>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+        <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 12px; color: #b45309; padding: 12px 15px; margin-bottom: 24px; font-weight:500; font-family:Inter,sans-serif; font-size: 13px;">
+            ⚠️ <strong>Note:</strong> Sample pool contains general candidates. Run with full 106K dataset for accurate ML engineer ranking.
+        </div>
+        """, unsafe_allow_html=True)
     
     scored_list = st.session_state.scored_candidates
     
@@ -1508,14 +1590,26 @@ if st.session_state.scored_candidates is not None:
         } for i, c in enumerate(st.session_state.scored_candidates)])
         csv_data = df.to_csv(index=False).encode('utf-8')
         
-        st.download_button(
-            label="Download Top 100 Shortlist CSV",
-            data=csv_data,
-            file_name="calipr_submission.csv",
-            mime="text/csv",
-            use_container_width=True,
-            key="download_btn_top"
-        )
+        if is_pro():
+            st.download_button(
+                label="Download Top 100 Shortlist CSV",
+                data=csv_data,
+                file_name="calipr_submission.csv",
+                mime="text/csv",
+                use_container_width=True,
+                key="download_btn_top"
+            )
+        else:
+            st.markdown("""
+            <div style="border: 1px dashed #D1D5DB; background: #F9FAFB; border-radius: 12px; padding: 24px; text-align: center; font-family: Inter, sans-serif; margin-bottom: 20px;">
+                <div style="font-size: 32px; margin-bottom: 12px;">🔒</div>
+                <div style="font-weight: 600; color: #111827; margin-bottom: 6px; font-size: 15px;">CSV Export is Locked</div>
+                <div style="color: #6B7280; font-size: 13px; margin-bottom: 16px; max-width: 380px; margin-left: auto; margin-right: auto; line-height: 1.5;">
+                    Exporting candidate shortlists to CSV is a Pro feature. Upgrade your plan to export and download submission-ready spreadsheets.
+                </div>
+                <a href="https://calipr-4fnf.vercel.app/#pricing" target="_blank" style="display: inline-block; background: #4A90FF; color: white; padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; box-shadow: 0 2px 4px rgba(74, 144, 255, 0.2);">Upgrade to Pro to Export</a>
+            </div>
+            """, unsafe_allow_html=True)
 
     with st.sidebar:
         st.markdown('<hr style="margin:20px 0 16px;border-top:1px solid #e4e2e2;">', unsafe_allow_html=True)
@@ -1757,26 +1851,50 @@ if st.session_state.scored_candidates is not None:
             from integrations.csv_export import generate_submission_csv
             try:
                 csv_bytes, fname = generate_submission_csv(ranked)
-                st.download_button(
-                    label="Download Top 100 Shortlist CSV",
-                    data=csv_bytes,
-                    file_name=fname,
-                    mime="text/csv",
-                    use_container_width=True,
-                    key="download_btn_try"
-                )
+                if is_pro():
+                    st.download_button(
+                        label="Download Top 100 Shortlist CSV",
+                        data=csv_bytes,
+                        file_name=fname,
+                        mime="text/csv",
+                        use_container_width=True,
+                        key="download_btn_try"
+                    )
+                else:
+                    st.markdown("""
+                    <div style="border: 1px dashed #D1D5DB; background: #F9FAFB; border-radius: 12px; padding: 24px; text-align: center; font-family: Inter, sans-serif; margin-bottom: 20px;">
+                        <div style="font-size: 32px; margin-bottom: 12px;">🔒</div>
+                        <div style="font-weight: 600; color: #111827; margin-bottom: 6px; font-size: 15px;">CSV Export is Locked</div>
+                        <div style="color: #6B7280; font-size: 13px; margin-bottom: 16px; max-width: 380px; margin-left: auto; margin-right: auto; line-height: 1.5;">
+                            Exporting candidate shortlists to CSV is a Pro feature. Upgrade your plan to export and download submission-ready spreadsheets.
+                        </div>
+                        <a href="https://calipr-4fnf.vercel.app/#pricing" target="_blank" style="display: inline-block; background: #4A90FF; color: white; padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; box-shadow: 0 2px 4px rgba(74, 144, 255, 0.2);">Upgrade to Pro to Export</a>
+                    </div>
+                    """, unsafe_allow_html=True)
             except Exception:
                 df_download = pd.DataFrame(scored_list)[["candidate_id", "name", "title", "experience", "score", "reasoning"]].copy()
                 df_download.insert(0, "rank", range(1, len(df_download) + 1))
                 csv_data = df_download.to_csv(index=False).encode('utf-8')
-                st.download_button(
-                    label="Download Top 100 Shortlist CSV",
-                    data=csv_data,
-                    file_name="calipr_submission.csv",
-                    mime="text/csv",
-                    use_container_width=True,
-                    key="download_btn_except"
-                )
+                if is_pro():
+                    st.download_button(
+                        label="Download Top 100 Shortlist CSV",
+                        data=csv_data,
+                        file_name="calipr_submission.csv",
+                        mime="text/csv",
+                        use_container_width=True,
+                        key="download_btn_except"
+                    )
+                else:
+                    st.markdown("""
+                    <div style="border: 1px dashed #D1D5DB; background: #F9FAFB; border-radius: 12px; padding: 24px; text-align: center; font-family: Inter, sans-serif; margin-bottom: 20px;">
+                        <div style="font-size: 32px; margin-bottom: 12px;">🔒</div>
+                        <div style="font-weight: 600; color: #111827; margin-bottom: 6px; font-size: 15px;">CSV Export is Locked</div>
+                        <div style="color: #6B7280; font-size: 13px; margin-bottom: 16px; max-width: 380px; margin-left: auto; margin-right: auto; line-height: 1.5;">
+                            Exporting candidate shortlists to CSV is a Pro feature. Upgrade your plan to export and download submission-ready spreadsheets.
+                        </div>
+                        <a href="https://calipr-4fnf.vercel.app/#pricing" target="_blank" style="display: inline-block; background: #4A90FF; color: white; padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; box-shadow: 0 2px 4px rgba(74, 144, 255, 0.2);">Upgrade to Pro to Export</a>
+                    </div>
+                    """, unsafe_allow_html=True)
 
         with detail_tabs[1]:
             # Resume PDF Viewer Tab

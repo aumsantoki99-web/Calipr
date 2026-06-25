@@ -1,11 +1,23 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="Calipr AI",
-    page_icon="🏆",
+    page_title="Calipr AI — Redrob Ranker Sandbox",
+    page_icon="calipr_logo.svg",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
+
+# Initialize Session and Auth Gate
+from auth import init_session, render_sign_in, render_sign_up, sign_out, render_navbar_user, is_pro, get_plan
+
+init_session()
+
+if not st.session_state.authenticated:
+    if st.session_state.auth_page == "signup":
+        render_sign_up()
+    else:
+        render_sign_in()
+    st.stop()
 
 import sys
 
@@ -2068,6 +2080,10 @@ if run_pipeline:
         if st.session_state.uploaded_candidates:
             candidates = st.session_state.uploaded_candidates + candidates
             
+        # Free Plan Gating: Limit candidates to 50
+        if not is_pro():
+            candidates = candidates[:50]
+            
         from rank import is_non_tech_candidate
         filtered_candidates = [c for c in candidates if not is_non_tech_candidate(c, core_skills, adjacent_skills)]
         if not filtered_candidates:
@@ -2142,7 +2158,17 @@ if run_pipeline:
 # ── MAIN AREA ─────────────────────────────────────────────────────
 
 # ── DASHBOARD NAVIGATION HEADER ───────────────────────────────────
-user_initial = user_name[0].upper() if user_name else "U"
+# Render HTML navigation dynamically from session state
+plan     = st.session_state.get("user_plan", "free")
+name     = st.session_state.get("user_name", "User")
+initials = st.session_state.get("user_initials", "?")
+
+plan_badge = {
+    "free":       ("FREE",       "#6B7280", "#F3F4F6"),
+    "pro":        ("PRO",        "#FFFFFF",  "#0A0A0A"),
+    "enterprise": ("ENTERPRISE", "#7C3AED", "#F5F3FF"),
+}
+badge_label, badge_text, badge_bg = plan_badge.get(plan, plan_badge["free"])
 
 st.markdown(f"""
 <div class="dashboard-nav">
@@ -2153,6 +2179,7 @@ st.markdown(f"""
       <path d="M13.5 9V22" stroke="currentColor" stroke-width="3.2" stroke-linecap="square"/>
     </svg>
     <span>Calipr</span>
+    <span class="nav-badge" style="background:{badge_bg}; color:{badge_text}; font-size:9px; font-weight:800; padding:2px 7px; border-radius:4px; letter-spacing:0.05em; margin-left:6px;">{badge_label}</span>
   </div>
   <div class="nav-menu">
     <a href="?page=ranker" target="_self" class="nav-item {'active' if active_page == 'ranker' else ''}" style="text-decoration:none !important;">Candidate Ranker</a>
@@ -2162,17 +2189,26 @@ st.markdown(f"""
     <a href="?page=pricing" target="_self" class="nav-item {'active' if active_page == 'pricing' else ''}" style="text-decoration:none !important;">Plans &amp; Pricing</a>
   </div>
   <div class="nav-user">
-    <div class="user-avatar">{user_initial}</div>
-    <span class="user-name">{user_name}</span>
+    <div class="user-avatar">{initials}</div>
+    <span class="user-name">{name}</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
-# Hackathon Demo Mode Banner
-st.markdown("""
-<div style="background: rgba(132, 185, 239, 0.08); border: 1px solid rgba(132, 185, 239, 0.25); border-radius: 12px; color: #156cc2; padding: 12px 18px; margin-top: 15px; margin-bottom: 24px; font-family: Inter, sans-serif; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
-    <span>🏆</span>
-    <span><strong>Hackathon Demo Mode</strong> — All Pro features unlocked. Sponsored by <strong>Redrob AI</strong>.</span>
+# Show hackathon banner for all users during demo
+st.markdown(f"""
+<div style="background:linear-gradient(135deg, #0A0A0A 0%, #1F2937 100%);
+            padding:10px 20px; border-radius:12px; margin-top: 15px; margin-bottom:24px;
+            display:flex; align-items:center; gap:12px; font-family: Inter, sans-serif;">
+  <span style="font-size:16px;">🏆</span>
+  <span style="font-size:13px; color:white; font-weight:500;">
+    <strong>Hackathon Demo Mode</strong> — All Pro features unlocked.
+    Sponsored by <strong>Redrob AI</strong>.
+  </span>
+  <span style="margin-left:auto; background:#16A34A; color:white; font-size:11px;
+               font-weight:700; padding:3px 10px; border-radius:9999px;">
+    IITRAM FLUX 2.0
+  </span>
 </div>
 """, unsafe_allow_html=True)
 
@@ -2229,11 +2265,25 @@ def render_ranker_page():
     # Section 6 — Conditional Results Display
     if st.session_state.scored_candidates is not None:
         st.markdown(
-            f'<div style="background: rgba(14, 161, 88, 0.08); border: 1px solid rgba(14, 161, 88, 0.25); border-radius: 12px; color: #0c7540; padding: 15px; margin-bottom: 24px; font-weight:600; font-family:Inter,sans-serif;">'
+            f'<div style="background: rgba(14, 161, 88, 0.08); border: 1px solid rgba(14, 161, 88, 0.25); border-radius: 12px; color: #0c7540; padding: 15px; margin-bottom: 12px; font-weight:600; font-family:Inter,sans-serif;">'
             f'✅ Ranking Complete — {st.session_state.run_runtime}s · Evaluated {st.session_state.total_candidates_evaluated:,} candidates'
             f'</div>',
             unsafe_allow_html=True
         )
+        
+        if not is_pro():
+            st.markdown("""
+            <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 12px; padding: 16px; margin-bottom: 24px; font-family:Inter,sans-serif; display: flex; align-items: flex-start; gap: 12px;">
+                <div style="font-size: 20px; margin-top: -2px;">⚠️</div>
+                <div>
+                    <div style="font-weight: 600; color: #b45309; margin-bottom: 4px; font-size: 14px;">Free Plan Limit Reached (50 Candidates Only)</div>
+                    <div style="color: #c27829; font-size: 13px; line-height: 1.5; margin-bottom: 8px;">
+                        You are currently on the Free Plan, which restricts candidate evaluation to the first 50 entries. To evaluate the full 106,039 candidates, please upgrade.
+                    </div>
+                    <a href="https://calipr-4fnf.vercel.app/#pricing" target="_blank" style="display: inline-block; background: #b45309; color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; transition: all 0.2s;">Upgrade to Professional</a>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
         
         scored_list = st.session_state.scored_candidates
         
@@ -2363,16 +2413,28 @@ def render_ranker_page():
             
             # Download Action
             st.markdown('<hr style="margin:24px 0; border: none; border-top: 1px solid #e4e2e2;">', unsafe_allow_html=True)
-            df_download = pd.DataFrame(scored_list)[["candidate_id", "name", "title", "experience", "score", "reasoning"]].copy()
-            df_download.insert(0, "rank", range(1, len(df_download) + 1))
-            csv_data = df_download.to_csv(index=False).encode('utf-8')
-            st.download_button(
-                label="📥 Download Top 100 Shortlist CSV",
-                data=csv_data,
-                file_name="calipr_submission.csv",
-                mime="text/csv",
-                use_container_width=True
-            )
+            if is_pro():
+                df_download = pd.DataFrame(scored_list)[["candidate_id", "name", "title", "experience", "score", "reasoning"]].copy()
+                df_download.insert(0, "rank", range(1, len(df_download) + 1))
+                csv_data = df_download.to_csv(index=False).encode('utf-8')
+                st.download_button(
+                    label="📥 Download Top 100 Shortlist CSV",
+                    data=csv_data,
+                    file_name="calipr_submission.csv",
+                    mime="text/csv",
+                    use_container_width=True
+                )
+            else:
+                st.markdown("""
+                <div style="border: 1px dashed #D1D5DB; background: #F9FAFB; border-radius: 12px; padding: 24px; text-align: center; font-family: Inter, sans-serif; margin-bottom: 20px;">
+                    <div style="font-size: 32px; margin-bottom: 12px;">🔒</div>
+                    <div style="font-weight: 600; color: #111827; margin-bottom: 6px; font-size: 15px;">CSV Export is Locked</div>
+                    <div style="color: #6B7280; font-size: 13px; margin-bottom: 16px; max-width: 380px; margin-left: auto; margin-right: auto; line-height: 1.5;">
+                        Exporting candidate shortlists to CSV is a Pro feature. Upgrade your plan to export and download submission-ready spreadsheets.
+                    </div>
+                    <a href="https://calipr-4fnf.vercel.app/#pricing" target="_blank" style="display: inline-block; background: #4A90FF; color: white; padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; box-shadow: 0 2px 4px rgba(74, 144, 255, 0.2);">Upgrade to Pro to Export</a>
+                </div>
+                """, unsafe_allow_html=True)
     
     # Section 2 — Stats Row
     col1, col2, col3, col4 = st.columns(4)
@@ -2449,7 +2511,42 @@ def render_ranker_page():
 if active_page == 'ranker':
     render_ranker_page()
 elif active_page == 'memory':
-    render_memory_page()
+    if is_pro():
+        render_memory_page()
+    else:
+        st.markdown("""
+        <div style="max-width: 600px; margin: 80px auto; padding: 40px; background: #ffffff; border: 1px solid #F3F4F6; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); text-align: center; font-family: 'Inter', sans-serif;">
+            <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: rgba(74, 144, 255, 0.08); border-radius: 50%; color: #4A90FF; font-size: 30px; margin-bottom: 24px;">
+                🔒
+            </div>
+            <h2 style="font-size: 24px; font-weight: 700; color: #0A0A0A; margin-bottom: 8px;">Recruiter Memory is Locked</h2>
+            <p style="font-size: 15px; color: #6B7280; line-height: 1.6; margin-bottom: 32px; max-width: 460px; margin-left: auto; margin-right: auto;">
+                Calipr Recruiter Memory allows you to eliminate systematic hiring biases, calibrate custom evaluation rules, and build a persistent memory of your hiring criteria.
+            </p>
+            
+            <div style="background: #F9FAFB; border-radius: 12px; padding: 20px; text-align: left; margin-bottom: 32px; max-width: 440px; margin-left: auto; margin-right: auto;">
+                <div style="font-weight: 600; color: #0A0A0A; font-size: 14px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em;">Pro Features Unlocked:</div>
+                <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px; color: #4B5563; line-height: 1.8;">
+                    <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                        <span style="color: #0D9488; font-weight: bold;">✓</span> Bias Transparency & Mitigation
+                    </li>
+                    <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                        <span style="color: #0D9488; font-weight: bold;">✓</span> Core/Adjacent Skill Weight Tuner
+                    </li>
+                    <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                        <span style="color: #0D9488; font-weight: bold;">✓</span> Persistent Recruiter Memory Audit Log
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 8px;">
+                        <span style="color: #0D9488; font-weight: bold;">✓</span> Live Disqualification Rule Sandbox
+                    </li>
+                </ul>
+            </div>
+            
+            <a href="https://calipr-4fnf.vercel.app/#pricing" target="_blank" style="display: inline-block; background: #4A90FF; color: #ffffff; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 15px; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(74, 144, 255, 0.2), 0 2px 4px -1px rgba(74, 144, 255, 0.1);">
+                Upgrade to Pro Plan
+            </a>
+        </div>
+        """, unsafe_allow_html=True)
 elif active_page == 'analytics':
     render_analytics_page()
 elif active_page == 'integrations':
