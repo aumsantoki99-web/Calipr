@@ -1037,44 +1037,127 @@ def integrations_page():
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            st.markdown(f"""
-            <div class="int-card connected" style="margin-bottom: 12px;">
-                <div class="int-badge badge-connected">
-                    <span class="pulse-dot"></span> Connected
-                </div>
-                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;"><img src="{get_image_base64('assets/slack.jpg')}" width="36" height="36" style="border-radius: 6px;"></div>
-                <div class="int-card-title">Slack</div>
-                <div class="int-card-desc">
-                    Send ranked candidate shortlists directly to any Slack channel
-                    when a ranking run completes. Includes top 5 candidates with scores.
-                </div>
-                <div class="int-card-tags">
-                    <span class="int-tag">Notifications</span>
-                    <span class="int-tag">Webhooks</span>
-                    <span class="int-tag">Real-time</span>
-                </div>
-                <div class="int-config">
-                    <div class="int-config-label">Webhook URL</div>
-                    <div class="int-config-value">hooks.slack.com/services/T0••••••/B0••••••/••••••</div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-            col_s1, col_s2 = st.columns(2)
-            with col_s1:
-                slack_test = st.button("Test Notification", key="test_slack", use_container_width=True)
-            with col_s2:
-                if st.button("Disconnect", key="disc_slack", use_container_width=True):
-                    st.session_state.slack_connected = False
-                    log_activity("Slack", "💬", "Disconnected Slack integration")
-                    st.rerun()
+            import os
+            import datetime
+            from slack_notifier import send_test_notification
 
-            if slack_test:
-                from integrations.slack import send_test_notification
-                res = send_test_notification()
-                if res["success"]:
-                    st.success(f"✓ {res['message']}")
-                else:
-                    st.error(res["message"])
+            SANDBOX_URL = "https://huggingface.co/spaces/Aumus/calipr"
+            slack_configured = bool(os.environ.get("SLACK_WEBHOOK_URL", ""))
+
+            # Last notification time (store in session state after each send)
+            if "slack_last_sent" not in st.session_state:
+                st.session_state.slack_last_sent = None
+            if "slack_test_status" not in st.session_state:
+                st.session_state.slack_test_status = None   # None | "success" | "error"
+
+            # ── CARD HTML ──
+            status_html = ""
+            if slack_configured:
+                last_sent = st.session_state.slack_last_sent
+                last_sent_str = (
+                    f"Last sent: {last_sent}" if last_sent
+                    else "Connected · Waiting for first ranking run"
+                )
+                status_html = f"""
+<div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+  <span style="display:inline-block; width:8px; height:8px; border-radius:50%;
+               background:#16A34A; animation: pulse 2s ease-in-out infinite;"></span>
+  <span style="font-size:13px; color:#16A34A; font-weight:600;">CONNECTED</span>
+  <span style="font-size:12px; color:#9CA3AF; margin-left:4px;">· {last_sent_str}</span>
+</div>
+"""
+                card_border = "border-top: 3px solid #0D9488;"
+            else:
+                status_html = """
+<div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+  <span style="display:inline-block; width:8px; height:8px;
+               border-radius:50%; background:#9CA3AF;"></span>
+  <span style="font-size:13px; color:#9CA3AF; font-weight:600;">NOT CONNECTED</span>
+</div>
+"""
+                card_border = "border-top: 3px solid #E5E7EB;"
+
+            st.markdown(f"""
+<div style="background:#FFFFFF; border:1px solid #F3F4F6; {card_border}
+            border-radius:12px; padding:24px; margin-bottom:16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+
+  <!-- Header row -->
+  <div style="display:flex; align-items:center; gap:14px; margin-bottom:16px;">
+    <!-- Slack logo custom image inline -->
+    <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0; width:32px; height:32px; overflow:hidden; border-radius:6px;">
+      <img src="{get_image_base64('assets/slack_logo.jpg')}" width="32" height="32" style="object-fit:cover;">
+    </div>
+    <div>
+      <div style="font-size:16px; font-weight:700; color:#0A0A0A;">Slack</div>
+      <div style="font-size:12px; color:#6B7280;">
+        Send ranked shortlists to your #recruiting channel instantly
+      </div>
+    </div>
+    <span style="margin-left:auto; font-size:11px; font-weight:600;
+                 padding:3px 10px; border-radius:9999px;
+                 background:{'#DCFCE7' if slack_configured else '#F3F4F6'};
+                 color:{'#16A34A' if slack_configured else '#6B7280'};
+                 border:1px solid {'#BBF7D0' if slack_configured else '#E5E7EB'};">
+      {'CONNECTED' if slack_configured else 'AVAILABLE'}
+    </span>
+  </div>
+
+  <!-- Status -->
+  {status_html}
+
+  <!-- What it does -->
+  <div style="font-size:13px; color:#374151; line-height:1.7; margin-bottom:20px;">
+    After every ranking run, Calipr automatically posts the
+    <strong>Top 5 candidates</strong> to your Slack channel with:
+    full signal breakdown, pipeline runtime, Precision@5 score,
+    and a direct link back to the sandbox.
+  </div>
+
+  <!-- Setup instruction if not connected -->
+  {'<div style="padding:12px 16px; background:#F8FAFC; border:1px solid #F3F4F6; border-radius:8px; font-size:12px; color:#6B7280; margin-bottom:16px;"><strong style="color:#0A0A0A;">Setup:</strong> Add <code style="background:#F3F4F6; padding:2px 6px; border-radius:4px;">SLACK_WEBHOOK_URL</code> to your HuggingFace Space secrets &rarr; Settings &rarr; Repository secrets.</div>' if not slack_configured else ''}
+
+</div>
+""", unsafe_allow_html=True)
+
+            # ── ACTION BUTTONS ──
+            if slack_configured:
+                if st.button("Test Slack", use_container_width=True):
+                    with st.spinner("Sending to Slack..."):
+                        result = send_test_notification(SANDBOX_URL)
+                    if result.get("success"):
+                        st.session_state.slack_last_sent = datetime.datetime.now().strftime("%b %d at %I:%M %p")
+                        st.session_state.slack_test_status = "success"
+                        
+                        # Add to activity log
+                        if "activity_log" not in st.session_state:
+                            st.session_state.activity_log = []
+                        st.session_state.activity_log.insert(0, {
+                            "icon": "💬",
+                            "text": f"Sent top 5 candidates for <strong>Senior AI Engineer</strong> to <strong>#recruiting</strong>",
+                            "meta": datetime.datetime.now().strftime("%I:%M %p · Just now"),
+                            "color": "#4A154B",
+                        })
+                        
+                        st.success("✅ Message sent! Check your #recruiting channel.")
+                        st.rerun()
+                    else:
+                        st.session_state.slack_test_status = "error"
+                        st.error(f"Failed: {result.get('error', 'Unknown error')}")
+
+                if st.button("Disconnect", use_container_width=True):
+                    st.info("To disconnect, remove SLACK_WEBHOOK_URL from HuggingFace Space secrets.")
+
+            else:
+                st.markdown("""
+                <a href="https://api.slack.com/messaging/webhooks" target="_blank"
+                   style="display:inline-flex; align-items:center; gap:8px;
+                          padding:10px 20px; background:#0A0A0A; color:#FFFFFF;
+                          border-radius:8px; font-size:14px; font-weight:600;
+                          text-decoration:none; transition:background 0.15s ease;">
+                  Set Up Slack Integration ↗
+                </a>
+                """, unsafe_allow_html=True)
 
         with col2:
             st.markdown(f"""
@@ -1099,11 +1182,25 @@ def integrations_page():
                 </div>
             </div>
             """, unsafe_allow_html=True)
-            sheets_open = st.button("Open Last Export", key="open_sheets", use_container_width=True)
+            from integrations.sheets import get_sheet_url, export_to_sheets
+            sheet_url = get_sheet_url()
+            if sheet_url:
+                st.link_button("Open Last Export ↗", sheet_url, use_container_width=True)
+            else:
+                st.button("Open Last Export ↗", disabled=True, use_container_width=True)
+                
             sheets_new  = st.button("Re-export Latest Rankings", key="reexport", use_container_width=True)
             if sheets_new:
-                st.success("✓ Data exported to Google Sheets.")
-                log_activity("Google Sheets", "📊", "Re-exported latest rankings manually.")
+                if "scored_candidates" in st.session_state and st.session_state.scored_candidates:
+                    job_title = st.session_state.get("job_title", "Senior AI Engineer")
+                    res = export_to_sheets(st.session_state.scored_candidates, job_title=job_title)
+                    if res.get("success"):
+                        st.success(f"✓ {res.get('message')}")
+                        log_activity("Google Sheets", "📊", f"Re-exported latest rankings manually to Google Sheets.")
+                    else:
+                        st.error(f"Failed to export: {res.get('message')}")
+                else:
+                    st.warning("⚠️ No ranked candidates found. Please run the Candidate Ranker first.")
 
     # 5. TIER 2 — AVAILABLE
     if current_filter in ["All", "Available"]:

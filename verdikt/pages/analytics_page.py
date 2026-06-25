@@ -15,6 +15,7 @@ from analytics.charts import (
     build_availability_chart, build_runtime_sparkline,
     build_benchmark_table
 )
+from auth import is_pro
 
 ANALYTICS_CSS = """
 <style>
@@ -497,7 +498,19 @@ def render_analytics_page():
     with col_corr:
         st.markdown('<div class="chart-card-title">Signal Correlation</div>', unsafe_allow_html=True)
         st.markdown('<div class="chart-card-sub">Top 100 signal matrix</div>', unsafe_allow_html=True)
-        st.plotly_chart(build_correlation_heatmap(corr_data), use_container_width=True, config={"displayModeBar":False})
+        if is_pro():
+            st.plotly_chart(build_correlation_heatmap(corr_data), use_container_width=True, config={"displayModeBar":False})
+        else:
+            st.markdown("""
+            <div style="border: 1px dashed #D1D5DB; background: #F9FAFB; border-radius: 12px; padding: 40px 20px; text-align: center; font-family: Inter, sans-serif; height: 350px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <div style="font-size: 36px; margin-bottom: 12px;">🔒</div>
+                <div style="font-weight: 600; color: #111827; margin-bottom: 6px; font-size: 15px;">Correlation Heatmap is Locked</div>
+                <div style="color: #6B7280; font-size: 13px; margin-bottom: 16px; max-width: 280px; line-height: 1.5;">
+                    Signal independence analysis is a Pro feature. Upgrade to view the multidimensional signal matrix.
+                </div>
+                <a href="https://calipr-4fnf.vercel.app/#pricing" target="_blank" style="display: inline-block; background: #4A90FF; color: white; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; transition: all 0.2s; box-shadow: 0 2px 4px rgba(74, 144, 255, 0.2);">Upgrade to Pro</a>
+            </div>
+            """, unsafe_allow_html=True)
                 
     with col_spark:
         st.markdown('<div class="chart-card-title">Signal Independence</div>', unsafe_allow_html=True)
@@ -559,10 +572,21 @@ def render_analytics_page():
     </div>
     """, unsafe_allow_html=True)
     
-    df_history = pd.DataFrame(get_run_history_table())
-    st.dataframe(df_history, use_container_width=True, hide_index=True)
-    
-    st.markdown('<div style="font-size:13px; color:#9CA3AF; margin-top:12px;">Run the ranker again to build run history.</div>', unsafe_allow_html=True)
+    if is_pro():
+        df_history = pd.DataFrame(get_run_history_table())
+        st.dataframe(df_history, use_container_width=True, hide_index=True)
+        st.markdown('<div style="font-size:13px; color:#9CA3AF; margin-top:12px;">Run the ranker again to build run history.</div>', unsafe_allow_html=True)
+    else:
+        st.markdown("""
+        <div style="border: 1px dashed #D1D5DB; background: #F9FAFB; border-radius: 12px; padding: 32px; text-align: center; font-family: Inter, sans-serif; margin-top: 10px;">
+            <div style="font-size: 32px; margin-bottom: 12px;">🔒</div>
+            <div style="font-weight: 600; color: #111827; margin-bottom: 6px; font-size: 15px;">Run History is Locked</div>
+            <div style="color: #6B7280; font-size: 13px; margin-bottom: 16px; max-width: 380px; margin-left: auto; margin-right: auto; line-height: 1.5;">
+                Hiring audit log and ranker history tracking is a Pro feature. Upgrade to Professional to track and compare candidate search records.
+            </div>
+            <a href="https://calipr-4fnf.vercel.app/#pricing" target="_blank" style="display: inline-block; background: #4A90FF; color: white; padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; box-shadow: 0 2px 4px rgba(74, 144, 255, 0.2);">Upgrade to Pro</a>
+        </div>
+        """, unsafe_allow_html=True)
 
     st.markdown("""
     <div style="text-align:center;padding:40px 0 0px;font-size:12px;color:#9CA3AF;">
