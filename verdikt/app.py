@@ -1524,11 +1524,7 @@ if st.session_state.scored_candidates is not None:
         for skill in selected_cand['_profile'].get('skills', []):
             prof = skill.get('proficiency', 'intermediate').lower()
             prof_color = "background: rgba(14,161,88,0.08); color: #0ea158; border: 1px solid rgba(14,161,88,0.25);" if prof == 'expert' or prof == 'advanced' else "background: rgba(132,185,239,0.08); color: #156cc2; border: 1px solid rgba(132,185,239,0.25);"
-            skills_html += f"""
-            <span style="{prof_color} padding: 4px 12px; font-size: 12px; font-weight: 600; border-radius: 100px; font-family: Inter, sans-serif;">
-                {skill.get('name')} • {prof.title()}
-            </span>
-            """
+            skills_html += f'<span style="{prof_color} padding: 4px 12px; font-size: 12px; font-weight: 600; border-radius: 100px; font-family: Inter, sans-serif;">{skill.get("name")} • {prof.title()}</span>'
         skills_html += "</div>"
         st.markdown(skills_html, unsafe_allow_html=True)
         
@@ -1537,18 +1533,18 @@ if st.session_state.scored_candidates is not None:
         for job in selected_cand['_profile'].get('career_history', []):
             is_current = job.get('is_current', False)
             bullet_color = "#156cc2" if is_current else "#757170"
-            timeline_html += f"""
-            <div style="position: relative; margin-bottom: 24px;">
-                <div style="position: absolute; left: -27px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: {bullet_color}; border: 2px solid #FFFFFF;"></div>
-                <div style="font-size: 14px; font-weight: 700; color: #1a1615; font-family: Inter, sans-serif;">{job.get('title')}</div>
-                <div style="font-size: 12px; color: #757170; margin-top: 2px; font-family: Inter, sans-serif;">
-                    {job.get('company')} • {job.get('duration_months', 0)} months
-                </div>
-                <p style="font-size: 13.5px; color: #453f3d; margin-top: 6px; line-height: 1.5; font-family: Inter, sans-serif;">
-                    {job.get('description', '')}
-                </p>
-            </div>
-            """
+            timeline_html += (
+                f'<div style="position: relative; margin-bottom: 24px;">'
+                f'<div style="position: absolute; left: -27px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: {bullet_color}; border: 2px solid #FFFFFF;"></div>'
+                f'<div style="font-size: 14px; font-weight: 700; color: #1a1615; font-family: Inter, sans-serif;">{job.get("title")}</div>'
+                f'<div style="font-size: 12px; color: #757170; margin-top: 2px; font-family: Inter, sans-serif;">'
+                f'{job.get("company")} • {job.get("duration_months", 0)} months'
+                f'</div>'
+                f'<p style="font-size: 13.5px; color: #453f3d; margin-top: 6px; line-height: 1.5; font-family: Inter, sans-serif;">'
+                f'{job.get("description", "")}'
+                f'</p>'
+                f'</div>'
+            )
         timeline_html += "</div>"
         st.markdown(timeline_html, unsafe_allow_html=True)
         

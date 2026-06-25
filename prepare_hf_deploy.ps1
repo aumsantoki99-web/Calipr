@@ -16,9 +16,15 @@ New-Item -ItemType Directory -Path "$deployDir\.streamlit" | Out-Null
 # Copy requirements.txt to root
 Copy-Item "$workspaceDir\verdikt\requirements.txt" -Destination "$deployDir\requirements.txt"
 
-# Create .streamlit/config.toml to disable XSRF and raise upload limit
+# Copy local Streamlit config.toml if it exists, otherwise generate default
 Write-Host "Configuring Streamlit settings..."
-python -c "import os; os.makedirs(r'$deployDir\.streamlit', exist_ok=True); f = open(r'$deployDir\.streamlit\config.toml', 'w', encoding='utf-8'); f.write('[server]\nport = 7860\nheadless = true\nenableCORS = false\nenableXsrfProtection = false\nmaxUploadSize = 100\n'); f.close()"
+if (Test-Path "$workspaceDir\verdikt\.streamlit\config.toml") {
+    Write-Host "Copying local Streamlit config..."
+    Copy-Item "$workspaceDir\verdikt\.streamlit\config.toml" -Destination "$deployDir\.streamlit\config.toml"
+} else {
+    Write-Host "Generating default Streamlit config..."
+    python -c "import os; os.makedirs(r'$deployDir\.streamlit', exist_ok=True); f = open(r'$deployDir\.streamlit\config.toml', 'w', encoding='utf-8'); f.write('[server]\nheadless = true\nenableCORS = false\nenableXsrfProtection = false\nmaxUploadSize = 100\n'); f.close()"
+}
 
 # Create README.md with Hugging Face Space metadata
 # Copy source files to root (excluding large datasets, requirements, and README.md)
@@ -38,6 +44,11 @@ if (Test-Path "$workspaceDir\verdikt\auth") {
     Write-Host "Copying auth folder..."
     Copy-Item "$workspaceDir\verdikt\auth" -Destination "$deployDir\auth" -Recurse -Force
 }
+
+# Clean __pycache__ folders in deployDir
+Write-Host "Cleaning __pycache__ folders..."
+Get-ChildItem -Path $deployDir -Filter "__pycache__" -Recurse | Remove-Item -Recurse -Force
+
 
 
 # Create README.md combining Hugging Face Space YAML metadata and our project README
