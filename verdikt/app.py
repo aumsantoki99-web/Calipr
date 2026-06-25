@@ -1465,7 +1465,8 @@ if st.session_state.scored_candidates is not None:
             data=csv_data,
             file_name="calipr_submission.csv",
             mime="text/csv",
-            use_container_width=True
+            use_container_width=True,
+            key="download_btn_top"
         )
 
     left_col, right_col = st.columns([1, 1.4])
@@ -1608,7 +1609,8 @@ if st.session_state.scored_candidates is not None:
                 data=csv_bytes,
                 file_name=fname,
                 mime="text/csv",
-                use_container_width=True
+                use_container_width=True,
+                key="download_btn_try"
             )
         except Exception:
             df_download = pd.DataFrame(scored_list)[["candidate_id", "name", "title", "experience", "score", "reasoning"]].copy()
@@ -1619,7 +1621,8 @@ if st.session_state.scored_candidates is not None:
                 data=csv_data,
                 file_name="calipr_submission.csv",
                 mime="text/csv",
-                use_container_width=True
+                use_container_width=True,
+                key="download_btn_except"
             )
 
 # Section 2 — Stats Row
