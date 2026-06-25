@@ -1131,14 +1131,10 @@ def integrations_page():
 
             # ── ACTION BUTTONS ──
             if slack_configured:
-                col_disconnect, col_test = st.columns([1, 1], gap="small")
-
-                with col_disconnect:
-                    if st.button("Disconnect", use_container_width=True):
-                        st.info("To disconnect, remove SLACK_WEBHOOK_URL from HuggingFace Space secrets.")
+                col_test, col_disconnect = st.columns([1, 1], gap="small")
 
                 with col_test:
-                    if st.button("💬 Test Slack", use_container_width=True):
+                    if st.button("Test Slack", use_container_width=True):
                         with st.spinner("Sending to Slack..."):
                             result = send_test_notification(SANDBOX_URL)
                         if result.get("success"):
@@ -1160,6 +1156,10 @@ def integrations_page():
                         else:
                             st.session_state.slack_test_status = "error"
                             st.error(f"Failed: {result.get('error', 'Unknown error')}")
+
+                with col_disconnect:
+                    if st.button("Disconnect", use_container_width=True):
+                        st.info("To disconnect, remove SLACK_WEBHOOK_URL from HuggingFace Space secrets.")
 
             else:
                 st.markdown("""
