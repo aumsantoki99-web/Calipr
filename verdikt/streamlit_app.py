@@ -453,28 +453,41 @@ div[data-testid="stRadio"] [data-checked="true"] div div {
 }
 .nav-menu {
     display: flex;
-    gap: 24px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 .nav-item {
-    font-size: 14px;
-    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 0 14px 1px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     color: #757170;
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
+    white-space: nowrap;
 }
 .nav-item:hover {
     color: #1a1615;
+    background: rgba(26, 22, 21, 0.04);
 }
 .nav-item.active {
     color: #156cc2;
-    font-weight: 600;
-    border-bottom: 2px solid #156cc2;
-    padding-bottom: 2px;
+    background: rgba(21, 108, 194, 0.10);
+    box-shadow: inset 0 0 0 1px rgba(21, 108, 194, 0.14);
 }
 .nav-user {
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-shrink: 0;
 }
 .user-avatar {
     width: 28px;
@@ -619,6 +632,343 @@ div[data-testid="stRadio"] [data-checked="true"] div div {
     background: rgba(14, 161, 88, 0.1);
     border-color: rgba(14, 161, 88, 0.3);
     color: #0ea158;
+}
+
+.section-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
+    gap: 18px;
+    align-items: stretch;
+    margin-bottom: 26px;
+}
+
+.section-intro-copy {
+    background: linear-gradient(135deg, rgba(255,255,255,0.88), rgba(255,255,255,0.68));
+    border: 1px solid rgba(228, 226, 226, 0.78);
+    border-radius: 22px;
+    padding: 24px 24px 22px;
+    box-shadow: 0 12px 34px rgba(26, 22, 21, 0.04);
+}
+
+.section-intro-copy h2 {
+    margin-top: 0 !important;
+    margin-bottom: 8px !important;
+}
+
+.section-intro-copy p {
+    margin: 0 !important;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #757170;
+}
+
+.section-intro-accent {
+    background: linear-gradient(160deg, rgba(226,236,245,0.95), rgba(244,246,248,0.88));
+    border: 1px solid rgba(132, 185, 239, 0.22);
+    border-radius: 22px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.section-intro-accent-label {
+    font-family: 'Fragment Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #156cc2;
+}
+
+.section-intro-accent strong {
+    font-size: 20px;
+    line-height: 1.25;
+    color: #1a1615;
+    font-family: 'Open Runde', 'Inter', sans-serif;
+}
+
+.section-intro-accent span {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #5f6b76;
+}
+
+.signal-card-ui {
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.74)) !important;
+    border: 1px solid rgba(228, 226, 226, 0.82) !important;
+    border-radius: 22px !important;
+    padding: 18px !important;
+    box-shadow: 0 10px 28px rgba(26, 22, 21, 0.04) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.signal-card-ui::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    height: 4px;
+    background: var(--signal-accent, #156cc2);
+    opacity: 0.9;
+}
+
+.signal-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.signal-token {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    height: 42px;
+    padding: 0 12px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--signal-accent, #156cc2) 12%, white);
+    color: var(--signal-accent, #156cc2);
+    font-family: 'Fragment Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.signal-card-ui h4 {
+    margin: 0 0 6px 0;
+    font-size: 16px;
+    color: #1a1615;
+    font-family: 'Open Runde', 'Inter', sans-serif;
+}
+
+.signal-meta {
+    font-family: 'Fragment Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #757170;
+    margin-bottom: 10px;
+}
+
+.signal-copy {
+    font-size: 13px;
+    line-height: 1.65;
+    color: #5b5553;
+    position: relative;
+    z-index: 1;
+}
+
+.memory-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.memory-hero-main,
+.memory-hero-side {
+    border-radius: 24px;
+    padding: 24px;
+    border: 1px solid rgba(228, 226, 226, 0.82);
+    box-shadow: 0 12px 34px rgba(26, 22, 21, 0.05);
+}
+
+.memory-hero-main {
+    background: linear-gradient(135deg, rgba(255,255,255,0.94), rgba(248,249,251,0.82));
+}
+
+.memory-hero-side {
+    background: linear-gradient(160deg, rgba(226,236,245,0.95), rgba(250,248,247,0.88));
+    display: grid;
+    gap: 12px;
+    align-content: start;
+}
+
+.memory-hero-main h1 {
+    margin-top: 0 !important;
+    margin-bottom: 10px !important;
+}
+
+.memory-hero-main p {
+    margin: 0 !important;
+    color: #6e6866;
+    font-size: 14px;
+    line-height: 1.7;
+    max-width: 640px;
+}
+
+.memory-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.memory-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(228, 226, 226, 0.9);
+    background: rgba(255,255,255,0.82);
+    font-size: 12px;
+    font-weight: 600;
+    color: #453f3d;
+}
+
+.memory-chip::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #156cc2;
+    box-shadow: 0 0 0 5px rgba(21, 108, 194, 0.10);
+}
+
+.memory-panel-label {
+    font-family: 'Fragment Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #156cc2;
+}
+
+.memory-panel-value {
+    font-family: 'Open Runde', 'Inter', sans-serif;
+    font-size: 24px;
+    color: #1a1615;
+    line-height: 1.2;
+}
+
+.memory-panel-copy {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #5f6b76;
+}
+
+.memory-section-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.76));
+    border: 1px solid rgba(228, 226, 226, 0.82);
+    border-radius: 22px;
+    padding: 22px;
+    margin-bottom: 18px;
+    box-shadow: 0 10px 28px rgba(26, 22, 21, 0.04);
+}
+
+.memory-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.memory-section-title {
+    font-size: 20px;
+    color: #1a1615;
+    font-family: 'Open Runde', 'Inter', sans-serif;
+    margin: 0;
+}
+
+.memory-section-copy {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: #6e6866;
+    margin: 0;
+    max-width: 720px;
+}
+
+.memory-section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    font-family: 'Fragment Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.memory-section-tag.danger {
+    color: #b42318;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.22);
+}
+
+.memory-section-tag.info {
+    color: #156cc2;
+    background: rgba(21, 108, 194, 0.08);
+    border: 1px solid rgba(21, 108, 194, 0.18);
+}
+
+.memory-rule-card {
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 14px;
+    border: 1px solid rgba(228, 226, 226, 0.86);
+    background: rgba(255,255,255,0.78);
+}
+
+.memory-rule-card.danger {
+    background: linear-gradient(180deg, rgba(255,246,245,0.96), rgba(255,255,255,0.86));
+    border-color: rgba(239, 68, 68, 0.18);
+}
+
+.memory-rule-card.info {
+    background: linear-gradient(180deg, rgba(244,248,253,0.96), rgba(255,255,255,0.86));
+    border-color: rgba(21, 108, 194, 0.18);
+}
+
+.memory-rule-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: start;
+    margin-bottom: 10px;
+}
+
+.memory-rule-code {
+    font-family: 'Fragment Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #1a1615;
+}
+
+.memory-rule-state {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.memory-rule-state.active-danger { color: #b42318; }
+.memory-rule-state.active-info { color: #156cc2; }
+.memory-rule-state.inactive { color: #9CA3AF; }
+
+.memory-rule-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1f1b1a;
+    margin-bottom: 6px;
+}
+
+.memory-rule-rationale {
+    font-size: 12px;
+    color: #6e6866;
+    line-height: 1.6;
 }
 
 /* SCORE BAR */
@@ -814,6 +1164,111 @@ div[data-testid="stRadio"] [data-checked="true"] div div {
     text-transform: uppercase !important;
     letter-spacing: 0.08em !important;
     white-space: nowrap;
+}
+
+@media (max-width: 820px) {
+    .block-container {
+        padding: 0 14px 72px !important;
+    }
+
+    [data-testid="stSidebar"] .block-container {
+        padding: 20px 14px 28px !important;
+    }
+
+    .hero-section {
+        padding: 22px !important;
+        border-radius: 20px !important;
+    }
+
+    .hero-title {
+        font-size: 28px !important;
+        line-height: 1.18 !important;
+    }
+
+    .hero-desc {
+        font-size: 13px !important;
+    }
+
+    .badge {
+        min-height: 38px;
+        padding: 8px 14px;
+    }
+
+    .stat-card,
+    .phase-card {
+        padding: 18px 16px !important;
+    }
+
+    .candidate-card {
+        padding: 14px 16px !important;
+    }
+
+    .dashboard-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 16px !important;
+        gap: 12px;
+    }
+
+    .nav-menu {
+        order: 3;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .section-intro,
+    .memory-hero {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 520px) {
+    h1 {
+        font-size: 30px !important;
+    }
+
+    h2 {
+        font-size: 22px !important;
+    }
+
+    .hero-title {
+        font-size: 24px !important;
+        letter-spacing: -0.03em !important;
+    }
+
+    .hero-header-label,
+    .section-label {
+        font-size: 10px !important;
+        letter-spacing: 0.07em !important;
+    }
+
+    .stat-number {
+        font-size: 32px !important;
+    }
+
+    .stButton > button,
+    .stDownloadButton > button {
+        min-height: 44px !important;
+        width: 100% !important;
+    }
+
+    .nav-menu {
+        gap: 6px;
+    }
+
+    .nav-item {
+        min-height: 34px;
+        padding: 0 10px 1px;
+        font-size: 12px;
+    }
+
+    .section-intro-copy,
+    .section-intro-accent,
+    .memory-hero-main,
+    .memory-hero-side,
+    .memory-section-card {
+        padding: 18px;
+    }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -1051,17 +1506,45 @@ def apply_recruiter_memory_rules(candidate, core_skills, min_years_exp, seniorit
 
 # ── RENDERING FUNCTIONS FOR INACTIVE TABS ─────────────────────────
 def render_memory_page():
-    st.markdown('<div class="section-label">Recruiter Memory Panel</div>', unsafe_allow_html=True)
-    st.markdown('<h1 class="hero-title" style="margin-top:0 !important;margin-bottom:12px;">Recruiter Memory & Bias Config</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="font-size:15px;color:#757170;margin-bottom:24px;">Manage automatic qualification screening rules and soft preference boosts that Calipr applies to candidates.</p>', unsafe_allow_html=True)
-
     rules = load_memory_rules()
+    dq_list = rules.get("disqualifiers", [])
+    prefs = rules.get("preferences", {})
+    active_dq = sum(1 for dq in dq_list if dq.get("active", True))
+    active_prefs = sum(1 for pref in prefs.values() if pref.get("active", True))
+
+    st.markdown(f"""
+    <div class="memory-hero">
+      <div class="memory-hero-main">
+        <div class="section-label">Recruiter Memory Panel</div>
+        <h1 class="hero-title">Recruiter Memory &amp; Bias Config</h1>
+        <p>Shape how Calipr behaves before the shortlist ever reaches a human reviewer. Use this layer to codify non-negotiables, highlight preferred patterns, and keep evaluation aligned with the way your team actually hires.</p>
+        <div class="memory-chip-row">
+          <span class="memory-chip">Hard disqualification guardrails</span>
+          <span class="memory-chip">Soft preference calibration</span>
+          <span class="memory-chip">Persistent recruiter logic</span>
+        </div>
+      </div>
+      <div class="memory-hero-side">
+        <div class="memory-panel-label">Currently active</div>
+        <div class="memory-panel-value">{active_dq + active_prefs} live rules</div>
+        <div class="memory-panel-copy">{active_dq} disqualifiers and {active_prefs} preference boosts are actively shaping candidate scores right now.</div>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     # Disqualifiers Section
-    st.markdown('<h3>🚫 Candidate Disqualifiers (Hard Rules)</h3>', unsafe_allow_html=True)
-    st.markdown('<p style="font-size:13.5px;color:#757170;margin-bottom:15px;">Candidates triggering these rules will be assigned a suitability score of 0.0.</p>', unsafe_allow_html=True)
-    
-    dq_list = rules.get("disqualifiers", [])
+    st.markdown("""
+    <div class="memory-section-card">
+      <div class="memory-section-header">
+        <div>
+          <h3 class="memory-section-title">Candidate Disqualifiers</h3>
+          <p class="memory-section-copy">These rules act as hard gates. When triggered, the candidate is immediately pushed out of consideration regardless of their downstream score.</p>
+        </div>
+        <span class="memory-section-tag danger">Hard rules</span>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
+
     updated_dq = []
     
     for i, dq in enumerate(dq_list):
@@ -1072,16 +1555,16 @@ def render_memory_page():
         
         with st.container():
             status_text = "Active" if active else "Inactive"
-            border_color = "rgba(239, 68, 68, 0.2)" if active else "#e4e2e2"
-            bg_color = "rgba(239, 68, 68, 0.03)" if active else "rgba(255,255,255,0.4)"
+            tone_class = "danger" if active else ""
+            state_class = "active-danger" if active else "inactive"
             st.markdown(f"""
-            <div style="background:{bg_color}; border:1px solid {border_color}; border-radius:12px; padding:16px; margin-bottom:16px; font-family:Inter,sans-serif;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-weight:700; color:#1a1615; font-size:14.5px;">{rule_id.upper()}</span>
-                    <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:{'#ef4444' if active else '#9CA3AF'};">{status_text}</span>
+            <div class="memory-rule-card {tone_class}">
+                <div class="memory-rule-head">
+                    <span class="memory-rule-code">{rule_id.upper()}</span>
+                    <span class="memory-rule-state {state_class}">{status_text}</span>
                 </div>
-                <div style="font-size:13px; color:#453f3d; margin-top:8px; line-height:1.5;">{desc}</div>
-                <div style="font-size:12px; color:#757170; margin-top:6px; font-style:italic;">Rationale: {rationale}</div>
+                <div class="memory-rule-title">{desc}</div>
+                <div class="memory-rule-rationale">Rationale: {rationale}</div>
             </div>
             """, unsafe_allow_html=True)
             
@@ -1089,7 +1572,7 @@ def render_memory_page():
             with c1:
                 new_active = st.checkbox(f"Active", value=active, key=f"dq_active_{i}")
             with c2:
-                delete_rule = st.button(f"🗑️ Delete Rule", key=f"dq_del_{i}")
+                delete_rule = st.button("Delete Rule", key=f"dq_del_{i}")
                 
             if not delete_rule:
                 dq["active"] = new_active
@@ -1101,7 +1584,7 @@ def render_memory_page():
     save_memory_rules()
 
     # Add Disqualifier Form
-    with st.expander("➕ Create Custom Disqualifier"):
+    with st.expander("Create Custom Disqualifier"):
         with st.form("add_dq_form"):
             new_id = st.text_input("Rule ID", placeholder="e.g. no_golang")
             new_desc = st.text_input("Rule Description", placeholder="Disqualify candidates who lack Golang experience")
@@ -1136,10 +1619,18 @@ def render_memory_page():
 
     # Preferences Section
     st.markdown('<hr style="border: none; border-top: 1px solid #e4e2e2; margin: 40px 0;">', unsafe_allow_html=True)
-    st.markdown('<h3>⭐ Recruiter Preferences (Soft Boosts)</h3>', unsafe_allow_html=True)
-    st.markdown('<p style="font-size:13.5px;color:#757170;margin-bottom:15px;">Candidates meeting these criteria will receive a soft multiplier/additive boost to their final score.</p>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="memory-section-card">
+      <div class="memory-section-header">
+        <div>
+          <h3 class="memory-section-title">Recruiter Preferences</h3>
+          <p class="memory-section-copy">These are softer signals that help Calipr elevate promising candidates without turning preference into blind bias.</p>
+        </div>
+        <span class="memory-section-tag info">Soft boosts</span>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    prefs = rules.get("preferences", {})
     updated_prefs = {}
     
     for pref_id, pref in list(prefs.items()):
@@ -1149,16 +1640,16 @@ def render_memory_page():
         
         with st.container():
             status_text = "Active" if active else "Inactive"
-            border_color = "rgba(21, 108, 194, 0.2)" if active else "#e4e2e2"
-            bg_color = "rgba(21, 108, 194, 0.03)" if active else "rgba(255,255,255,0.4)"
+            tone_class = "info" if active else ""
+            state_class = "active-info" if active else "inactive"
             st.markdown(f"""
-            <div style="background:{bg_color}; border:1px solid {border_color}; border-radius:12px; padding:16px; margin-bottom:16px; font-family:Inter,sans-serif;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-weight:700; color:#1a1615; font-size:14.5px;">{pref_id.upper()}</span>
-                    <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:{'#156cc2' if active else '#9CA3AF'};">{status_text}</span>
+            <div class="memory-rule-card {tone_class}">
+                <div class="memory-rule-head">
+                    <span class="memory-rule-code">{pref_id.upper()}</span>
+                    <span class="memory-rule-state {state_class}">{status_text}</span>
                 </div>
-                <div style="font-size:13px; color:#453f3d; margin-top:8px; line-height:1.5;">{desc}</div>
-                <div style="font-size:12px; color:#156cc2; margin-top:6px; font-weight:600;">Score Boost: +{boost_val*100:.1f}%</div>
+                <div class="memory-rule-title">{desc}</div>
+                <div class="memory-rule-rationale">Score boost: +{boost_val*100:.1f}%</div>
             </div>
             """, unsafe_allow_html=True)
             
@@ -1166,7 +1657,7 @@ def render_memory_page():
             with c1:
                 new_active = st.checkbox(f"Active", value=active, key=f"pref_active_{pref_id}")
             with c2:
-                delete_pref = st.button(f"🗑️ Delete Preference", key=f"pref_del_{pref_id}")
+                delete_pref = st.button("Delete Preference", key=f"pref_del_{pref_id}")
                 
             if not delete_pref:
                 pref["active"] = new_active
@@ -1178,7 +1669,7 @@ def render_memory_page():
     save_memory_rules()
 
     # Add Preference Form
-    with st.expander("➕ Create Custom Preference"):
+    with st.expander("Create Custom Preference"):
         with st.form("add_pref_form"):
             new_pref_id = st.text_input("Preference ID", placeholder="e.g. prefer_remote")
             new_pref_desc = st.text_input("Description", placeholder="Slight boost for candidates who prefer remote roles")
@@ -1672,14 +2163,23 @@ def candidate_row(rank: int, name: str, title: str,
 
 # ── SIGNAL CARD COMPONENT ─────────────────────────────────────────
 def signal_card(icon: str, name: str, weight: str, description: str):
+    accent_map = {
+        "SF": "#156cc2",
+        "SM": "#0ea158",
+        "CP": "#cf8d13",
+        "BS": "#c9502e",
+        "DF": "#614a44",
+    }
+    accent = accent_map.get(icon, "#156cc2")
     st.markdown(
-        f'<div class="card" style="height:100%;">'
-        f'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">'
-        f'<div style="font-size:28px;">{icon}</div>'
+        f'<div class="signal-card-ui" style="--signal-accent:{accent};">'
+        f'<div class="signal-card-header">'
+        f'<div class="signal-token">{icon}</div>'
         f'<div class="weight-badge">{weight}</div>'
         f'</div>'
-        f'<div style="font-size:15px;font-weight:700;color:#1a1615;font-family:\'Open Runde\', \'Inter\',sans-serif;margin-bottom:6px;">{name}</div>'
-        f'<div style="font-size:13px;color:#757170;line-height:1.6;font-family:Inter,sans-serif;">{description}</div>'
+        f'<h4>{name}</h4>'
+        f'<div class="signal-meta">Weighted evaluation signal</div>'
+        f'<div class="signal-copy">{description}</div>'
         f'</div>',
         unsafe_allow_html=True
     )
@@ -1997,7 +2497,7 @@ def parse_resume_offline(text, filename="Resume"):
 if active_page == "ranker":
     st.sidebar.markdown("""
     <div style="padding:10px 0 20px;">
-        <span style="font-size:24px;font-weight:800;color:#1a1615;font-family:'Open Runde', sans-serif;letter-spacing:-0.03em;">🏆 Calipr</span>
+        <span style="font-size:24px;font-weight:800;color:#1a1615;font-family:'Open Runde', sans-serif;letter-spacing:-0.03em;">Calipr</span>
         <div style="font-size:12px;color:#757170;font-family:Inter,sans-serif;margin-top:2px;">AI Candidate Ranker</div>
     </div>
     <hr style="margin:8px 0 20px;border-top:1px solid #e4e2e2;">
@@ -2012,7 +2512,7 @@ if active_page == "ranker":
             jd_text = "\n".join([p.text for p in doc.paragraphs if p.text.strip()])
         except Exception:
             jd_text = "Senior Backend Engineer with experience in hybrid search, vector databases, Python, and ranking algorithms."
-        st.sidebar.success("✓ Default Job Description loaded.")
+        st.sidebar.success("Default Job Description loaded.")
     elif jd_input_method == "Paste custom JD":
         jd_text = st.sidebar.text_area("Paste JD text here", height=200, placeholder="Enter job description text...")
     else:
@@ -2028,7 +2528,7 @@ if active_page == "ranker":
             except Exception as e:
                 st.sidebar.error(f"Error parsing document: {e}")
     
-    run_pipeline = st.sidebar.button("🚀 Rank Candidates", type="primary", use_container_width=True)
+    run_pipeline = st.sidebar.button("Run Ranking Pipeline", type="primary", use_container_width=True)
     
     st.sidebar.markdown('<hr style="margin:20px 0 16px;border-top:1px solid #e4e2e2;">', unsafe_allow_html=True)
     st.sidebar.markdown('<div class="section-label">Pipeline Weights</div>', unsafe_allow_html=True)
@@ -2200,7 +2700,6 @@ st.markdown(f"""
 <div style="background:linear-gradient(135deg, #0A0A0A 0%, #1F2937 100%);
             padding:10px 20px; border-radius:12px; margin-top: 15px; margin-bottom:24px;
             display:flex; align-items:center; gap:12px; font-family: Inter, sans-serif;">
-  <span style="font-size:16px;">🏆</span>
   <span style="font-size:13px; color:white; font-weight:500;">
     <strong>Hackathon Demo Mode</strong> — All Pro features unlocked.
     Sponsored by <strong>Redrob AI</strong>.
@@ -2230,15 +2729,15 @@ def render_ranker_page():
         </div>
       </div>
       <div class="hero-badges">
-        <span class="badge badge-blue">⚡ Local Embeddings</span>
-        <span class="badge badge-green">✓ Validated Output</span>
+        <span class="badge badge-blue">Local Embeddings</span>
+        <span class="badge badge-green">Validated Output</span>
         <span class="badge">No API Cost</span>
       </div>
     </div>
     """, unsafe_allow_html=True)
     
     # Resume uploader collapsed expander
-    with st.expander("📄 Add Custom Resumes to Evaluation Pool", expanded=False):
+    with st.expander("Add Custom Resumes to Evaluation Pool", expanded=False):
         uploaded_resumes = st.file_uploader("Upload resumes (PDF, TXT, or DOCX)", type=["pdf", "txt", "docx"], accept_multiple_files=True, key="custom_resumes_uploader")
         if uploaded_resumes:
             new_candidates_added = False
@@ -2258,7 +2757,7 @@ def render_ranker_page():
                 
         if st.session_state.uploaded_candidates:
             st.info(f"Currently loaded: {len(st.session_state.uploaded_candidates)} custom candidate(s) in pool.")
-            if st.button("🗑️ Clear Uploaded Candidates"):
+            if st.button("Clear Uploaded Candidates"):
                 st.session_state.uploaded_candidates = []
                 st.rerun()
     
@@ -2266,7 +2765,7 @@ def render_ranker_page():
     if st.session_state.scored_candidates is not None:
         st.markdown(
             f'<div style="background: rgba(14, 161, 88, 0.08); border: 1px solid rgba(14, 161, 88, 0.25); border-radius: 12px; color: #0c7540; padding: 15px; margin-bottom: 12px; font-weight:600; font-family:Inter,sans-serif;">'
-            f'✅ Ranking Complete — {st.session_state.run_runtime}s · Evaluated {st.session_state.total_candidates_evaluated:,} candidates'
+            f'Ranking Complete — {st.session_state.run_runtime}s · Evaluated {st.session_state.total_candidates_evaluated:,} candidates'
             f'</div>',
             unsafe_allow_html=True
         )
@@ -2333,7 +2832,7 @@ def render_ranker_page():
             if selected_cand.get("disqualified", False):
                 st.markdown(
                     f'<div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 12px; color: #ef4444; padding: 15px; margin-bottom: 20px; font-weight:600; font-family:Inter,sans-serif;">'
-                    f'🚫 Disqualified by Recruiter Memory: {selected_cand.get("disq_reason", "Hard rule triggered")}'
+                    f'Disqualified by Recruiter Memory: {selected_cand.get("disq_reason", "Hard rule triggered")}'
                     f'</div>',
                     unsafe_allow_html=True
                 )
@@ -2350,11 +2849,11 @@ def render_ranker_page():
             
             # Score Breakdown
             st.markdown('<div class="section-label" style="margin-top:15px;margin-bottom:10px;">Score Breakdown</div>', unsafe_allow_html=True)
-            score_bar("🧠 Semantic Fit", selected_cand['s1_sem'])
-            score_bar("💻 Skills Match", selected_cand['s2_skl'])
-            score_bar("📈 Career Trajectory", selected_cand['s3_car'])
-            score_bar("⚡ Behavioral Score", selected_cand['s4_beh'])
-            score_bar("🎯 Domain Alignment", selected_cand['s5_dom'])
+            score_bar("Semantic Fit", selected_cand['s1_sem'])
+            score_bar("Skills Match", selected_cand['s2_skl'])
+            score_bar("Career Trajectory", selected_cand['s3_car'])
+            score_bar("Behavioral Score", selected_cand['s4_beh'])
+            score_bar("Domain Alignment", selected_cand['s5_dom'])
             
             # Score Card Display
             score_color = "#0ea158" if selected_cand['score'] >= 0.75 else "#cf8d13" if selected_cand['score'] >= 0.50 else "#c9502e"
@@ -2418,7 +2917,7 @@ def render_ranker_page():
                 df_download.insert(0, "rank", range(1, len(df_download) + 1))
                 csv_data = df_download.to_csv(index=False).encode('utf-8')
                 st.download_button(
-                    label="📥 Download Top 100 Shortlist CSV",
+                    label="Download Top 100 Shortlist CSV",
                     data=csv_data,
                     file_name="calipr_submission.csv",
                     mime="text/csv",
@@ -2455,15 +2954,15 @@ def render_ranker_page():
     
     sig_col1, sig_col2, sig_col3, sig_col4, sig_col5 = st.columns(5)
     with sig_col1:
-        signal_card("🧠", "Semantic Fit", "30%", "Cosine similarity between JD and resume embeddings using all-MiniLM-L6-v2.")
+        signal_card("SF", "Semantic Fit", "30%", "Cosine similarity between JD and resume embeddings using all-MiniLM-L6-v2.")
     with sig_col2:
-        signal_card("💻", "Skills Match", "25%", "BM25 with adjacency scoring. Adjacent skills score 0.4x. Verified assessments override proficiency.")
+        signal_card("SM", "Skills Match", "25%", "BM25 with adjacency scoring. Adjacent skills score 0.4x. Verified assessments override proficiency.")
     with sig_col3:
-        signal_card("📈", "Career Path", "20%", "Seniority level, company size growth progression, and education tiers (Tier 1-4).")
+        signal_card("CP", "Career Path", "20%", "Seniority level, company size growth progression, and education tiers (Tier 1-4).")
     with sig_col4:
-        signal_card("⚡", "Behavioral", "15%", "Notice period scaling, completeness, activity freshness, and verification factors.")
+        signal_card("BS", "Behavioral", "15%", "Notice period scaling, completeness, activity freshness, and verification factors.")
     with sig_col5:
-        signal_card("🎯", "Domain Fit", "10%", "Keyword frequency matches of core job description terminology in candidate history.")
+        signal_card("DF", "Domain Fit", "10%", "Keyword frequency matches of core job description terminology in candidate history.")
     
     # Section 4 — Pipeline Phases
     st.markdown('<hr style="border: none; border-top: 1px solid #e4e2e2; margin: 40px 0;">', unsafe_allow_html=True)
