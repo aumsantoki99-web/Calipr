@@ -54,6 +54,7 @@
         </div>
         
         <div class="nav-actions">
+          <button class="btn btn-secondary btn-sm btn-pill auth-trigger" type="button" id="nav-sign-in" data-auth-trigger data-auth-plan="pro" data-auth-target="https://huggingface.co/spaces/Aumus/calipr">Sign In</button>
           <a href="https://huggingface.co/spaces/Aumus/calipr" target="_blank" class="btn btn-primary btn-sm btn-pill" id="nav-try-demo">Try Demo</a>
         </div>
         
@@ -71,6 +72,7 @@
     <a href="#how-it-works" class="mobile-link">How It Works</a>
     <a href="#pricing" class="mobile-link">Pricing</a>
     <a href="#contact" class="mobile-link">Contact</a>
+    <button class="btn btn-secondary btn-pill auth-trigger" type="button" id="mobile-sign-in" data-auth-trigger data-auth-plan="pro" data-auth-target="https://huggingface.co/spaces/Aumus/calipr">Sign In</button>
     <a href="https://huggingface.co/spaces/Aumus/calipr" target="_blank" class="btn btn-primary btn-pill" id="mobile-try-demo">Try Demo</a>
   </div>
 
@@ -116,10 +118,10 @@
         Calipr uses multi-dimensional AI scoring and Reciprocal Rank Fusion to evaluate candidates the way expert recruiters do — with nuance, context, and precision.
       </p>
       <div class="hero-ctas">
-        <a href="https://huggingface.co/spaces/Aumus/calipr" target="_blank" class="btn btn-primary btn-pill" id="hero-get-started">
+        <button class="btn btn-primary btn-pill auth-trigger" type="button" id="hero-get-started" data-auth-trigger data-auth-plan="free" data-auth-target="https://huggingface.co/spaces/Aumus/calipr">
           Get Started Free
           <svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8h9M8.5 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+        </button>
         <a href="#how-it-works" class="btn btn-secondary btn-pill">
           Watch How It Works
         </a>
@@ -541,7 +543,7 @@
             <div class="pricing-feature"><div class="check">✓</div> Plotly interactive analytics</div>
             <div class="pricing-feature"><div class="check">✓</div> 5-signal hybrid scoring engine</div>
           </div>
-          <a href="https://huggingface.co/spaces/Aumus/calipr" target="_blank" class="btn btn-secondary btn-pill" style="width:100%;" id="pricing-get-started">Try Free Sandbox</a>
+          <button class="btn btn-secondary btn-pill auth-trigger" type="button" style="width:100%;" id="pricing-get-started" data-auth-trigger data-auth-plan="free" data-auth-target="https://huggingface.co/spaces/Aumus/calipr">Try Free Sandbox</button>
         </div>
         
         <!-- Dedicated Cloud -->
@@ -558,7 +560,7 @@
             <div class="pricing-feature"><div class="check">✓</div> Customized scoring weights & memory rules</div>
             <div class="pricing-feature"><div class="check">✓</div> Dedicated support & SLA guarantees</div>
           </div>
-          <a href="#cta" class="btn btn-primary btn-pill" style="width:100%;" id="pricing-start-trial">Get Full Solution</a>
+          <button class="btn btn-primary btn-pill auth-trigger" type="button" style="width:100%;" id="pricing-start-trial" data-auth-trigger data-auth-plan="pro" data-auth-target="https://huggingface.co/spaces/Aumus/calipr">Get Full Solution</button>
         </div>
         
         <!-- On-Premise -->
@@ -579,6 +581,53 @@
       </div>
     </div>
   </section>
+
+  <div class="auth-modal" id="authModal" aria-hidden="true">
+    <div class="auth-modal-backdrop" data-auth-close></div>
+    <div class="auth-modal-card" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+      <button class="auth-modal-close" type="button" aria-label="Close" data-auth-close>×</button>
+      <div class="auth-modal-header">
+        <div class="auth-modal-eyebrow">Calipr Access</div>
+        <h3 id="authModalTitle">Continue to your workspace</h3>
+        <p id="authModalCopy">Sign in to unlock your plan and continue to the product.</p>
+      </div>
+
+      <div class="auth-modal-tabs" role="tablist" aria-label="Authentication mode">
+        <button class="auth-tab active" type="button" data-auth-mode="signin">Sign In</button>
+        <button class="auth-tab" type="button" data-auth-mode="signup">Create Account</button>
+      </div>
+
+      <button class="auth-google-btn" type="button" id="authGoogleButton">
+        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+          <path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/>
+          <path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/>
+          <path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/>
+          <path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <div class="auth-divider"><span>or use email</span></div>
+
+      <form class="auth-form" id="authForm">
+        <div class="auth-field auth-signup-only">
+          <label for="authName">Full Name</label>
+          <input id="authName" name="name" type="text" placeholder="Aum Santoki" autocomplete="name">
+        </div>
+        <div class="auth-field">
+          <label for="authEmail">Work Email</label>
+          <input id="authEmail" name="email" type="email" placeholder="you@company.com" autocomplete="email" required>
+        </div>
+        <div class="auth-field">
+          <label for="authPassword">Password</label>
+          <input id="authPassword" name="password" type="password" placeholder="Minimum 8 characters" autocomplete="current-password" required>
+        </div>
+        <button class="btn btn-primary btn-pill auth-submit" type="submit" id="authSubmitButton">Sign In</button>
+      </form>
+
+      <div class="auth-status" id="authStatus" aria-live="polite"></div>
+    </div>
+  </div>
 
   <!-- ===== METRICS ===== -->
   <section class="section metrics" id="metrics">
@@ -799,6 +848,7 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/script.js"></script>
   <script src="js/gsap-animations.js"></script>
 </body>

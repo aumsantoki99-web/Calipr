@@ -8,7 +8,271 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
   initMobileMenu();
   initCandidateDemo();
+  initAuth();
 });
+
+const PRODUCT_URLS = {
+  free: 'https://huggingface.co/spaces/Aumus/calipr',
+  pro: 'https://huggingface.co/spaces/Aumus/calipr'
+};
+
+const SUPABASE_URL = 'https://vvakfljeslxhwceidxvi.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2YWtmbGplc2x4aHdjZWlkeHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4MzA4MDAsImV4cCI6MjA5NzQwNjgwMH0.faZg4fylypLfjVcswbWQrC47nIvI-CDIO3nHU5Fvyho';
+const STORAGE_KEYS = {
+  plan: 'calipr_pending_plan',
+  target: 'calipr_pending_target',
+  redirect: 'calipr_auto_redirect'
+};
+
+let supabaseClient = null;
+let authMode = 'signin';
+let authElements = null;
+
+async function initAuth() {
+  if (!window.supabase || !window.supabase.createClient) return;
+
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      flowType: 'pkce',
+      detectSessionInUrl: true,
+      persistSession: true,
+      autoRefreshToken: true
+    }
+  });
+
+  authElements = {
+    modal: document.getElementById('authModal'),
+    title: document.getElementById('authModalTitle'),
+    copy: document.getElementById('authModalCopy'),
+    status: document.getElementById('authStatus'),
+    form: document.getElementById('authForm'),
+    name: document.getElementById('authName'),
+    email: document.getElementById('authEmail'),
+    password: document.getElementById('authPassword'),
+    submit: document.getElementById('authSubmitButton'),
+    google: document.getElementById('authGoogleButton'),
+    tabs: Array.from(document.querySelectorAll('.auth-tab')),
+    triggers: Array.from(document.querySelectorAll('[data-auth-trigger]')),
+    closers: Array.from(document.querySelectorAll('[data-auth-close]'))
+  };
+
+  bindAuthEvents();
+  setAuthMode('signin');
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (session) {
+    await updateSignedInState(session);
+    await maybeRedirectAuthenticatedUser(session);
+  }
+
+  supabaseClient.auth.onAuthStateChange(async (event, session) => {
+    if (!session) return;
+    if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') {
+      await updateSignedInState(session);
+      await maybeRedirectAuthenticatedUser(session);
+    }
+  });
+}
+
+function bindAuthEvents() {
+  authElements.triggers.forEach((trigger) => {
+    trigger.addEventListener('click', async () => {
+      const plan = trigger.dataset.authPlan || 'pro';
+      const target = trigger.dataset.authTarget || PRODUCT_URLS[plan] || PRODUCT_URLS.pro;
+      setPendingDestination(plan, target, true);
+
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session) {
+        await updateSignedInState(session);
+        redirectToPendingDestination();
+        return;
+      }
+
+      updateModalCopy(plan);
+      openAuthModal();
+    });
+  });
+
+  authElements.closers.forEach((closer) => {
+    closer.addEventListener('click', closeAuthModal);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeAuthModal();
+  });
+
+  authElements.tabs.forEach((tab) => {
+    tab.addEventListener('click', () => setAuthMode(tab.dataset.authMode || 'signin'));
+  });
+
+  authElements.google.addEventListener('click', handleGoogleAuth);
+  authElements.form.addEventListener('submit', handleEmailAuth);
+}
+
+function setPendingDestination(plan, target, shouldRedirect) {
+  localStorage.setItem(STORAGE_KEYS.plan, plan);
+  localStorage.setItem(STORAGE_KEYS.target, target);
+  localStorage.setItem(STORAGE_KEYS.redirect, shouldRedirect ? 'true' : 'false');
+}
+
+function getPendingPlan() {
+  return localStorage.getItem(STORAGE_KEYS.plan) || 'pro';
+}
+
+function getPendingTarget() {
+  return localStorage.getItem(STORAGE_KEYS.target) || PRODUCT_URLS[getPendingPlan()] || PRODUCT_URLS.pro;
+}
+
+function clearAuthStatus() {
+  authElements.status.textContent = '';
+  authElements.status.className = 'auth-status';
+}
+
+function setAuthStatus(message, tone) {
+  authElements.status.textContent = message;
+  authElements.status.className = `auth-status${tone ? ` is-${tone}` : ''}`;
+}
+
+function setAuthMode(mode) {
+  authMode = mode;
+  authElements.modal.dataset.authMode = mode;
+  authElements.tabs.forEach((tab) => {
+    tab.classList.toggle('active', tab.dataset.authMode === mode);
+  });
+  authElements.submit.textContent = mode === 'signup' ? 'Create Account' : 'Sign In';
+  authElements.password.autocomplete = mode === 'signup' ? 'new-password' : 'current-password';
+  clearAuthStatus();
+}
+
+function updateModalCopy(plan) {
+  const copy = plan === 'free'
+    ? 'Create your Calipr account to continue into the sandbox experience.'
+    : 'Sign in to continue into the full Calipr workspace.';
+  authElements.copy.textContent = copy;
+}
+
+function openAuthModal() {
+  authElements.modal.classList.add('is-open');
+  authElements.modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAuthModal() {
+  authElements.modal.classList.remove('is-open');
+  authElements.modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+async function handleGoogleAuth() {
+  try {
+    clearAuthStatus();
+    const plan = getPendingPlan();
+    updateModalCopy(plan);
+    const { error } = await supabaseClient.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}${window.location.pathname}`,
+        queryParams: {
+          prompt: 'select_account'
+        }
+      }
+    });
+    if (error) {
+      throw error;
+    }
+  } catch (error) {
+    setAuthStatus(error.message || 'Google sign-in could not be started.', 'error');
+  }
+}
+
+async function handleEmailAuth(event) {
+  event.preventDefault();
+  clearAuthStatus();
+
+  const fullName = authElements.name.value.trim();
+  const email = authElements.email.value.trim();
+  const password = authElements.password.value;
+  const plan = getPendingPlan();
+
+  if (!email || !password) {
+    setAuthStatus('Email and password are required.', 'error');
+    return;
+  }
+
+  if (authMode === 'signup' && !fullName) {
+    setAuthStatus('Full name is required to create an account.', 'error');
+    return;
+  }
+
+  try {
+    if (authMode === 'signup') {
+      const { data, error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}${window.location.pathname}`,
+          data: {
+            full_name: fullName,
+            plan
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.session) {
+        await updateSignedInState(data.session);
+        redirectToPendingDestination();
+        return;
+      }
+
+      setAuthStatus('Account created. Check your inbox to verify your email, then sign in.', 'success');
+      setAuthMode('signin');
+      return;
+    }
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    await updateSignedInState(data.session);
+    redirectToPendingDestination();
+  } catch (error) {
+    setAuthStatus(error.message || 'Authentication failed. Please try again.', 'error');
+  }
+}
+
+async function updateSignedInState(session) {
+  const user = session?.user;
+  if (!user) return;
+
+  const selectedPlan = getPendingPlan();
+  const userMeta = user.user_metadata || {};
+  if (userMeta.plan !== selectedPlan) {
+    await supabaseClient.auth.updateUser({
+      data: {
+        ...userMeta,
+        plan: selectedPlan
+      }
+    });
+  }
+
+  const displayName = userMeta.full_name || user.email || 'Account';
+  document.querySelectorAll('#nav-sign-in, #mobile-sign-in').forEach((button) => {
+    button.textContent = displayName.split(' ')[0];
+  });
+  closeAuthModal();
+}
+
+async function maybeRedirectAuthenticatedUser(session) {
+  if (localStorage.getItem(STORAGE_KEYS.redirect) !== 'true') return;
+  if (!session?.user) return;
+  redirectToPendingDestination();
+}
+
+function redirectToPendingDestination() {
+  const target = getPendingTarget();
+  localStorage.removeItem(STORAGE_KEYS.redirect);
+  window.location.href = target;
+}
 
 /* ==========================================================================
    1. NAVBAR SCROLL EFFECT

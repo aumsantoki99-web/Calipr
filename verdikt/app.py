@@ -29,17 +29,9 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Initialize Session and Auth Gate
-from auth import init_session, render_sign_in, render_sign_up, sign_out, render_navbar_user, is_pro, get_plan
-
-init_session()
-
-if not st.session_state.authenticated:
-    if st.session_state.auth_page == "signup":
-        render_sign_up()
-    else:
-        render_sign_in()
-    st.stop()
+# Hackathon demo mode: public Space is open with all features unlocked.
+def is_pro():
+    return True
 
 # ── FULL CSS INJECTION ────────────────────────────────────────────
 st.markdown("""
@@ -337,28 +329,6 @@ div[data-baseweb="select"] > div {
     font-weight: 600;
     border-bottom: 2px solid #156cc2;
     padding-bottom: 2px;
-}
-.nav-user {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.user-avatar {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: #1a1615;
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-}
-.user-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: #1a1615;
 }
 
 /* GLASS CARD — light */
@@ -1181,19 +1151,8 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Render HTML navigation dynamically from session state
-plan     = st.session_state.get("user_plan", "free")
-name     = st.session_state.get("user_name", "User")
-initials = st.session_state.get("user_initials", "?")
-
-plan_badge = {
-    "free":       ("FREE",       "#6B7280", "#F3F4F6"),
-    "pro":        ("PRO",        "#FFFFFF",  "#0A0A0A"),
-    "enterprise": ("ENTERPRISE", "#7C3AED", "#F5F3FF"),
-}
-badge_label, badge_text, badge_bg = plan_badge.get(plan, plan_badge["free"])
-
-st.markdown(f"""
+# Render HTML navigation
+st.markdown("""
 <div class="dashboard-nav">
   <div class="nav-logo">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #1a1615;">
@@ -1202,12 +1161,6 @@ st.markdown(f"""
       <path d="M13.5 9V22" stroke="currentColor" stroke-width="3.2" stroke-linecap="square"/>
     </svg>
     <span>Calipr</span>
-    <span class="nav-badge" style="background:{badge_bg}; color:{badge_text}; font-size:9px; font-weight:800; padding:2px 7px; border-radius:4px; letter-spacing:0.05em; margin-left:6px;">{badge_label}</span>
-  </div>
-  <div style="flex:1;"></div>
-  <div class="nav-user">
-    <div class="user-avatar">{initials}</div>
-    <span class="user-name">{name}</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -1367,10 +1320,6 @@ st.sidebar.markdown(f"""
   <div style="display:flex;justify-content:space-between;"><span>Domain Alignment</span><span style="font-weight:700;color:#1a1615;">{w_dom}%</span></div>
 </div>
 """, unsafe_allow_html=True)
-
-st.sidebar.markdown('<hr style="margin:20px 0 16px;border-top:1px solid #e4e2e2;">', unsafe_allow_html=True)
-if st.sidebar.button("🚪 Sign Out", key="sidebar_signout_btn", use_container_width=True):
-    sign_out()
 
 st.sidebar.markdown("""
 <div style="font-size:11px;color:#757170;font-family:Inter,sans-serif;line-height:1.5;margin-top:15px;">

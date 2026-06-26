@@ -32,24 +32,37 @@ Write-Host "Copying sandbox source files..."
 $sourceFiles = Get-ChildItem "$workspaceDir\verdikt" -File
 foreach ($file in $sourceFiles) {
     $name = $file.Name
-    if ($name -eq "candidates.jsonl" -or $name -eq "sample_candidates.jsonl" -or $name -eq "requirements.txt" -or $name -eq "README.md") {
+    if ($name -eq "candidates.jsonl" -or $name -eq "sample_candidates.jsonl" -or $name -eq "requirements.txt" -or $name -eq "README.md" -or $name -eq "auth.py" -or $name -eq "streamlit_app.py" -or $name -eq "supabase_client.py") {
         Write-Host "Skipping dataset/root/doc file: $name"
         continue
     }
     Copy-Item $file.FullName -Destination "$deployDir\$name"
 }
 
-# Copy auth folder recursively
-if (Test-Path "$workspaceDir\verdikt\auth") {
-    Write-Host "Copying auth folder..."
-    Copy-Item "$workspaceDir\verdikt\auth" -Destination "$deployDir\auth" -Recurse -Force
+# Copy package subdirectories required by app.py
+$packageDirs = @("integrations", "analytics", "pages", "assets")
+foreach ($dirName in $packageDirs) {
+    $sourcePath = Join-Path "$workspaceDir\verdikt" $dirName
+    if (Test-Path $sourcePath) {
+        Write-Host "Copying $dirName folder..."
+        Copy-Item $sourcePath -Destination (Join-Path $deployDir $dirName) -Recurse -Force
+    } else {
+        Write-Host "Skipping missing folder: $dirName"
+    }
 }
 
 # Clean __pycache__ folders in deployDir
 Write-Host "Cleaning __pycache__ folders..."
 Get-ChildItem -Path $deployDir -Filter "__pycache__" -Recurse | Remove-Item -Recurse -Force
 
-
+$requiredPaths = @("integrations\api.py", "analytics\data_store.py", "pages\analytics_page.py")
+foreach ($relPath in $requiredPaths) {
+    if (-not (Test-Path (Join-Path $deployDir $relPath))) {
+        Write-Error "Deploy missing required file: $relPath"
+        exit 1
+    }
+}
+Write-Host "Required package files verified."
 
 # Create README.md combining Hugging Face Space YAML metadata and our project README
 Write-Host "Creating merged README.md..."

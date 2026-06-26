@@ -5,6 +5,13 @@
 import streamlit as st
 from supabase_client import get_supabase
 
+def _html(markup: str) -> None:
+    """Render HTML without Markdown treating indented lines as code blocks."""
+    st.markdown(
+        "\n".join(line.strip() for line in markup.splitlines() if line.strip()),
+        unsafe_allow_html=True,
+    )
+
 # ─────────────────────────────────────────
 # SESSION STATE HELPERS
 # ─────────────────────────────────────────
@@ -157,7 +164,7 @@ def sign_up(full_name: str, email: str, password: str, plan: str = "free") -> bo
 # ─────────────────────────────────────────
 
 def render_sign_in():
-    st.markdown("""
+    _html("""
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
       html, body, [class*="css"] {
@@ -195,12 +202,12 @@ def render_sign_in():
       /* Hide label for inputs */
       [data-testid="stTextInput"] label { display: none !important; }
     </style>
-    """, unsafe_allow_html=True)
+    """)
 
     # Center the auth card
     _, col, _ = st.columns([1, 1.2, 1])
     with col:
-        st.markdown("""
+        _html("""
         <div style="min-height:100vh; display:flex; flex-direction:column;
                     justify-content:center; padding: 60px 0;">
 
@@ -234,10 +241,10 @@ def render_sign_in():
                       margin:0 0 28px 0;">
               Sign in to your Calipr account
             </p>
-        """, unsafe_allow_html=True)
+        """)
 
         # Google OAuth button (UI only)
-        st.markdown("""
+        _html("""
             <button onclick="return false;" style="
               width:100%; height:44px; background:#FFFFFF;
               border:1.5px solid #E5E7EB; border-radius:8px;
@@ -253,26 +260,26 @@ def render_sign_in():
               </svg>
               Continue with Google
             </button>
-        """, unsafe_allow_html=True)
+        """)
 
         # OR divider
-        st.markdown("""
+        _html("""
             <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
               <div style="flex:1; height:1px; background:#F3F4F6;"></div>
               <span style="font-size:12px; color:#9CA3AF; font-weight:500;">OR</span>
               <div style="flex:1; height:1px; background:#F3F4F6;"></div>
             </div>
-        """, unsafe_allow_html=True)
+        """)
 
         # Error message
         if st.session_state.auth_error:
-            st.markdown(f"""
+            _html(f"""
             <div style="padding:12px 14px; background:#FFF5F5; border:1px solid #FEE2E2;
                         border-radius:8px; margin-bottom:16px; font-size:13px;
                         color:#DC2626; display:flex; align-items:center; gap:8px;">
               ⚠️ {st.session_state.auth_error}
             </div>
-            """, unsafe_allow_html=True)
+            """)
 
         # Input labels (styled as floating)
         st.markdown('<p style="font-size:13px; font-weight:500; color:#374151; margin:0 0 6px 0;">Work Email</p>', unsafe_allow_html=True)
@@ -297,14 +304,14 @@ def render_sign_in():
                     st.rerun()
 
         # Switch to sign up
-        st.markdown("""
+        _html("""
             <p style="text-align:center; font-size:13px;
                       color:#6B7280; margin-top:20px;">
               Don't have an account?
             </p>
           </div><!-- end card -->
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
         # Switch to signup button
         col1, col2, col3 = st.columns([1,2,1])
@@ -320,7 +327,7 @@ def render_sign_in():
 # ─────────────────────────────────────────
 
 def render_sign_up():
-    st.markdown("""
+    _html("""
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
       html, body, [class*="css"] {
@@ -346,11 +353,11 @@ def render_sign_up():
         font-family: 'Inter', sans-serif !important;
       }
     </style>
-    """, unsafe_allow_html=True)
+    """)
 
     _, col, _ = st.columns([1, 1.4, 1])
     with col:
-        st.markdown("""
+        _html("""
         <div style="min-height:100vh; display:flex; flex-direction:column;
                     justify-content:center; padding:60px 0;">
 
@@ -377,7 +384,7 @@ def render_sign_up():
           <!-- PLAN SELECTOR — 3 cards -->
           <p style="font-size:13px; font-weight:600; color:#0A0A0A;
                     margin:0 0 12px 0;">Choose your plan</p>
-        """, unsafe_allow_html=True)
+        """)
 
         plan_options = ["free", "pro", "enterprise"]
         plan_labels  = {
@@ -424,7 +431,7 @@ def render_sign_up():
             )
 
             with pcol:
-                st.markdown(f"""
+                _html(f"""
                 <div style="border:{border_w} solid {border_c}; border-radius:12px;
                             padding:16px 14px; background:{bg};
                             transition:all 0.15s ease; min-height:185px;
@@ -443,7 +450,7 @@ def render_sign_up():
                              line-height:1.4;">{desc}</p>
                   {check_indicator}
                 </div>
-                """, unsafe_allow_html=True)
+                """)
 
                 if st.button(
                     f"Select {label}",
@@ -455,31 +462,31 @@ def render_sign_up():
 
         # Error message
         if st.session_state.auth_error:
-            st.markdown(f"""
+            _html(f"""
             <div style="padding:12px 14px; background:#FFF5F5; border:1px solid #FEE2E2;
                         border-radius:8px; margin:16px 0; font-size:13px; color:#DC2626;
                         display:flex; align-items:center; gap:8px;">
               ⚠️ {st.session_state.auth_error}
             </div>
-            """, unsafe_allow_html=True)
+            """)
 
         # Success message
         if st.session_state.auth_success:
-            st.markdown(f"""
+            _html(f"""
             <div style="padding:12px 14px; background:#F0FDF4; border:1px solid #BBF7D0;
                         border-radius:8px; margin:16px 0; font-size:13px; color:#16A34A;
                         display:flex; align-items:center; gap:8px;">
               ✅ {st.session_state.auth_success}
             </div>
-            """, unsafe_allow_html=True)
+            """)
 
         # Form fields container
-        st.markdown("""
+        _html("""
           <!-- Form card -->
           <div style="background:#FFFFFF; border:1px solid #F3F4F6; border-radius:16px;
                       padding:28px 24px; margin-top:16px;
                       box-shadow:0 4px 24px rgba(0,0,0,0.06);">
-        """, unsafe_allow_html=True)
+        """)
 
         st.markdown('<p style="font-size:13px; font-weight:500; color:#374151; margin:0 0 6px 0;">Full Name</p>', unsafe_allow_html=True)
         full_name = st.text_input("fn", placeholder="Aum Santoki", key="signup_name", label_visibility="collapsed")
@@ -513,14 +520,14 @@ def render_sign_up():
                 for i in range(4)
             ])
             
-            st.markdown(f"""
+            _html(f"""
             <div style="margin-top:8px;">
               <div style="display:flex; gap:4px; margin-bottom:4px;">
                 {bars_html}
               </div>
               <span style="font-size:11px; color:{sc}; font-weight:500;">{sl}</span>
             </div>
-            """, unsafe_allow_html=True)
+            """)
 
         # Terms checkbox
         st.markdown('<div style="height:12px;"></div>', unsafe_allow_html=True)
@@ -569,9 +576,9 @@ def render_sign_up():
                 else:
                     st.rerun()
 
-        st.markdown("""
+        _html("""
           </div><!-- end form card -->
-        """, unsafe_allow_html=True)
+        """)
 
         # Back to sign in
         st.markdown('<div style="height:12px;"></div>', unsafe_allow_html=True)
@@ -605,7 +612,7 @@ def render_navbar_user():
     badge_label, badge_text, badge_bg = plan_badge.get(plan, plan_badge["free"])
 
     # Renders user initials, name and badge using inline HTML matching landing page layout
-    st.markdown(f"""
+    _html(f"""
     <div style="display:flex; align-items:center; gap:10px; padding: 4px 12px; 
                 background: #FFFFFF; border: 1px solid #F3F4F6; border-radius: 9999px;
                 box-shadow: 0 1px 2px rgba(0,0,0,0.02); margin-left: auto;">
@@ -622,4 +629,4 @@ def render_navbar_user():
       <!-- Name -->
       <span style="font-size:13px; font-weight:600; color:#0A0A0A; padding-right:4px;">{name}</span>
     </div>
-    """, unsafe_allow_html=True)
+    """)

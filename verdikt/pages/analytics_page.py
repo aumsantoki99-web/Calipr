@@ -15,7 +15,9 @@ from analytics.charts import (
     build_availability_chart, build_runtime_sparkline,
     build_benchmark_table
 )
-from auth import is_pro
+
+def is_pro():
+    return True
 
 ANALYTICS_CSS = """
 <style>

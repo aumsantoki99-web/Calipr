@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 
 st.set_page_config(
@@ -7,17 +8,30 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Initialize Session and Auth Gate
-from auth import init_session, render_sign_in, render_sign_up, sign_out, render_navbar_user, is_pro, get_plan
+# Hackathon demo mode: the public Space is intentionally open and fully unlocked.
+st.session_state.setdefault("authenticated", True)
+st.session_state.setdefault("user_plan", "pro")
+st.session_state.setdefault("user_name", "Demo User")
+st.session_state.setdefault("user_initials", "DU")
+st.session_state.setdefault("user_email", "demo@calipr.ai")
 
-init_session()
+def is_pro():
+    return True
 
-if not st.session_state.authenticated:
-    if st.session_state.auth_page == "signup":
-        render_sign_up()
-    else:
-        render_sign_in()
-    st.stop()
+def get_supabase_url():
+    return os.environ.get("SUPABASE_URL", "")
+
+def is_authenticated():
+    return True
+
+def check_oauth_callback():
+    return None
+
+def get_current_user():
+    return None
+
+def sign_out():
+    return None
 
 import sys
 
@@ -35,12 +49,6 @@ try:
     import uuid
     import plotly.graph_objects as go
     import plotly.express as px
-    from supabase import create_client, Client
-    
-    # Auth pages imports
-    from auth.signin_page import render_signin_page
-    from auth.signup_page import render_signup_page
-    from auth.supabase_auth import is_authenticated, sign_out, get_current_user, check_oauth_callback, get_supabase_url
 except Exception as e:
     st.error(f"🚨 Calipr Diagnostic Error — Import Failure: {e}")
     st.write("### Diagnostics Information")
