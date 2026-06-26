@@ -141,15 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Metric cards — scale in
-    const metricCards = gsap.utils.toArray('.metric-card');
-    if (metricCards.length) {
-      gsap.from(metricCards, {
-        scrollTrigger: { trigger: metricCards[0], start: 'top 88%', once: true },
-        scale: 0.92, opacity: 0, duration: 0.5, ease: 'back.out(1.3)', stagger: 0.1
-      });
-    }
-
     // Demo section — candidate card + radar
     const demoContent = document.querySelector('.demo-content');
     if (demoContent) {
