@@ -28,7 +28,7 @@
   <!-- ===== HACKATHON DEMO BANNER ===== -->
   <div class="hackathon-banner" id="hackathonBanner">
     <div class="container">
-      <span>🏆 <strong>Hackathon Demo Mode</strong> — All Pro features unlocked. Sponsored by <strong>Redrob AI</strong>.</span>
+      <span><strong>Hackathon Demo Mode</strong> — All Pro features unlocked. Sponsored by <strong>Redrob AI</strong>.</span>
     </div>
   </div>
 
@@ -135,6 +135,11 @@
           <div class="browser-url">app.calipr.ai/dashboard</div>
         </div>
         <div class="hero-mockup">
+          <div class="hero-image-glow" aria-hidden="true"></div>
+          <div class="hero-image-badge" aria-hidden="true">
+            <span class="hero-image-badge-kicker">Live ranking view</span>
+            <strong>Radar scoring, rationale, and shortlist context</strong>
+          </div>
           <img src="assets/images/hero-dashboard.png" alt="Calipr AI Recruiter Dashboard showing candidate scoring radar chart" loading="eager" width="960" height="540">
         </div>
       </div>
@@ -377,6 +382,7 @@
         
         <div class="pipeline-step reveal-delay-1">
           <div class="pipeline-number">1</div>
+          <div class="pipeline-step-line" aria-hidden="true"></div>
           <h4>Ingest & Parse</h4>
           <p>Schema validation + LLM-powered JD decoding into structured signals</p>
           <div class="pipeline-tech">
@@ -387,6 +393,7 @@
         
         <div class="pipeline-step reveal-delay-2">
           <div class="pipeline-number">2</div>
+          <div class="pipeline-step-line" aria-hidden="true"></div>
           <h4>Hybrid Retrieval</h4>
           <p>BM25 sparse + vector dense search, fused via Reciprocal Rank Fusion</p>
           <div class="pipeline-tech">
@@ -398,6 +405,7 @@
         
         <div class="pipeline-step active reveal-delay-3">
           <div class="pipeline-number">3</div>
+          <div class="pipeline-step-line" aria-hidden="true"></div>
           <h4>5-Signal Scoring</h4>
           <p>Memory injection + multi-dimensional weighted fusion across 5 axes</p>
           <div class="pipeline-tech">
@@ -408,12 +416,36 @@
         
         <div class="pipeline-step reveal-delay-4">
           <div class="pipeline-number">4</div>
+          <div class="pipeline-step-line" aria-hidden="true"></div>
           <h4>Agentic Re-Rank</h4>
           <p>LLM with tool-use re-ranks Top 20 with explainable rationale</p>
           <div class="pipeline-tech">
             <span class="tech-tag">Groq</span>
             <span class="tech-tag">Tool Use</span>
           </div>
+        </div>
+      </div>
+
+      <div class="pipeline-summary reveal">
+        <div class="pipeline-summary-card">
+          <span>Stage 1</span>
+          <strong>Structured intake</strong>
+          <p>Normalize the job description and candidate schema before any ranking logic begins.</p>
+        </div>
+        <div class="pipeline-summary-card">
+          <span>Stage 2</span>
+          <strong>Retrieval at scale</strong>
+          <p>Use sparse and dense search together so relevant candidates are surfaced without brute force filtering.</p>
+        </div>
+        <div class="pipeline-summary-card">
+          <span>Stage 3</span>
+          <strong>Weighted evaluation</strong>
+          <p>Score every shortlist candidate across five measurable dimensions with auditable weights.</p>
+        </div>
+        <div class="pipeline-summary-card">
+          <span>Stage 4</span>
+          <strong>Final reasoning layer</strong>
+          <p>Apply explainable re-ranking only where judgment matters most: the final candidate set.</p>
         </div>
       </div>
     </div>
@@ -429,56 +461,56 @@
           <svg viewBox="0 0 120 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="6" fill="#E53E3E"/><path d="M8 8h12M8 14h8M8 20h12" stroke="white" stroke-width="2" stroke-linecap="round"/><text x="34" y="20" font-family="Inter,sans-serif" font-weight="700" font-size="16" fill="#1a1615">Redrob AI</text></svg>
         </div>
         <div class="client-logo">
-          <span class="client-logo-text">🐍 Python</span>
+          <span class="client-logo-text">Python</span>
         </div>
         <div class="client-logo">
-          <span class="client-logo-text">⚡ FastAPI</span>
+          <span class="client-logo-text">FastAPI</span>
         </div>
         <div class="client-logo">
-          <span class="client-logo-text">🤗 HuggingFace</span>
+          <span class="client-logo-text">HuggingFace</span>
         </div>
         <div class="client-logo">
-          <span class="client-logo-text">🧠 Gemini</span>
+          <span class="client-logo-text">Gemini</span>
         </div>
         <div class="client-logo">
-          <span class="client-logo-text">🚀 Groq</span>
+          <span class="client-logo-text">Groq</span>
         </div>
         <div class="client-logo">
-          <span class="client-logo-text">📊 Streamlit</span>
+          <span class="client-logo-text">Streamlit</span>
         </div>
         <div class="client-logo">
-          <span class="client-logo-text">🐘 PostgreSQL</span>
+          <span class="client-logo-text">PostgreSQL</span>
         </div>
         <div class="client-logo">
-          <span class="client-logo-text">🔍 FAISS</span>
+          <span class="client-logo-text">FAISS</span>
         </div>
         <!-- Duplicate set for seamless loop -->
         <div class="client-logo">
           <svg viewBox="0 0 120 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="6" fill="#E53E3E"/><path d="M8 8h12M8 14h8M8 20h12" stroke="white" stroke-width="2" stroke-linecap="round"/><text x="34" y="20" font-family="Inter,sans-serif" font-weight="700" font-size="16" fill="#1a1615">Redrob AI</text></svg>
         </div>
         <div class="client-logo">
-          <span class="client-logo-text">🐍 Python</span>
+          <span class="client-logo-text">Python</span>
         </div>
         <div class="client-logo">
-          <span class="client-logo-text">⚡ FastAPI</span>
+          <span class="client-logo-text">FastAPI</span>
         </div>
         <div class="client-logo">
-          <span class="client-logo-text">🤗 HuggingFace</span>
+          <span class="client-logo-text">HuggingFace</span>
         </div>
         <div class="client-logo">
-          <span class="client-logo-text">🧠 Gemini</span>
+          <span class="client-logo-text">Gemini</span>
         </div>
         <div class="client-logo">
-          <span class="client-logo-text">🚀 Groq</span>
+          <span class="client-logo-text">Groq</span>
         </div>
         <div class="client-logo">
-          <span class="client-logo-text">📊 Streamlit</span>
+          <span class="client-logo-text">Streamlit</span>
         </div>
         <div class="client-logo">
-          <span class="client-logo-text">🐘 PostgreSQL</span>
+          <span class="client-logo-text">PostgreSQL</span>
         </div>
         <div class="client-logo">
-          <span class="client-logo-text">🔍 FAISS</span>
+          <span class="client-logo-text">FAISS</span>
         </div>
       </div>
     </div>
@@ -551,30 +583,56 @@
   <!-- ===== METRICS ===== -->
   <section class="section metrics" id="metrics">
     <div class="container">
-      <div class="text-center reveal" style="margin-bottom: 64px;">
+      <div class="text-center" style="margin-bottom: 64px;">
         <div class="section-label">Performance</div>
         <h2 class="section-title">Don't Just Trust Us.<br>Trust the Numbers.</h2>
+        <p class="section-subtitle mx-auto">Calipr is tuned for measurable hiring signal quality, not just flashy AI claims. These benchmarks show how the pipeline performs under real shortlist conditions.</p>
+      </div>
+
+      <div class="metrics-lead">
+        <div class="metrics-lead-copy">
+          <span class="metrics-kicker">Benchmark snapshot</span>
+          <h3>Engineered to keep shortlist quality high while staying fast enough for real recruiting teams.</h3>
+          <p>The system balances retrieval depth, ranking accuracy, and turnaround time so hiring teams can trust both the output and the pace of the workflow.</p>
+        </div>
+        <div class="metrics-pillars" aria-hidden="true">
+          <div class="metrics-pillar">
+            <strong>Quality</strong>
+            <span>High-value top matches</span>
+          </div>
+          <div class="metrics-pillar">
+            <strong>Relevance</strong>
+            <span>Consistent rank ordering</span>
+          </div>
+          <div class="metrics-pillar">
+            <strong>Speed</strong>
+            <span>Shortlist-ready in seconds</span>
+          </div>
+        </div>
       </div>
       
       <div class="metrics-grid">
-        <div class="metric-card reveal reveal-delay-1">
+        <div class="metric-card">
           <div class="metric-value" data-target="80" data-suffix="%">0%</div>
           <div class="metric-label">Precision@5</div>
-          <div class="metric-detail">4 of top 5 results are strong hires</div>
+          <div class="metric-detail">4 of the top 5 surfaced profiles were judged as strong matches.</div>
+          <div class="metric-footnote">Shortlist quality</div>
         </div>
-        <div class="metric-card reveal reveal-delay-2">
+        <div class="metric-card">
           <div class="metric-value" data-target="0.92" data-decimal="true">0</div>
           <div class="metric-label">NDCG@10</div>
-          <div class="metric-detail">Normalized discounted cumulative gain</div>
+          <div class="metric-detail">High ranking quality even when stronger matches appear deeper in the pool.</div>
+          <div class="metric-footnote">Ranking relevance</div>
         </div>
-        <div class="metric-card reveal reveal-delay-3">
+        <div class="metric-card">
           <div class="metric-value" data-target="30" data-prefix="<" data-suffix="s">0s</div>
           <div class="metric-label">Pipeline Speed</div>
-          <div class="metric-detail">500 candidates ranked end-to-end</div>
+          <div class="metric-detail">End-to-end evaluation time for a 500 candidate batch in the demo pipeline.</div>
+          <div class="metric-footnote">Operational throughput</div>
         </div>
       </div>
       
-      <p class="text-center reveal" style="margin-top:32px;font-size:13px;color:var(--text-muted);font-family:var(--font-mono);">
+      <p class="text-center" style="margin-top:32px;font-size:13px;color:var(--text-muted);font-family:var(--font-mono);">
         Evaluated against a 15-candidate labeled test set with ground-truth relevance labels.
       </p>
     </div>
