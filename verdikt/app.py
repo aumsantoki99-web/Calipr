@@ -41,7 +41,12 @@ if "token" in st.query_params:
         import os
         SUPABASE_JWT_SECRET = st.secrets.get("SUPABASE_JWT_SECRET", os.environ.get("SUPABASE_JWT_SECRET", ""))
         if SUPABASE_JWT_SECRET:
-            decoded = jwt.decode(token, SUPABASE_JWT_SECRET, algorithms=["HS256"], options={"verify_aud": False})
+            # Check what algorithm the token actually uses
+            unverified_header = jwt.get_unverified_header(token)
+            alg = unverified_header.get("alg", "HS256")
+            
+            # Decode using the token's algorithm (typically HS256 for Supabase)
+            decoded = jwt.decode(token, SUPABASE_JWT_SECRET, algorithms=[alg], options={"verify_aud": False})
             st.session_state.auth_user_email = decoded.get("email")
             st.session_state.auth_user_name = decoded.get("user_metadata", {}).get("full_name", decoded.get("email"))
         else:
