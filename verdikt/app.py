@@ -44,7 +44,10 @@ if "token" in st.query_params:
             decoded = jwt.decode(token, SUPABASE_JWT_SECRET, algorithms=["HS256"], options={"verify_aud": False})
             st.session_state.auth_user_email = decoded.get("email")
             st.session_state.auth_user_name = decoded.get("user_metadata", {}).get("full_name", decoded.get("email"))
+        else:
+            st.error("SUPABASE_JWT_SECRET is missing! Please configure it in Hugging Face Space Settings -> Secrets.")
     except Exception as e:
+        st.error(f"Failed to authenticate token: {e}")
         print(f"Failed to authenticate token: {e}")
     st.query_params.clear()
 
