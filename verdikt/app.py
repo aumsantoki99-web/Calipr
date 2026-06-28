@@ -29,6 +29,34 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+# JWT Authentication Check
+if "auth_user_email" not in st.session_state:
+    st.session_state.auth_user_email = None
+    st.session_state.auth_user_name = None
+
+if "token" in st.query_params:
+    token = st.query_params["token"]
+    try:
+        import jwt
+        import os
+        SUPABASE_JWT_SECRET = st.secrets.get("SUPABASE_JWT_SECRET", os.environ.get("SUPABASE_JWT_SECRET", ""))
+        if SUPABASE_JWT_SECRET:
+            decoded = jwt.decode(token, SUPABASE_JWT_SECRET, algorithms=["HS256"], options={"verify_aud": False})
+            st.session_state.auth_user_email = decoded.get("email")
+            st.session_state.auth_user_name = decoded.get("user_metadata", {}).get("full_name", decoded.get("email"))
+    except Exception as e:
+        print(f"Failed to authenticate token: {e}")
+    st.query_params.clear()
+
+if st.session_state.auth_user_name:
+    first_name = st.session_state.auth_user_name.split()[0]
+    st.markdown(f"""
+    <div style="position: fixed; top: 16px; right: 24px; z-index: 999999; background: white; padding: 6px 16px; border-radius: 999px; font-family: Inter, sans-serif; font-size: 14px; font-weight: 600; color: #1a1615; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #e4e2e2; display: flex; align-items: center; gap: 10px;">
+        <div style="background: linear-gradient(135deg, #4A90FF 0%, #1a1615 100%); color: white; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px;">{first_name[0].upper()}</div>
+        Hello, {first_name}
+    </div>
+    """, unsafe_allow_html=True)
+
 # Hackathon demo mode: public Space is open with all features unlocked.
 def is_pro():
     return True
