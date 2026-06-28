@@ -271,10 +271,23 @@ async function maybeRedirectAuthenticatedUser(session) {
   redirectToPendingDestination();
 }
 
-function redirectToPendingDestination() {
+async function redirectToPendingDestination() {
   const target = getPendingTarget();
   localStorage.removeItem(STORAGE_KEYS.redirect);
-  window.location.href = target;
+  
+  let finalUrl = target;
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session && session.access_token) {
+      const url = new URL(target);
+      url.searchParams.set('token', session.access_token);
+      finalUrl = url.toString();
+    }
+  } catch (error) {
+    console.error("Failed to attach token to destination url", error);
+  }
+
+  window.location.href = finalUrl;
 }
 
 /* ==========================================================================
