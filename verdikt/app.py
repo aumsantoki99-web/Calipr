@@ -1173,13 +1173,14 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-first_name = st.session_state.auth_user_name.split()[0] if st.session_state.auth_user_name else ""
+first_name = st.session_state.auth_user_name.split()[0] if st.session_state.auth_user_name else "Guest"
+initial = first_name[0].upper() if first_name else "G"
 user_badge_html = f"""
   <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #453f3d;">
-    <div style="background: linear-gradient(135deg, #4A90FF 0%, #1a1615 100%); color: white; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px;">{first_name[0].upper() if first_name else ''}</div>
+    <div style="background: linear-gradient(135deg, #4A90FF 0%, #1a1615 100%); color: white; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px;">{initial}</div>
     {first_name}
   </div>
-""" if first_name else ""
+"""
 
 # Render HTML navigation
 st.markdown(f"""
