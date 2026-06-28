@@ -79,6 +79,9 @@ function bindAuthEvents() {
     trigger.addEventListener('click', async () => {
       const plan = trigger.dataset.authPlan || 'pro';
       const target = trigger.dataset.authTarget || PRODUCT_URLS[plan] || PRODUCT_URLS.pro;
+      const action = trigger.dataset.authAction || 'signin';
+      setAuthMode(action);
+      
       setPendingDestination(plan, target, true);
 
       const { data: { session } } = await supabaseClient.auth.getSession();
