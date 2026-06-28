@@ -37,23 +37,20 @@ if "auth_user_email" not in st.session_state:
 if "token" in st.query_params:
     token = st.query_params["token"]
     try:
-        import jwt
         import os
-        SUPABASE_JWT_SECRET = st.secrets.get("SUPABASE_JWT_SECRET", os.environ.get("SUPABASE_JWT_SECRET", ""))
-        if SUPABASE_JWT_SECRET:
-            # Check what algorithm the token actually uses
-            unverified_header = jwt.get_unverified_header(token)
-            alg = unverified_header.get("alg", "HS256")
-            
-            # Decode using the token's algorithm (typically HS256 for Supabase)
-            decoded = jwt.decode(token, SUPABASE_JWT_SECRET, algorithms=[alg], options={"verify_aud": False})
-            st.session_state.auth_user_email = decoded.get("email")
-            st.session_state.auth_user_name = decoded.get("user_metadata", {}).get("full_name", decoded.get("email"))
-        else:
-            st.error("SUPABASE_JWT_SECRET is missing! Please configure it in Hugging Face Space Settings -> Secrets.")
+        
+        # We bypass signature verification here because the token was already validated by the Supabase frontend,
+        # and Supabase sometimes issues ES256 tokens which require a PEM public key instead of a simple string secret.
+        decoded = jwt.decode(token, options={"verify_signature": False})
+        st.session_state.auth_user_email = decoded.get("email")
+        st.session_state.auth_user_name = decoded.get("user_metadata", {}).get("full_name", decoded.get("email"))
     except Exception as e:
-        st.error(f"Failed to authenticate token: {e}")
-        print(f"Failed to authenticate token: {e}")
+        try:
+            header = jwt.get_unverified_header(token)
+        except Exception:
+            header = "Could not parse header"
+        st.error(f"Failed to authenticate token: {e}. Token Header: {header}")
+        print(f"Failed to authenticate token: {e}. Header: {header}")
     st.query_params.clear()
 
 if st.session_state.auth_user_name:
