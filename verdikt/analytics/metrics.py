@@ -77,7 +77,12 @@ def get_signal_correlation(run: dict) -> dict:
             v1 = np.array(sigs.get(k1, [0]))
             v2 = np.array(sigs.get(k2, [0]))
             if len(v1) > 1 and len(v2) > 1:
-                corr = float(np.corrcoef(v1, v2)[0,1])
+                if np.std(v1) == 0 or np.std(v2) == 0:
+                    corr = 1.0 if k1 == k2 else 0.0
+                else:
+                    corr = float(np.corrcoef(v1, v2)[0, 1])
+                    if np.isnan(corr):
+                        corr = 0.0
             else:
                 corr = 1.0 if k1 == k2 else 0.0
             row.append(round(corr, 3))

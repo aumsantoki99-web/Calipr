@@ -258,10 +258,11 @@ def build_correlation_heatmap(corr_data: dict) -> go.Figure:
         x=short_labels,
         y=short_labels,
         colorscale=[
-            [0.0,  "rgba(255,255,255,0.5)"],
-            [0.3,  "rgba(200,220,255,0.6)"],
-            [0.6,  "rgba(120,174,255,0.75)"],
-            [1.0,  "#4A90FF"],
+            [0.0,  "#EEF4FF"],
+            [0.25, "#BFDBFE"],
+            [0.5,  "#60A5FA"],
+            [0.75, "#2563EB"],
+            [1.0,  "#1E3A8A"],
         ],
         zmin=0, zmax=1,
         showscale=True,
@@ -273,19 +274,9 @@ def build_correlation_heatmap(corr_data: dict) -> go.Figure:
         ),
         text=[[f"{v:.2f}" for v in row] for row in matrix],
         texttemplate="%{text}",
-        textfont=dict(size=11, family="JetBrains Mono, monospace", color="#0A0A0A"),
+        textfont=dict(size=12, family="JetBrains Mono, monospace", color="#111827"),
         hovertemplate="%{y} × %{x}: <b>%{z:.3f}</b><extra></extra>",
     ))
-
-    # Diagonal cells (always 1.0) — darker
-    for i in range(5):
-        fig.add_annotation(
-            x=short_labels[i], y=short_labels[i],
-            text=f"<b>1.00</b>",
-            showarrow=False,
-            font=dict(size=11, color="#FFFFFF",
-                      family="JetBrains Mono, monospace"),
-        )
 
     fig.update_layout(
         **CHART_LAYOUT,
@@ -316,14 +307,14 @@ def build_availability_chart(av_data: dict) -> go.Figure:
     ]
 
     labels  = [m[0] for m in metrics]
-    values  = [m[1] for m in metrics]
+    values  = [max(m[1], 0) for m in metrics]
     colors  = [m[2] for m in metrics]
 
     fig = go.Figure()
 
     # Background tracks
     fig.add_trace(go.Bar(
-        y=labels, x=[100]*5, orientation="h",
+        y=labels, x=[100] * len(labels), orientation="h",
         marker=dict(color="rgba(229,231,235,0.4)", line=dict(width=0)),
         hoverinfo="skip", showlegend=False, width=0.5,
     ))
@@ -331,13 +322,8 @@ def build_availability_chart(av_data: dict) -> go.Figure:
     # Value bars
     fig.add_trace(go.Bar(
         y=labels, x=values, orientation="h",
-        marker=dict(
-            color=[c.replace(")", ",0.85)").replace("rgb","rgba")
-                   if "rgb" in c else c for c in colors],
-            line=dict(width=0),
-        ),
-        text=[f"<b>{v:.0f}%</b>" if v != av_data["avg_response_rate"]*100
-              else f"<b>{v:.0f}%</b>" for v in values],
+        marker=dict(color=colors, line=dict(width=0)),
+        text=[f"<b>{v:.0f}%</b>" for v in values],
         textposition="outside",
         textfont=dict(size=12, family="JetBrains Mono, monospace",
                       color="#0A0A0A", weight=700),

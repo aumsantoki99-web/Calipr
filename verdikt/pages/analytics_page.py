@@ -415,12 +415,13 @@ def render_analytics_page():
         rank_classes = ["gold","silver","bronze"] + [""] * 7
         rows_html = ""
         for i, c in enumerate(top10[:10]):
-            score = c.get("score",0)
-            sc    = "teal" if score>=0.75 else "blue" if score>=0.5 else "amber"
+            score = c.get("score", 0)
+            sc    = "teal" if score >= 0.75 else "blue" if score >= 0.5 else "amber"
             rc    = rank_classes[i] if i < len(rank_classes) else ""
+            rank_num = c.get("rank") or (i + 1)
             rows_html += f"""
             <tr>
-                <td><span class="top10-rank {rc}">#{c.get('rank', i+1)}</span></td>
+                <td><span class="top10-rank {rc}">{rank_num}</span></td>
                 <td>
                     <div style="font-weight:700;color:#0A0A0A;font-size:13px;">
                         {c.get('name','')}</div>
@@ -477,7 +478,7 @@ def render_analytics_page():
     with col_radar:
         st.markdown('<div class="chart-card-title">Average Candidate Fingerprint</div>', unsafe_allow_html=True)
         st.markdown('<div class="chart-card-sub">Aggregate radar of top 100 · dashed = 0.70 benchmark</div>', unsafe_allow_html=True)
-        st.plotly_chart(build_radial_cluster(sig_avgs),
+        st.plotly_chart(build_aggregate_radar(sig_avgs),
                         use_container_width=True, config={"displayModeBar":False})
         
     st.markdown("<hr>", unsafe_allow_html=True)

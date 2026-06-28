@@ -2,15 +2,97 @@ import streamlit as st
 import base64
 import os
 
+_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+_ASSETS_DIR = os.path.join(_BASE_DIR, "assets")
+
+_ASSET_FILES = {
+    "slack": "slack.jpg",
+    "sheets": "sheets.png",
+    "email": "email.png",
+    "rest_api": "rest API.png",
+    "csv_export": "csv export.png",
+    "linkedin": "linkedin.png",
+    "naukri": "naukri.png",
+    "whatsapp": "whatsapp.jpg",
+    "calendly": "calenderly.png",
+    "greenhouse": "greenhouse.png",
+}
+
+
 @st.cache_data
 def get_image_base64(path):
+    if not os.path.isabs(path):
+        candidates = [
+            os.path.join(_BASE_DIR, path),
+            os.path.join(_ASSETS_DIR, os.path.basename(path)),
+        ]
+        for candidate in candidates:
+            if os.path.exists(candidate):
+                path = candidate
+                break
+        else:
+            path = os.path.join(_BASE_DIR, path)
+
     if not os.path.exists(path):
         return ""
+
     with open(path, "rb") as image_file:
         encoded = base64.b64encode(image_file.read()).decode()
-    ext = path.split('.')[-1].lower()
+    ext = path.split(".")[-1].lower()
     mime = "jpeg" if ext in ["jpg", "jpeg"] else "png"
     return f"data:image/{mime};base64,{encoded}"
+
+
+def connector_logo(asset_key: str, size: int = 32) -> str:
+    filename = _ASSET_FILES.get(asset_key, "")
+    src = get_image_base64(os.path.join(_ASSETS_DIR, filename)) if filename else ""
+    if not src:
+        return (
+            f'<div style="width:{size}px;height:{size}px;background:#F3F4F6;'
+            f'border-radius:6px;border:1px solid #E5E7EB;"></div>'
+        )
+    return (
+        f'<img src="{src}" width="{size}" height="{size}" '
+        f'style="object-fit:cover;border-radius:6px;display:block;">'
+    )
+
+
+def connected_card_html(logo_key: str, title: str, subtitle: str, badge: str,
+                        status_subtext: str, body_html: str, connected: bool = True) -> str:
+    badge_bg = "#DCFCE7" if connected else "#F3F4F6"
+    badge_color = "#16A34A" if connected else "#6B7280"
+    badge_border = "#BBF7D0" if connected else "#E5E7EB"
+    top_border = "#0D9488" if connected else "#E5E7EB"
+    dot_color = "#16A34A" if connected else "#9CA3AF"
+    status_label = badge if connected else "NOT CONNECTED"
+
+    status_html = f"""
+<div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+  <span style="display:inline-block; width:8px; height:8px; border-radius:50%;
+               background:{dot_color}; animation: pulsePing 2s ease-in-out infinite;"></span>
+  <span style="font-size:13px; color:{dot_color}; font-weight:600;">{status_label}</span>
+  <span style="font-size:12px; color:#9CA3AF; margin-left:4px;">· {status_subtext}</span>
+</div>"""
+
+    return f"""
+<div class="int-connected-card" style="border-top-color:{top_border};">
+  <div style="display:flex; align-items:center; gap:14px; margin-bottom:16px;">
+    <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0; width:32px; height:32px; overflow:hidden; border-radius:6px;">
+      {connector_logo(logo_key, 32)}
+    </div>
+    <div style="flex:1; min-width:0;">
+      <div style="font-size:16px; font-weight:700; color:#0A0A0A;">{title}</div>
+      <div style="font-size:12px; color:#6B7280;">{subtitle}</div>
+    </div>
+    <span style="margin-left:auto; font-size:11px; font-weight:600; white-space:nowrap;
+                 padding:3px 10px; border-radius:9999px;
+                 background:{badge_bg}; color:{badge_color}; border:1px solid {badge_border};">
+      {badge}
+    </span>
+  </div>
+  {status_html}
+  <div class="int-connected-card-body">{body_html}</div>
+</div>"""
 
 import requests
 import os
@@ -548,6 +630,29 @@ hr {
     word-break: break-all;
 }
 
+/* CONNECTED CONNECTOR CARD — equal Slack / Sheets sizing */
+.int-connected-card {
+    background: #FFFFFF;
+    border: 1px solid #F3F4F6;
+    border-top: 3px solid #0D9488;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    min-height: 340px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+.int-connected-card-body {
+    flex: 1;
+    font-size: 13px;
+    color: #374151;
+    line-height: 1.7;
+    margin-bottom: 0;
+}
+
 /* PULSE DOT — connected status */
 .pulse-dot {
     display: inline-block;
@@ -1051,74 +1156,39 @@ def integrations_page():
                 st.session_state.slack_test_status = None   # None | "success" | "error"
 
             # ── CARD HTML ──
-            status_html = ""
             if slack_configured:
                 last_sent = st.session_state.slack_last_sent
-                last_sent_str = (
+                status_subtext = (
                     f"Last sent: {last_sent}" if last_sent
                     else "Connected · Waiting for first ranking run"
                 )
-                status_html = f"""
-<div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
-  <span style="display:inline-block; width:8px; height:8px; border-radius:50%;
-               background:#16A34A; animation: pulse 2s ease-in-out infinite;"></span>
-  <span style="font-size:13px; color:#16A34A; font-weight:600;">CONNECTED</span>
-  <span style="font-size:12px; color:#9CA3AF; margin-left:4px;">· {last_sent_str}</span>
-</div>
-"""
-                card_border = "border-top: 3px solid #0D9488;"
             else:
-                status_html = """
-<div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
-  <span style="display:inline-block; width:8px; height:8px;
-               border-radius:50%; background:#9CA3AF;"></span>
-  <span style="font-size:13px; color:#9CA3AF; font-weight:600;">NOT CONNECTED</span>
-</div>
-"""
-                card_border = "border-top: 3px solid #E5E7EB;"
+                status_subtext = "Not configured yet"
 
-            st.markdown(f"""
-<div style="background:#FFFFFF; border:1px solid #F3F4F6; {card_border}
-            border-radius:12px; padding:24px; margin-bottom:16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
-
-  <!-- Header row -->
-  <div style="display:flex; align-items:center; gap:14px; margin-bottom:16px;">
-    <!-- Slack logo custom image inline -->
-    <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0; width:32px; height:32px; overflow:hidden; border-radius:6px;">
-      <img src="{get_image_base64('assets/slack_logo.jpg')}" width="32" height="32" style="object-fit:cover;">
-    </div>
-    <div>
-      <div style="font-size:16px; font-weight:700; color:#0A0A0A;">Slack</div>
-      <div style="font-size:12px; color:#6B7280;">
-        Send ranked shortlists to your #recruiting channel instantly
-      </div>
-    </div>
-    <span style="margin-left:auto; font-size:11px; font-weight:600;
-                 padding:3px 10px; border-radius:9999px;
-                 background:{'#DCFCE7' if slack_configured else '#F3F4F6'};
-                 color:{'#16A34A' if slack_configured else '#6B7280'};
-                 border:1px solid {'#BBF7D0' if slack_configured else '#E5E7EB'};">
-      {'CONNECTED' if slack_configured else 'AVAILABLE'}
-    </span>
-  </div>
-
-  <!-- Status -->
-  {status_html}
-
-  <!-- What it does -->
-  <div style="font-size:13px; color:#374151; line-height:1.7; margin-bottom:20px;">
+            slack_body = """
     After every ranking run, Calipr automatically posts the
     <strong>Top 5 candidates</strong> to your Slack channel with:
     full signal breakdown, pipeline runtime, Precision@5 score,
     and a direct link back to the sandbox.
-  </div>
+"""
+            if not slack_configured:
+                slack_body += """
+    <div style="padding:12px 16px; background:#F8FAFC; border:1px solid #F3F4F6; border-radius:8px; font-size:12px; color:#6B7280; margin-top:16px;">
+      <strong style="color:#0A0A0A;">Setup:</strong> Add <code style="background:#F3F4F6; padding:2px 6px; border-radius:4px;">SLACK_WEBHOOK_URL</code> to your HuggingFace Space secrets &rarr; Settings &rarr; Repository secrets.
+    </div>"""
 
-  <!-- Setup instruction if not connected -->
-  {'<div style="padding:12px 16px; background:#F8FAFC; border:1px solid #F3F4F6; border-radius:8px; font-size:12px; color:#6B7280; margin-bottom:16px;"><strong style="color:#0A0A0A;">Setup:</strong> Add <code style="background:#F3F4F6; padding:2px 6px; border-radius:4px;">SLACK_WEBHOOK_URL</code> to your HuggingFace Space secrets &rarr; Settings &rarr; Repository secrets.</div>' if not slack_configured else ''}
-
-</div>
-""", unsafe_allow_html=True)
+            st.markdown(
+                connected_card_html(
+                    logo_key="slack",
+                    title="Slack",
+                    subtitle="Send ranked shortlists to your #recruiting channel instantly",
+                    badge="CONNECTED" if slack_configured else "AVAILABLE",
+                    status_subtext=status_subtext,
+                    body_html=slack_body,
+                    connected=slack_configured,
+                ),
+                unsafe_allow_html=True,
+            )
 
             # ── ACTION BUTTONS ──
             if slack_configured:
@@ -1160,43 +1230,43 @@ def integrations_page():
                 """, unsafe_allow_html=True)
 
         with col2:
-            st.markdown(f"""
-            <div class="int-card connected" style="margin-bottom: 12px;">
-                <div class="int-badge badge-connected">
-                    <span class="pulse-dot"></span> Connected
-                </div>
-                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;"><img src="{get_image_base64('assets/google_sheets.jpg')}" width="36" height="36" style="border-radius: 6px;"></div>
-                <div class="int-card-title">Google Sheets</div>
-                <div class="int-card-desc">
-                    Export all 100 ranked candidates to a Google Sheet automatically.
-                    Includes all 5 signal scores, rationale, and candidate metadata.
-                </div>
-                <div class="int-card-tags">
-                    <span class="int-tag">Export</span>
-                    <span class="int-tag">Spreadsheet</span>
-                    <span class="int-tag">Auto-sync</span>
-                </div>
-                <div class="int-config">
-                    <div class="int-config-label">Spreadsheet</div>
-                    <div class="int-config-value">Calipr Rankings — Redrob Challenge 2025</div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
             from integrations.sheets import get_sheet_url, export_to_sheets
             sheet_url = get_sheet_url()
+
+            sheets_body = """
+    After every ranking run, Calipr exports the <strong>Top 100 candidates</strong>
+    to Google Sheets with: all 5 signal scores, AI rationale, candidate metadata,
+    pipeline runtime, and a direct link back to the sandbox.
+    <div style="padding:12px 16px; background:#F8FAFC; border:1px solid #F3F4F6; border-radius:8px; font-size:12px; color:#6B7280; margin-top:16px;">
+      <strong style="color:#0A0A0A;">Spreadsheet:</strong> Calipr Rankings — Redrob Challenge 2025
+    </div>"""
+
+            st.markdown(
+                connected_card_html(
+                    logo_key="sheets",
+                    title="Google Sheets",
+                    subtitle="Export ranked candidates to a spreadsheet automatically",
+                    badge="CONNECTED",
+                    status_subtext="Connected · Spreadsheet linked",
+                    body_html=sheets_body,
+                    connected=True,
+                ),
+                unsafe_allow_html=True,
+            )
+
             if sheet_url:
                 st.link_button("Open Last Export ↗", sheet_url, use_container_width=True)
             else:
                 st.button("Open Last Export ↗", disabled=True, use_container_width=True)
-                
-            sheets_new  = st.button("Re-export Latest Rankings", key="reexport", use_container_width=True)
+
+            sheets_new = st.button("Re-export Latest Rankings", key="reexport", use_container_width=True)
             if sheets_new:
                 if "scored_candidates" in st.session_state and st.session_state.scored_candidates:
                     job_title = st.session_state.get("job_title", "Senior AI Engineer")
                     res = export_to_sheets(st.session_state.scored_candidates, job_title=job_title)
                     if res.get("success"):
                         st.success(f"✓ {res.get('message')}")
-                        log_activity("Google Sheets", "📊", f"Re-exported latest rankings manually to Google Sheets.")
+                        log_activity("Google Sheets", "📊", "Re-exported latest rankings manually to Google Sheets.")
                     else:
                         st.error(f"Failed to export: {res.get('message')}")
                 else:
@@ -1211,7 +1281,7 @@ def integrations_page():
             st.markdown(f"""
             <div class="int-card" style="margin-bottom: 12px;">
                 <div class="int-badge badge-available">Available</div>
-                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;"><img src="{get_image_base64('assets/gmail.png')}" width="36" height="36" style="border-radius: 6px;"></div>
+                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;">{connector_logo("email", 36)}</div>
                 <div class="int-card-title">Email Digest</div>
                 <div class="int-card-desc">
                     Send a formatted email summary with the top 10 candidates,
@@ -1243,7 +1313,7 @@ def integrations_page():
             st.markdown(f"""
             <div class="int-card" style="margin-bottom: 12px;">
                 <div class="int-badge badge-available">Available</div>
-                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;"><img src="{get_image_base64('assets/rest_api.png')}" width="36" height="36" style="border-radius: 6px;"></div>
+                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;">{connector_logo("rest_api", 36)}</div>
                 <div class="int-card-title">REST API</div>
                 <div class="int-card-desc">
                     Programmatic access to the full ranking pipeline.
@@ -1264,7 +1334,7 @@ def integrations_page():
             st.markdown(f"""
             <div class="int-card" style="margin-bottom: 12px;">
                 <div class="int-badge badge-available">Available</div>
-                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;"><img src="{get_image_base64('assets/csv_export.png')}" width="36" height="36" style="border-radius: 6px;"></div>
+                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;">{connector_logo("csv_export", 36)}</div>
                 <div class="int-card-title">CSV Export</div>
                 <div class="int-card-desc">
                     Download submission-spec compliant CSV with all 10 columns
@@ -1294,7 +1364,7 @@ def integrations_page():
             st.markdown(f"""
             <div class="int-card beta" style="margin-bottom: 12px;">
                 <div class="int-badge" style="background:#E0E7FF; color:#3730A3; border: 1px solid #C7D2FE;">Free</div>
-                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;"><img src="{get_image_base64('assets/linkedin.png')}" width="36" height="36" style="border-radius: 6px;"></div>
+                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;">{connector_logo("linkedin", 36)}</div>
                 <div class="int-card-title">LinkedIn Import</div>
                 <div class="int-card-desc">
                     Import candidates directly from a LinkedIn job posting URL.
@@ -1317,7 +1387,7 @@ def integrations_page():
             st.markdown(f"""
             <div class="int-card beta" style="margin-bottom: 12px;">
                 <div class="int-badge" style="background:#E0E7FF; color:#3730A3; border: 1px solid #C7D2FE;">Free</div>
-                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;"><img src="{get_image_base64('assets/naukri.png')}" width="36" height="36" style="border-radius: 6px;"></div>
+                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;">{connector_logo("naukri", 36)}</div>
                 <div class="int-card-title">Naukri.com</div>
                 <div class="int-card-desc">
                     Pull applicants directly from Naukri job postings.
@@ -1340,7 +1410,7 @@ def integrations_page():
             st.markdown(f"""
             <div class="int-card beta" style="margin-bottom: 12px;">
                 <div class="int-badge" style="background:#E0E7FF; color:#3730A3; border: 1px solid #C7D2FE;">Free</div>
-                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;"><img src="{get_image_base64('assets/whatsapp.jpg')}" width="36" height="36" style="border-radius: 6px;"></div>
+                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;">{connector_logo("whatsapp", 36)}</div>
                 <div class="int-card-title">WhatsApp Business</div>
                 <div class="int-card-desc">
                     Send hiring manager the top 10 shortlist via WhatsApp.
@@ -1365,7 +1435,7 @@ def integrations_page():
             st.markdown(f"""
             <div class="int-card beta" style="margin-top: 16px; margin-bottom: 12px;">
                 <div class="int-badge" style="background:#E0E7FF; color:#3730A3; border: 1px solid #C7D2FE;">Free</div>
-                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;"><img src="{get_image_base64('assets/calenderly.jpg')}" width="36" height="36" style="border-radius: 6px;"></div>
+                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;">{connector_logo("calendly", 36)}</div>
                 <div class="int-card-title">Calendly</div>
                 <div class="int-card-desc">
                     Auto-send interview scheduling links to the top 10 ranked
@@ -1388,7 +1458,7 @@ def integrations_page():
             st.markdown(f"""
             <div class="int-card beta" style="margin-top: 16px; margin-bottom: 12px;">
                 <div class="int-badge" style="background:#E0E7FF; color:#3730A3; border: 1px solid #C7D2FE;">Free</div>
-                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;"><img src="{get_image_base64('assets/greenhouse.jpg')}" width="36" height="36" style="border-radius: 6px;"></div>
+                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;">{connector_logo("greenhouse", 36)}</div>
                 <div class="int-card-title">Greenhouse</div>
                 <div class="int-card-desc">
                     Push Calipr's ranked shortlist directly into your Greenhouse

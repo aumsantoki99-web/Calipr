@@ -8,6 +8,15 @@ from datetime import datetime
 RUN_HISTORY_PATH    = "data/run_history.json"
 ANALYTICS_CACHE_PATH = "data/analytics_cache.json"
 
+
+def _candidate_profile(candidate: dict) -> dict:
+    return candidate.get("_profile", candidate)
+
+
+def _candidate_signals(candidate: dict) -> dict:
+    return _candidate_profile(candidate).get("redrob_signals", {})
+
+
 def save_run(
     ranked_candidates: list[dict],
     job_title: str,
@@ -35,34 +44,34 @@ def save_run(
         "scores":          [round(float(c.get("score", c.get("final_score", 0))), 4)
                            for c in ranked_candidates[:100]],
         "signal_scores": {
-            "semantic":    [round(float(c.get("s1_semantic", 0)), 4) for c in ranked_candidates[:100]],
-            "skills":      [round(float(c.get("s2_skills", 0)), 4) for c in ranked_candidates[:100]],
-            "career":      [round(float(c.get("s3_career", 0)), 4) for c in ranked_candidates[:100]],
-            "behavioral":  [round(float(c.get("s4_behavioral", 0)), 4) for c in ranked_candidates[:100]],
-            "domain":      [round(float(c.get("s5_domain", 0)), 4) for c in ranked_candidates[:100]],
+            "semantic":    [round(float(c.get("s1_sem", 0)), 4) for c in ranked_candidates[:100]],
+            "skills":      [round(float(c.get("s2_skl", 0)), 4) for c in ranked_candidates[:100]],
+            "career":      [round(float(c.get("s3_car", 0)), 4) for c in ranked_candidates[:100]],
+            "behavioral":  [round(float(c.get("s4_beh", 0)), 4) for c in ranked_candidates[:100]],
+            "domain":      [round(float(c.get("s5_dom", 0)), 4) for c in ranked_candidates[:100]],
         },
         "availability": {
             "open_to_work":      sum(1 for c in ranked_candidates[:100]
-                                    if c.get("redrob_signals",{}).get("open_to_work_flag")),
+                                    if _candidate_signals(c).get("open_to_work_flag")),
             "notice_lt_30":      sum(1 for c in ranked_candidates[:100]
-                                    if c.get("redrob_signals",{}).get("notice_period_days",180) < 30),
+                                    if _candidate_signals(c).get("notice_period_days", 180) < 30),
             "notice_lt_60":      sum(1 for c in ranked_candidates[:100]
-                                    if c.get("redrob_signals",{}).get("notice_period_days",180) < 60),
+                                    if _candidate_signals(c).get("notice_period_days", 180) < 60),
             "avg_response_rate": round(
-                sum(float(c.get("redrob_signals",{}).get("recruiter_response_rate",0))
-                    for c in ranked_candidates[:100]) / max(len(ranked_candidates[:100]),1), 3
+                sum(float(_candidate_signals(c).get("recruiter_response_rate", 0))
+                    for c in ranked_candidates[:100]) / max(len(ranked_candidates[:100]), 1), 3
             ),
             "active_7d":         sum(1 for c in ranked_candidates[:100]
-                                    if c.get("redrob_signals",{}).get("last_active_days_ago",999) <= 7),
+                                    if _candidate_signals(c).get("last_active_days_ago", 999) <= 7),
         },
         "top10": [
             {
-                "rank":   c.get("rank",""),
-                "name":   c.get("name", c.get("profile",{}).get("anonymized_name","")),
-                "title":  c.get("current_title", c.get("profile",{}).get("current_title","")),
-                "score":  round(float(c.get("score", c.get("final_score",0))),4),
+                "rank":   i + 1,
+                "name":   c.get("name") or _candidate_profile(c).get("profile", {}).get("anonymized_name", "Unknown"),
+                "title":  c.get("title") or _candidate_profile(c).get("profile", {}).get("current_title", ""),
+                "score":  round(float(c.get("score", c.get("final_score", 0))), 4),
             }
-            for c in ranked_candidates[:10]
+            for i, c in enumerate(ranked_candidates[:10])
         ]
     }
 
