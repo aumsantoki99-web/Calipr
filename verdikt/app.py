@@ -37,6 +37,7 @@ if "auth_user_email" not in st.session_state:
 if "token" in st.query_params:
     token = st.query_params["token"]
     try:
+        import jwt
         import os
         
         # We bypass signature verification here because the token was already validated by the Supabase frontend,
