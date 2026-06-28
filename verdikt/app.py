@@ -49,13 +49,7 @@ if "token" in st.query_params:
     st.query_params.clear()
 
 if st.session_state.auth_user_name:
-    first_name = st.session_state.auth_user_name.split()[0]
-    st.markdown(f"""
-    <div style="position: fixed; top: 16px; right: 24px; z-index: 999999; background: white; padding: 6px 16px; border-radius: 999px; font-family: Inter, sans-serif; font-size: 14px; font-weight: 600; color: #1a1615; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #e4e2e2; display: flex; align-items: center; gap: 10px;">
-        <div style="background: linear-gradient(135deg, #4A90FF 0%, #1a1615 100%); color: white; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px;">{first_name[0].upper()}</div>
-        Hello, {first_name}
-    </div>
-    """, unsafe_allow_html=True)
+    pass # we will inject this in the dashboard-nav
 
 # Hackathon demo mode: public Space is open with all features unlocked.
 def is_pro():
@@ -1179,8 +1173,16 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+first_name = st.session_state.auth_user_name.split()[0] if st.session_state.auth_user_name else ""
+user_badge_html = f"""
+  <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #453f3d;">
+    <div style="background: linear-gradient(135deg, #4A90FF 0%, #1a1615 100%); color: white; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px;">{first_name[0].upper() if first_name else ''}</div>
+    {first_name}
+  </div>
+""" if first_name else ""
+
 # Render HTML navigation
-st.markdown("""
+st.markdown(f"""
 <div class="dashboard-nav">
   <div class="nav-logo">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #1a1615;">
@@ -1190,6 +1192,7 @@ st.markdown("""
     </svg>
     <span>Calipr</span>
   </div>
+  {user_badge_html}
 </div>
 """, unsafe_allow_html=True)
 
