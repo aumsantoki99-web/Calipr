@@ -53,8 +53,9 @@
           <a href="#contact">Contact</a>
         </div>
         
-        <div class="nav-actions">
+        <div class="nav-actions" style="display: flex; gap: 8px;">
           <button class="btn btn-primary btn-sm btn-pill auth-trigger" type="button" id="nav-sign-in" data-auth-trigger data-auth-action="signin" data-auth-plan="pro" data-auth-target="https://aumus-calipr.hf.space">Log In</button>
+          <button class="btn btn-secondary btn-sm btn-pill" type="button" id="nav-sign-out" style="display: none;">Log Out</button>
         </div>
         
         <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
@@ -72,6 +73,7 @@
     <a href="#pricing" class="mobile-link">Pricing</a>
     <a href="#contact" class="mobile-link">Contact</a>
     <button class="btn btn-secondary btn-pill auth-trigger" type="button" id="mobile-sign-in" data-auth-trigger data-auth-plan="pro" data-auth-target="https://aumus-calipr.hf.space">Sign In</button>
+    <button class="btn btn-secondary btn-pill" type="button" id="mobile-sign-out" style="display: none;">Log Out</button>
     <a href="https://huggingface.co/spaces/Aumus/calipr" target="_blank" class="btn btn-primary btn-pill" id="mobile-try-demo">Try Demo</a>
   </div>
 
@@ -848,7 +850,7 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/script.js?v=2"></script>
+  <script src="js/script.js?v=3"></script>
   <script src="js/gsap-animations.js"></script>
 </body>
 </html>

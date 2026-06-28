@@ -110,6 +110,13 @@ function bindAuthEvents() {
 
   authElements.google.addEventListener('click', handleGoogleAuth);
   authElements.form.addEventListener('submit', handleEmailAuth);
+
+  document.querySelectorAll('#nav-sign-out, #mobile-sign-out').forEach((button) => {
+    button.addEventListener('click', async () => {
+      await supabaseClient.auth.signOut();
+      window.location.reload();
+    });
+  });
 }
 
 function setPendingDestination(plan, target, shouldRedirect) {
@@ -262,6 +269,11 @@ async function updateSignedInState(session) {
   document.querySelectorAll('#nav-sign-in, #mobile-sign-in').forEach((button) => {
     button.textContent = displayName.split(' ')[0];
   });
+  
+  document.querySelectorAll('#nav-sign-out, #mobile-sign-out').forEach((button) => {
+    button.style.display = 'inline-block';
+  });
+
   closeAuthModal();
 }
 
