@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const PRODUCT_URLS = {
-  free: 'https://huggingface.co/spaces/Aumus/calipr',
-  pro: 'https://huggingface.co/spaces/Aumus/calipr'
+  free: 'https://aumus-calipr.hf.space',
+  pro: 'https://aumus-calipr.hf.space'
 };
 
 const SUPABASE_URL = 'https://vvakfljeslxhwceidxvi.supabase.co';
