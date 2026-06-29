@@ -1555,42 +1555,84 @@ if st.session_state.scored_candidates is not None:
     scored_list = st.session_state.scored_candidates
     
     if st.session_state.scored_candidates:
-        # Generate CSV for download
-        import pandas as pd
-        df = pd.DataFrame([{
-            'Rank': i+1,
-            'Candidate ID': c['candidate_id'],
-            'Name': c['name'],
-            'Title': c['title'],
-            'Final Score': c['score'],
-            'Semantic Fit': c['s1_sem'],
-            'Skills Match': c['s2_skl'],
-            'Career': c['s3_car'],
-            'Behavioral': c['s4_beh'],
-            'Domain': c['s5_dom']
-        } for i, c in enumerate(st.session_state.scored_candidates)])
-        csv_data = df.to_csv(index=False).encode('utf-8')
+        st.markdown("<h4 style='margin-bottom:12px;font-family:Inter;'>Export Results</h4>", unsafe_allow_html=True)
+        export_col1, export_col2, export_col3 = st.columns([1, 1, 2])
         
-        if is_pro():
-            st.download_button(
-                label="Download Top 100 Shortlist CSV",
-                data=csv_data,
-                file_name="calipr_submission.csv",
-                mime="text/csv",
-                use_container_width=True,
-                key="download_btn_top"
-            )
-        else:
-            st.markdown("""
-            <div style="border: 1px dashed #D1D5DB; background: #F9FAFB; border-radius: 12px; padding: 24px; text-align: center; font-family: Inter, sans-serif; margin-bottom: 20px;">
-                <div style="font-size: 32px; margin-bottom: 12px;">🔒</div>
-                <div style="font-weight: 600; color: #111827; margin-bottom: 6px; font-size: 15px;">CSV Export is Locked</div>
-                <div style="color: #6B7280; font-size: 13px; margin-bottom: 16px; max-width: 380px; margin-left: auto; margin-right: auto; line-height: 1.5;">
-                    Exporting candidate shortlists to CSV is a Pro feature. Upgrade your plan to export and download submission-ready spreadsheets.
+        with export_col1:
+            export_format = st.selectbox("Format", ["CSV", "Excel (.xlsx)"], label_visibility="collapsed")
+        with export_col2:
+            export_filter = st.selectbox("Filter", ["All Candidates", "Shortlisted Only"], label_visibility="collapsed")
+            
+        import pandas as pd
+        import io
+        
+        # Build dataset
+        export_data = []
+        for i, c in enumerate(st.session_state.scored_candidates):
+            decision = st.session_state.get("candidate_decisions", {}).get(c['name'], "pending")
+            
+            if export_filter == "Shortlisted Only" and decision != "shortlisted":
+                continue
+                
+            export_data.append({
+                'Rank': i+1,
+                'Status': decision.upper(),
+                'Candidate ID': c.get('candidate_id', ''),
+                'Name': c.get('name', ''),
+                'Title': c.get('title', ''),
+                'Final Score': c.get('score', 0),
+                'Experience': c.get('experience', ''),
+                'Current Company': c.get('current_company', ''),
+                'Location': c.get('location', ''),
+                'Education': c.get('education', ''),
+                'Semantic Fit': c.get('s1_sem', 0),
+                'Skills Match': c.get('s2_skl', 0),
+                'Career Trajectory': c.get('s3_car', 0),
+                'Behavioral': c.get('s4_beh', 0),
+                'Domain Expertise': c.get('s5_dom', 0),
+                'Email Verified': c.get('verified_email', False),
+                'Phone Verified': c.get('verified_phone', False),
+                'LinkedIn Connected': c.get('linkedin_connected', False)
+            })
+            
+        if export_data:
+            df = pd.DataFrame(export_data)
+            
+            if export_format == "CSV":
+                data_payload = df.to_csv(index=False).encode('utf-8')
+                mime_type = "text/csv"
+                file_name = "calipr_results.csv"
+            else:
+                buffer = io.BytesIO()
+                with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+                    df.to_excel(writer, index=False, sheet_name='Candidates')
+                data_payload = buffer.getvalue()
+                mime_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                file_name = "calipr_results.xlsx"
+                
+            if is_pro():
+                st.download_button(
+                    label=f"⬇️ Download {export_format}",
+                    data=data_payload,
+                    file_name=file_name,
+                    mime=mime_type,
+                    use_container_width=True,
+                    key="download_btn_export",
+                    type="primary"
+                )
+            else:
+                st.markdown("""
+                <div style="border: 1px dashed #D1D5DB; background: #F9FAFB; border-radius: 12px; padding: 24px; text-align: center; font-family: Inter, sans-serif; margin-bottom: 20px;">
+                    <div style="font-size: 32px; margin-bottom: 12px;">🔒</div>
+                    <div style="font-weight: 600; color: #111827; margin-bottom: 6px; font-size: 15px;">Data Export is Locked</div>
+                    <div style="color: #6B7280; font-size: 13px; margin-bottom: 16px; max-width: 380px; margin-left: auto; margin-right: auto; line-height: 1.5;">
+                        Exporting candidate shortlists is a Pro feature. Upgrade your plan to export and download submission-ready spreadsheets.
+                    </div>
+                    <a href="https://calipr-4fnf.vercel.app/#pricing" target="_blank" style="display: inline-block; background: #4A90FF; color: white; padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; box-shadow: 0 2px 4px rgba(74, 144, 255, 0.2);">Upgrade to Pro to Export</a>
                 </div>
-                <a href="https://calipr-4fnf.vercel.app/#pricing" target="_blank" style="display: inline-block; background: #4A90FF; color: white; padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; box-shadow: 0 2px 4px rgba(74, 144, 255, 0.2);">Upgrade to Pro to Export</a>
-            </div>
-            """, unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
+        else:
+            st.info("No candidates match the selected filter.")
 
     with st.sidebar:
         st.markdown('<hr style="margin:20px 0 16px;border-top:1px solid #e4e2e2;">', unsafe_allow_html=True)
