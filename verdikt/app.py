@@ -2140,16 +2140,3 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Section 7 — Footer
-st.markdown("""
-<div style="border-top:1px solid #e4e2e2;padding:32px 0;margin-top:64px;
-            display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
-    <div style="font-size:13px;color:#757170;font-family:Inter,sans-serif;">
-        © 2026 Calipr · Built at IITRAM Flux 2.0 · Sponsored by 
-        <span style="color:#4A90FF;font-weight:700;">Redrob AI</span>
-    </div>
-    <div style="font-size:13px;color:#757170;font-family:Inter,sans-serif;">
-        Made with ❤️ by Aum Santoki &amp; Team
-    </div>
-</div>
-""", unsafe_allow_html=True)
