@@ -712,6 +712,12 @@ SKILL_ADJACENCY = {
 # Initialize session state variables
 if "uploaded_candidates" not in st.session_state:
     st.session_state.uploaded_candidates = []
+if "selected_candidate" not in st.session_state:
+    st.session_state.selected_candidate = None
+
+if "saved_shortlists" not in st.session_state:
+    st.session_state.saved_shortlists = []
+
 if "scored_candidates" not in st.session_state:
     st.session_state.scored_candidates = None
 if "run_runtime" not in st.session_state:
@@ -1190,7 +1196,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # The functional navigation bar pulled UP into the HTML via negative margin
-selected_page = st.radio("Navigation", ["Candidate Ranker", "Recruiter Memory", "Analytics", "Integrations"], horizontal=True, label_visibility="collapsed")
+selected_page = st.radio("Navigation", ["Candidate Ranker", "Compare Shortlists", "Recruiter Memory", "Analytics", "Integrations"], horizontal=True, label_visibility="collapsed")
 
 # ── ROUTING LOGIC ──
 if selected_page == "Integrations":
@@ -1202,6 +1208,16 @@ if selected_page == "Integrations":
     """, unsafe_allow_html=True)
     from integrations_ui import integrations_page
     integrations_page()
+    st.stop()
+elif selected_page == "Compare Shortlists":
+    st.markdown("""
+    <style>
+    [data-testid="stSidebar"] { display: none !important; }
+    [data-testid="stSidebarCollapseButton"] { display: none !important; }
+    </style>
+    """, unsafe_allow_html=True)
+    from pages.compare_page import render_compare_page
+    render_compare_page()
     st.stop()
 elif selected_page == "Recruiter Memory":
     st.markdown("""
@@ -1501,22 +1517,52 @@ st.markdown("""
 
 # Resume uploader collapsed expander
 with st.expander("📄 Add Custom Resumes to Evaluation Pool", expanded=False):
-    uploaded_resumes = st.file_uploader("Upload resumes (PDF, TXT, or DOCX)", type=["pdf", "txt", "docx"], accept_multiple_files=True, key="custom_resumes_uploader")
+    uploaded_resumes = st.file_uploader("Upload resumes (PDF, TXT, DOCX, ZIP)", type=["pdf", "txt", "docx", "zip"], accept_multiple_files=True, key="custom_resumes_uploader")
     if uploaded_resumes:
         new_candidates_added = False
-        for f in uploaded_resumes:
-            if f.name not in [c.get("_filename") for c in st.session_state.uploaded_candidates]:
-                with st.spinner(f"Parsing {f.name}..."):
-                    text = extract_text_from_file(f)
-                    if text and not text.startswith("Error"):
-                        cand = parse_resume_offline(text, filename=f.name)
-                        cand["_filename"] = f.name
-                        st.session_state.uploaded_candidates.append(cand)
-                        new_candidates_added = True
-                    else:
-                        st.error(f"Failed to read {f.name}: {text}")
+        import zipfile
+        import io
+        
+        parsed_count = 0
+        with st.spinner("Processing uploads..."):
+            for f in uploaded_resumes:
+                if f.name.endswith(".zip"):
+                    try:
+                        with zipfile.ZipFile(f) as z:
+                            for zinfo in z.infolist():
+                                if zinfo.is_dir() or zinfo.filename.startswith("__MACOSX"):
+                                    continue
+                                if not zinfo.filename.lower().endswith(('.pdf', '.txt', '.docx')):
+                                    continue
+                                
+                                # Use basename for filename
+                                base_name = zinfo.filename.split('/')[-1]
+                                if base_name not in [c.get("_filename") for c in st.session_state.uploaded_candidates]:
+                                    file_obj = io.BytesIO(z.read(zinfo))
+                                    file_obj.name = base_name
+                                    text = extract_text_from_file(file_obj)
+                                    if text and not text.startswith("Error"):
+                                        cand = parse_resume_offline(text, filename=base_name)
+                                        cand["_filename"] = base_name
+                                        st.session_state.uploaded_candidates.append(cand)
+                                        parsed_count += 1
+                                        new_candidates_added = True
+                    except Exception as e:
+                        st.error(f"Failed to extract zip {f.name}: {e}")
+                else:
+                    if f.name not in [c.get("_filename") for c in st.session_state.uploaded_candidates]:
+                        text = extract_text_from_file(f)
+                        if text and not text.startswith("Error"):
+                            cand = parse_resume_offline(text, filename=f.name)
+                            cand["_filename"] = f.name
+                            st.session_state.uploaded_candidates.append(cand)
+                            parsed_count += 1
+                            new_candidates_added = True
+                        else:
+                            st.error(f"Failed to read {f.name}: {text}")
+                            
         if new_candidates_added:
-            st.success(f"Successfully added {len(uploaded_resumes)} custom candidate(s) to the pool!")
+            st.success(f"Successfully added {parsed_count} custom candidate(s) to the pool!")
             
     if st.session_state.uploaded_candidates:
         st.info(f"Currently loaded: {len(st.session_state.uploaded_candidates)} custom candidate(s) in pool.")
@@ -1952,6 +1998,16 @@ if st.session_state.scored_candidates is not None:
                         <a href="https://calipr-4fnf.vercel.app/#pricing" target="_blank" style="display: inline-block; background: #4A90FF; color: white; padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; box-shadow: 0 2px 4px rgba(74, 144, 255, 0.2);">Upgrade to Pro to Export</a>
                     </div>
                     """, unsafe_allow_html=True)
+            
+            st.markdown('<hr style="margin:24px 0; border: none; border-top: 1px solid #e4e2e2;">', unsafe_allow_html=True)
+            if st.button("💾 Save Shortlist for Comparison", use_container_width=True):
+                from datetime import datetime
+                st.session_state.saved_shortlists.append({
+                    "name": f"Shortlist at {datetime.now().strftime('%I:%M %p')}",
+                    "weights": {"sem": w_sem, "skl": w_skl, "car": w_car, "beh": w_beh, "dom": w_dom},
+                    "candidates": ranked[:10]
+                })
+                st.success("Shortlist saved! Go to 'Compare Shortlists' to view it.")
 
         with detail_tabs[1]:
             # Resume PDF Viewer Tab
