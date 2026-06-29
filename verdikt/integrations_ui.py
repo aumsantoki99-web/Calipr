@@ -1329,7 +1329,16 @@ def integrations_page():
             if email_configured:
                 if st.button("Test Email", use_container_width=True):
                     if email_to:
-                        st.success(f"Test email sent to {email_to}!")
+                        from integrations.email_digest import send_email_digest
+                        ranked = st.session_state.get("scored_candidates")
+                        if not ranked:
+                            ranked = [{"name": "Test Candidate", "score": 0.99, "reasoning": "This is a test email.", "rank": 1}]
+                        job_title = st.session_state.get("job_title", "Senior AI Engineer (Test)")
+                        res = send_email_digest(ranked, job_title=job_title, runtime=0.0, to_email=email_to)
+                        if res.get("success"):
+                            st.success(f"Test email sent to {email_to}!")
+                        else:
+                            st.error(f"Failed to send email: {res.get('message')}")
                     else:
                         st.warning("Please specify an email address.")
             else:
