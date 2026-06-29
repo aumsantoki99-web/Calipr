@@ -1431,45 +1431,45 @@ if run_pipeline:
             st.write("Fusing multi-dimensional signals...")
             scored_list = []
             for i, c in enumerate(filtered_candidates):
-            rs = c.get('redrob_signals', {})
-            s1 = sig_semantic(emb_candidates[i], emb_jd)
-            s2 = sig_skills(c.get('skills', []), rs.get('skill_assessment_scores', {}), core_skills)
-            s3 = sig_career(c)
-            s4 = sig_behavioral(rs)
-            s5 = sig_domain(c, domain_kws)
-            
-            # Apply learned response rate hard filter if memory is calibrated
-            if sessions > 0 and rs.get('recruiter_response_rate', 1.0) < 0.55:
-                continue
+                rs = c.get('redrob_signals', {})
+                s1 = sig_semantic(emb_candidates[i], emb_jd)
+                s2 = sig_skills(c.get('skills', []), rs.get('skill_assessment_scores', {}), core_skills)
+                s3 = sig_career(c)
+                s4 = sig_behavioral(rs)
+                s5 = sig_domain(c, domain_kws)
+                
+                # Apply learned response rate hard filter if memory is calibrated
+                if sessions > 0 and rs.get('recruiter_response_rate', 1.0) < 0.55:
+                    continue
 
-            # Weighted Signal Fusion
-            final_score = (s1 * (w_sem / 100)) + (s2 * (w_skl / 100)) + (s3 * (w_car / 100)) + (s4 * (w_beh / 100)) + (s5 * (w_dom / 100))
-            
-            # Apply learned notice period penalty if memory is calibrated
-            if sessions > 0 and rs.get('notice_period_days', 0) > 90:
-                final_score -= 0.08
+                # Weighted Signal Fusion
+                final_score = (s1 * (w_sem / 100)) + (s2 * (w_skl / 100)) + (s3 * (w_car / 100)) + (s4 * (w_beh / 100)) + (s5 * (w_dom / 100))
                 
-            # Post-fusion OTW multiplier
-            if not rs.get('open_to_work_flag', False):
-                final_score *= 0.75
+                # Apply learned notice period penalty if memory is calibrated
+                if sessions > 0 and rs.get('notice_period_days', 0) > 90:
+                    final_score -= 0.08
+                    
+                # Post-fusion OTW multiplier
+                if not rs.get('open_to_work_flag', False):
+                    final_score *= 0.75
+                    
+                reasoning = generate_reasoning(c, s2, core_skills)
                 
-            reasoning = generate_reasoning(c, s2, core_skills)
-            
-            scored_list.append({
-                "candidate_id": c["candidate_id"],
-                "name": c.get("profile", {}).get("anonymized_name", "Anonymized"),
-                "title": c.get("profile", {}).get("current_title", "Developer"),
-                "experience": c.get("profile", {}).get("years_of_experience", 0),
-                "score": round(final_score, 4),
-                "s1_sem": round(s1, 4),
-                "s2_skl": round(s2, 4),
-                "s3_car": round(s3, 4),
-                "s4_beh": round(s4, 4),
-                "s5_dom": round(s5, 4),
-                "reasoning": reasoning,
-                "_profile": c
-            })
-            
+                scored_list.append({
+                    "candidate_id": c["candidate_id"],
+                    "name": c.get("profile", {}).get("anonymized_name", "Anonymized"),
+                    "title": c.get("profile", {}).get("current_title", "Developer"),
+                    "experience": c.get("profile", {}).get("years_of_experience", 0),
+                    "score": round(final_score, 4),
+                    "s1_sem": round(s1, 4),
+                    "s2_skl": round(s2, 4),
+                    "s3_car": round(s3, 4),
+                    "s4_beh": round(s4, 4),
+                    "s5_dom": round(s5, 4),
+                    "reasoning": reasoning,
+                    "_profile": c
+                })
+                
             # Explicit Tie-Breaking
             scored_list.sort(key=lambda x: (-x["score"], x["candidate_id"]))
             status.update(label="Ranking complete!", state="complete", expanded=False)
