@@ -1131,23 +1131,6 @@ def parse_resume_offline(text, filename="Resume"):
     }
     return candidate
 
-# Show hackathon banner for all users during demo
-st.markdown(f"""
-<div style="background:linear-gradient(135deg, #0A0A0A 0%, #1F2937 100%);
-            padding:10px 20px; border-radius:10px; margin-bottom:20px;
-            display:flex; align-items:center; gap:12px;">
-  <span style="font-size:16px;">🏆</span>
-  <span style="font-size:13px; color:white; font-weight:500;">
-    <strong>Hackathon Demo Mode</strong> — All Pro features unlocked.
-    Sponsored by <strong>Redrob AI</strong>.
-  </span>
-  <span style="margin-left:auto; background:#16A34A; color:white; font-size:11px;
-               font-weight:700; padding:3px 10px; border-radius:9999px;">
-    IITRAM FLUX 2.0
-  </span>
-</div>
-""", unsafe_allow_html=True)
-
 st.markdown("""
 <style>
 /* Hide the radio button circles to make it look like a nav bar */
