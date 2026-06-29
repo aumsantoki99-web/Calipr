@@ -73,23 +73,34 @@ font-family:Inter,-apple-system,sans-serif;">
 
 def send_email_digest(ranked_candidates, job_title="Senior AI Engineer",
                       runtime=0.0, to_email=None):
-    if not SENDGRID_API_KEY:
-        return {"success":False,"message":"SENDGRID_API_KEY not configured."}
+    from integrations.config import SMTP_SERVER, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, RECRUITER_EMAIL
+    
     recipient = to_email or RECRUITER_EMAIL
-    if not recipient:
-        return {"success":False,"message":"No recipient email. Set RECRUITER_EMAIL in secrets."}
+    if not recipient or not SMTP_SERVER:
+        return {"success":False,"message":"SMTP or recipient not configured."}
     try:
-        from sendgrid import SendGridAPIClient
-        from sendgrid.helpers.mail import Mail
-        msg = Mail(
-            from_email="noreply@calipr.ai", to_emails=recipient,
-            subject=f"🏆 Calipr — {len(ranked_candidates):,} ranked for {job_title}",
-            html_content=build_email_html(ranked_candidates, job_title, runtime)
-        )
-        r = SendGridAPIClient(SENDGRID_API_KEY).send(msg)
-        if r.status_code in [200,202]:
-            log_activity("Email","📧",f"Digest sent to *{recipient}* — top 10 of {len(ranked_candidates):,}","success")
-            return {"success":True,"message":f"Email sent to {recipient}"}
-        return {"success":False,"message":f"SendGrid error {r.status_code}"}
+        import smtplib
+        from email.mime.text import MIMEText
+        from email.mime.multipart import MIMEMultipart
+        
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = f"🏆 Calipr — {len(ranked_candidates):,} ranked for {job_title}"
+        msg["From"] = "noreply@calipr.ai"
+        msg["To"] = recipient
+        
+        if not SMTP_PASSWORD:
+            return {"success": False, "message": "Missing SendGrid API Key or SMTP Password in Hugging Face Secrets. Please configure SENDGRID_API_KEY in Space Settings -> Variables and Secrets."}
+
+        html_content = build_email_html(ranked_candidates, job_title, runtime)
+        msg.attach(MIMEText(html_content, "html"))
+
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            server.starttls()
+            if SMTP_USER and SMTP_PASSWORD:
+                server.login(SMTP_USER, SMTP_PASSWORD)
+            server.send_message(msg)
+            
+        log_activity("Email","📧",f"Digest sent to *{recipient}* — top 10 of {len(ranked_candidates):,}","success")
+        return {"success":True,"message":f"Email sent to {recipient}"}
     except Exception as e:
         return {"success":False,"message":str(e)}
