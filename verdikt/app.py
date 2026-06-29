@@ -1361,6 +1361,9 @@ else:
     # Fallback to even split if all are 0
     w_sem = w_skl = w_car = w_beh = w_dom = 20.0
 
+with st.sidebar.expander("🛡️ Bias Mitigation", expanded=False):
+    blind_mode = st.toggle("Enable Blind Audition Mode", value=False, help="Sanitize candidate names and identifiers before ranking.")
+
 st.sidebar.markdown("""
 <div style="font-size:11px;color:#757170;font-family:Inter,sans-serif;line-height:1.5;margin-top:15px;">
   Built for Redrob Hackathon<br>
@@ -1444,10 +1447,17 @@ if run_pipeline:
                     
                 reasoning = generate_reasoning(c, s2, core_skills)
                 
+                c_name = c.get("profile", {}).get("anonymized_name", "Anonymized")
+                c_title = c.get("profile", {}).get("current_title", "Developer")
+                
+                if blind_mode:
+                    c_name = f"Candidate {str(c['candidate_id'])[:6]}"
+                    c_title = "Sanitized Title"
+                    
                 scored_list.append({
                     "candidate_id": c["candidate_id"],
-                    "name": c.get("profile", {}).get("anonymized_name", "Anonymized"),
-                    "title": c.get("profile", {}).get("current_title", "Developer"),
+                    "name": c_name,
+                    "title": c_title,
                     "experience": c.get("profile", {}).get("years_of_experience", 0),
                     "score": round(final_score, 4),
                     "s1_sem": round(s1, 4),
@@ -1804,7 +1814,7 @@ if st.session_state.scored_candidates is not None:
         st.markdown('<hr style="margin:16px 0; border: none; border-top: 1px solid #e4e2e2;">', unsafe_allow_html=True)
 
         # Tabs layout for Evaluation and Resume
-        detail_tabs = st.tabs(["📊 Evaluation & Insights", "📄 Original Resume"])
+        detail_tabs = st.tabs(["📊 Evaluation & Insights", "📄 Original Resume", "📧 Email Drafts"])
         
         with detail_tabs[0]:
             # Radar Chart Plotly
@@ -2149,6 +2159,42 @@ if st.session_state.scored_candidates is not None:
             </div>
             """
             st.markdown(clean_html(pdf_viewer_html), unsafe_allow_html=True)
+            
+        with detail_tabs[2]:
+            st.markdown('<div style="margin-bottom:16px;"></div>', unsafe_allow_html=True)
+            cand_score = selected_cand.get("score", 0)
+            c_name = selected_cand.get("name", "Candidate")
+            is_top = cand_score >= 0.70  # Arbitrary threshold for "top" candidate
+            
+            if is_top:
+                st.markdown('<h3 style="font-family:Inter; font-size:16px; margin-bottom:8px; color:#0c7540;">✅ Interview Invitation Draft</h3>', unsafe_allow_html=True)
+                email_body = f"""Subject: Interview Invitation - {job_title} at Our Company
+
+Hi {c_name},
+
+Thank you for applying for the {job_title} role. We were very impressed by your background, particularly your strong alignment with the technical skills and domain expertise we are looking for. 
+
+We would love to invite you to a first-round interview to discuss your experience in more detail. Please let us know your availability for a 30-minute call next week.
+
+Best regards,
+The Recruiting Team
+"""
+            else:
+                st.markdown('<h3 style="font-family:Inter; font-size:16px; margin-bottom:8px; color:#b45309;">⚠️ Polite Rejection Draft</h3>', unsafe_allow_html=True)
+                email_body = f"""Subject: Update regarding your application for {job_title}
+
+Hi {c_name},
+
+Thank you for your interest in the {job_title} role and for taking the time to share your background with us. 
+
+While your experience is impressive, we have decided to move forward with other candidates whose technical skills and direct experience more closely align with the specific needs of this position at this time.
+
+We wish you the best of luck in your job search.
+
+Best regards,
+The Recruiting Team
+"""
+            st.text_area("Copy Email Text:", value=email_body, height=250)
 
 # Section 2 — Stats Row
 col1, col2, col3, col4 = st.columns(4)

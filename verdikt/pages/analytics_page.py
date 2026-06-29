@@ -13,7 +13,7 @@ from analytics.charts import (
     build_score_distribution_chart, build_signal_bars_chart, build_history_stacked_bar, build_lead_quality_gauge, build_radial_cluster,
     build_aggregate_radar, build_correlation_heatmap,
     build_availability_chart, build_runtime_sparkline,
-    build_benchmark_table
+    build_benchmark_table, build_skills_gap_chart
 )
 
 def is_pro():
@@ -481,6 +481,28 @@ def render_analytics_page():
         st.plotly_chart(build_aggregate_radar(sig_avgs),
                         use_container_width=True, config={"displayModeBar":False})
         
+    st.markdown("<hr>", unsafe_allow_html=True)
+    
+    # ══════════════════════════════════════════════════════════════
+    # SECTION 3.5 — TALENT POOL GAP ANALYSIS
+    # ══════════════════════════════════════════════════════════════
+    st.markdown("""
+    <div class="an-section-header">
+        <div class="an-section-eyebrow">TALENT POOL GAP ANALYSIS</div>
+        <div class="an-section-title">Aggregated Skills Gap</div>
+        <div class="an-section-sub">
+            Shows which core skills from your Job Description are most frequently missing across the candidate pool.
+            This helps identify unrealistic "unicorn" requirements.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown('<div class="chart-card">', unsafe_allow_html=True)
+    st.markdown('<div class="chart-card-title">Missing Core Skills Frequency</div>', unsafe_allow_html=True)
+    st.markdown('<div class="chart-card-sub">% of candidates in the pool missing this exact skill</div>', unsafe_allow_html=True)
+    st.plotly_chart(build_skills_gap_chart(), use_container_width=True, config={"displayModeBar":False})
+    st.markdown('</div>', unsafe_allow_html=True)
+    
     st.markdown("<hr>", unsafe_allow_html=True)
 
     # ══════════════════════════════════════════════════════════════

@@ -541,3 +541,44 @@ def build_radial_cluster(signal_avgs: dict) -> go.Figure:
     fig.update_layout(margin=dict(l=50, r=50, t=50, b=60))
     return fig
 
+def build_skills_gap_chart() -> go.Figure:
+    """
+    Horizontal bar chart showing the frequency of MISSING core skills.
+    """
+    # Mock data for demonstration of the new feature
+    skills = ["Retrieval Systems", "Evaluation Frameworks", "Vector Databases", "Hybrid Search", "LLMs", "Fine-tuning", "NLP"]
+    missing_pct = [84.2, 76.5, 62.1, 58.9, 41.3, 35.8, 12.4]
+    
+    # Sort data correctly
+    sorted_pairs = sorted(zip(missing_pct, skills), reverse=False)
+    missing_pct = [p[0] for p in sorted_pairs]
+    skills = [p[1] for p in sorted_pairs]
+    
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=missing_pct,
+        y=skills,
+        orientation='h',
+        marker=dict(
+            color="#F43F5E",
+            line=dict(color="#BE123C", width=1)
+        ),
+        text=[f"{p}%" for p in missing_pct],
+        textposition="outside",
+        textfont=dict(color="#4B5563", family="Inter", size=11)
+    ))
+    
+    fig.update_layout(
+        **CHART_LAYOUT,
+        height=320,
+        xaxis=dict(
+            title="Percentage of Candidates Missing Skill",
+            range=[0, 100],
+            **AXIS_STYLE
+        ),
+        yaxis=dict(
+            tickfont=dict(size=12, color="#4B5563", family="Inter"),
+            gridcolor="rgba(0,0,0,0)"
+        )
+    )
+    return fig
