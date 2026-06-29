@@ -857,6 +857,8 @@ def signal_card(icon: str, name: str, weight: str, description: str):
 
 # ── SCORING LOGIC FUNCTIONS ───────────────────────────────────────
 def build_candidate_text(c):
+    if "_raw_resume_text" in c:
+        return c["_raw_resume_text"]
     p = c.get('profile', {})
     skills_text = " ".join([s.get('name','') for s in c.get('skills', [])])
     career_text = " ".join([jh.get('description','') for jh in c.get('career_history', [])])
@@ -1124,7 +1126,8 @@ def parse_resume_offline(text, filename="Resume"):
             "linkedin_connected": True,
             "saved_by_recruiters_30d": 3,
             "last_active_date": date.today().isoformat()
-        }
+        },
+        "_raw_resume_text": text
     }
     return candidate
 
