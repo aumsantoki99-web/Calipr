@@ -1210,7 +1210,7 @@ st.markdown(f"""
 selected_page = st.radio("Navigation", ["Candidate Ranker", "Recruiter Memory", "Analytics", "Integrations"], horizontal=True, label_visibility="collapsed")
 
 # ── ROUTING LOGIC ──
-elif selected_page == "Integrations":
+if selected_page == "Integrations":
     st.markdown("""
     <style>
     [data-testid="stSidebar"] { display: none !important; }
