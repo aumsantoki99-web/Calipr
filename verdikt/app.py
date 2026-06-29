@@ -1320,30 +1320,30 @@ from analytics.data_store import load_run_history
 history = load_run_history()
 sessions = len(history)
 
-if sessions > 0:
-    w_sem = 30
-    w_skl = 25
-    w_car = 14
-    w_beh = 18
-    w_dom = 13
-else:
-    w_sem = 30
-    w_skl = 25
-    w_car = 20
-    w_beh = 15
-    w_dom = 10
-
 st.sidebar.markdown('<hr style="margin:20px 0 16px;border-top:1px solid #e4e2e2;">', unsafe_allow_html=True)
 st.sidebar.markdown('<div class="section-label">Pipeline Weights</div>', unsafe_allow_html=True)
-st.sidebar.markdown(f"""
-<div style="font-size:13px;font-family:Inter,sans-serif;color:#757170;line-height:1.9;">
-  <div style="display:flex;justify-content:space-between;"><span>Semantic Fit</span><span style="font-weight:700;color:#1a1615;">{w_sem}%</span></div>
-  <div style="display:flex;justify-content:space-between;"><span>Skills Match</span><span style="font-weight:700;color:#1a1615;">{w_skl}%</span></div>
-  <div style="display:flex;justify-content:space-between;"><span>Career Trajectory</span><span style="font-weight:700;color:#1a1615;">{w_car}%</span></div>
-  <div style="display:flex;justify-content:space-between;"><span>Behavioral Signals</span><span style="font-weight:700;color:#1a1615;">{w_beh}%</span></div>
-  <div style="display:flex;justify-content:space-between;"><span>Domain Alignment</span><span style="font-weight:700;color:#1a1615;">{w_dom}%</span></div>
-</div>
-""", unsafe_allow_html=True)
+
+# Add an expander so the sidebar isn't too cluttered
+with st.sidebar.expander("⚙️ Advanced Ranking Tweaks", expanded=False):
+    st.markdown("<p style='font-size:12px;color:#757170;margin-bottom:12px;'>Adjust the importance of each signal. The system will automatically normalize these to 100%.</p>", unsafe_allow_html=True)
+    raw_sem = st.slider("Semantic Fit", min_value=0, max_value=100, value=30, step=5)
+    raw_skl = st.slider("Skills Match", min_value=0, max_value=100, value=25, step=5)
+    raw_car = st.slider("Career Trajectory", min_value=0, max_value=100, value=20, step=5)
+    raw_beh = st.slider("Behavioral Signals", min_value=0, max_value=100, value=15, step=5)
+    raw_dom = st.slider("Domain Alignment", min_value=0, max_value=100, value=10, step=5)
+
+# Normalize the weights so they sum to 100 exactly
+total_weight = raw_sem + raw_skl + raw_car + raw_beh + raw_dom
+
+if total_weight > 0:
+    w_sem = (raw_sem / total_weight) * 100
+    w_skl = (raw_skl / total_weight) * 100
+    w_car = (raw_car / total_weight) * 100
+    w_beh = (raw_beh / total_weight) * 100
+    w_dom = (raw_dom / total_weight) * 100
+else:
+    # Fallback to even split if all are 0
+    w_sem = w_skl = w_car = w_beh = w_dom = 20.0
 
 st.sidebar.markdown("""
 <div style="font-size:11px;color:#757170;font-family:Inter,sans-serif;line-height:1.5;margin-top:15px;">
