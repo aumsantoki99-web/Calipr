@@ -1387,44 +1387,50 @@ if run_pipeline:
         t_start = time.time()
         job_title = "Senior AI Engineer"
         
-        # Phase 1: Ingest & Parse
-        # Load core, adjacent, domain skills
-        default_core = ["Python", "Embeddings", "Vector Databases", "Retrieval Systems", "Ranking Systems", "LLMs", "Fine-tuning", "Evaluation Frameworks", "NLP", "IR", "Hybrid Search"]
-        default_adj = ["Docker", "AWS", "LangChain", "OpenAI", "Pinecone", "Weaviate", "Qdrant", "Milvus", "OpenSearch", "Elasticsearch", "FAISS"]
-        default_domain = ["AI", "ML", "NLP", "IR", "Recruiting Tech", "HR-tech", "Marketplace Products"]
-        try:
-            with open("jd_skills.json", "r", encoding="utf-8") as f:
-                jd_config = json.load(f)
-                core_skills = jd_config.get("core_skills", default_core)
-                adjacent_skills = jd_config.get("adjacent_skills", default_adj)
-                domain_kws = jd_config.get("domain_keywords", default_domain)
-        except Exception:
-            core_skills = default_core
-            adjacent_skills = default_adj
-            domain_kws = default_domain
+        with st.status("Analyzing and scoring candidates...", expanded=True) as status:
+            st.write("Ingesting Job Description...")
+            # Phase 1: Ingest & Parse
+            # Load core, adjacent, domain skills
+            default_core = ["Python", "Embeddings", "Vector Databases", "Retrieval Systems", "Ranking Systems", "LLMs", "Fine-tuning", "Evaluation Frameworks", "NLP", "IR", "Hybrid Search"]
+            default_adj = ["Docker", "AWS", "LangChain", "OpenAI", "Pinecone", "Weaviate", "Qdrant", "Milvus", "OpenSearch", "Elasticsearch", "FAISS"]
+            default_domain = ["AI", "ML", "NLP", "IR", "Recruiting Tech", "HR-tech", "Marketplace Products"]
+            try:
+                with open("jd_skills.json", "r", encoding="utf-8") as f:
+                    jd_config = json.load(f)
+                    core_skills = jd_config.get("core_skills", default_core)
+                    adjacent_skills = jd_config.get("adjacent_skills", default_adj)
+                    domain_kws = jd_config.get("domain_keywords", default_domain)
+            except Exception:
+                core_skills = default_core
+                adjacent_skills = default_adj
+                domain_kws = default_domain
 
-        # Phase 2: Hybrid Retrieval Pre-filter
-        candidates = load_sample_candidates()
-        if st.session_state.uploaded_candidates:
-            candidates = st.session_state.uploaded_candidates + candidates
+            st.write("Loading candidate pool...")
+            # Phase 2: Hybrid Retrieval Pre-filter
+            candidates = load_sample_candidates()
+            if st.session_state.uploaded_candidates:
+                candidates = st.session_state.uploaded_candidates + candidates
+                
+            # Free Tier Gating: Limit candidates to 50
+            if not is_pro():
+                candidates = candidates[:50]
+                
+            from rank import is_non_tech_candidate
+            st.write("Applying semantic pre-filters...")
+            filtered_candidates = [c for c in candidates if not is_non_tech_candidate(c, core_skills, adjacent_skills)]
+            if not filtered_candidates:
+                filtered_candidates = candidates
+                
+            st.write("Generating local embeddings for scoring...")
+            # Phase 3: local embeddings encoding & scoring
+            model = load_sentence_transformer()
+            emb_jd = model.encode(jd_text)
+            candidate_texts = [build_candidate_text(c) for c in filtered_candidates]
+            emb_candidates = model.encode(candidate_texts, show_progress_bar=False)
             
-        # Free Tier Gating: Limit candidates to 50
-        if not is_pro():
-            candidates = candidates[:50]
-            
-        from rank import is_non_tech_candidate
-        filtered_candidates = [c for c in candidates if not is_non_tech_candidate(c, core_skills, adjacent_skills)]
-        if not filtered_candidates:
-            filtered_candidates = candidates
-            
-        # Phase 3: local embeddings encoding & scoring
-        model = load_sentence_transformer()
-        emb_jd = model.encode(jd_text)
-        candidate_texts = [build_candidate_text(c) for c in filtered_candidates]
-        emb_candidates = model.encode(candidate_texts, show_progress_bar=False)
-        
-        scored_list = []
-        for i, c in enumerate(filtered_candidates):
+            st.write("Fusing multi-dimensional signals...")
+            scored_list = []
+            for i, c in enumerate(filtered_candidates):
             rs = c.get('redrob_signals', {})
             s1 = sig_semantic(emb_candidates[i], emb_jd)
             s2 = sig_skills(c.get('skills', []), rs.get('skill_assessment_scores', {}), core_skills)
@@ -1464,13 +1470,15 @@ if run_pipeline:
                 "_profile": c
             })
             
-        # Explicit Tie-Breaking
-        scored_list.sort(key=lambda x: (-x["score"], x["candidate_id"]))
+            # Explicit Tie-Breaking
+            scored_list.sort(key=lambda x: (-x["score"], x["candidate_id"]))
+            status.update(label="Ranking complete!", state="complete", expanded=False)
         
         t_elapsed = round(time.time() - t_start, 1)
         st.session_state.scored_candidates = scored_list
         st.session_state.run_runtime = t_elapsed
         st.session_state.total_candidates_evaluated = len(candidates)
+        st.session_state.just_ranked = True
         
         # Save to Supabase
         if st.session_state.get("user"):
