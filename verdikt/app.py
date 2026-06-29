@@ -1204,10 +1204,20 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # The functional navigation bar pulled UP into the HTML via negative margin
-selected_page = st.radio("Navigation", ["Candidate Ranker", "Recruiter Memory", "Analytics", "Integrations"], horizontal=True, label_visibility="collapsed")
+selected_page = st.radio("Navigation", ["Candidate Ranker", "Recruiter Memory", "Analytics", "Integrations", "History"], horizontal=True, label_visibility="collapsed")
 
 # ── ROUTING LOGIC ──
-if selected_page == "Integrations":
+if selected_page == "History":
+    st.markdown("""
+    <style>
+    [data-testid="stSidebar"] { display: none !important; }
+    [data-testid="stSidebarCollapseButton"] { display: none !important; }
+    </style>
+    """, unsafe_allow_html=True)
+    from pages.history_page import render_history_page
+    render_history_page()
+    st.stop()
+elif selected_page == "Integrations":
     st.markdown("""
     <style>
     [data-testid="stSidebar"] { display: none !important; }
@@ -1459,6 +1469,23 @@ if run_pipeline:
         st.session_state.run_runtime = t_elapsed
         st.session_state.total_candidates_evaluated = len(candidates)
         
+        # Save to Supabase
+        if st.session_state.get("user"):
+            from db_manager import save_ranking_run
+            try:
+                import copy
+                clean_list = []
+                for sc in scored_list:
+                    clean_list.append(dict(sc))
+                save_ranking_run(
+                    user_id=st.session_state["user"].id,
+                    job_title=job_title,
+                    runtime_seconds=t_elapsed,
+                    ranked_candidates=clean_list
+                )
+            except Exception as e:
+                print(f"Failed to save run to Supabase: {e}")
+                
         try:
             from analytics.data_store import save_run
             save_run(

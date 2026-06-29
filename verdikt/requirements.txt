@@ -13,3 +13,5 @@ requests
 python-dotenv
 fastapi
 uvicorn
+PyPDF2
+python-dateutil
