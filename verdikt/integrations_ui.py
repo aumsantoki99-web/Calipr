@@ -1336,8 +1336,10 @@ def integrations_page():
                         job_title = st.session_state.get("job_title", "Senior AI Engineer (Test)")
                         res = send_email_digest(ranked, job_title=job_title, runtime=0.0, to_email=email_to)
                         if res.get("success"):
-                            st.success(f"Test email sent to {email_to}!")
+                            st.toast(f"📧 Test email successfully sent to {email_to}!", icon="✅")
+                            st.success(f"✓ Email was sent to {email_to} successfully!")
                         else:
+                            st.toast("❌ Failed to send email", icon="❌")
                             st.error(f"Failed to send email: {res.get('message')}")
                     else:
                         st.warning("Please specify an email address.")
