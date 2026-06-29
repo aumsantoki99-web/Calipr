@@ -1837,24 +1837,38 @@ if st.session_state.scored_candidates is not None:
             st.markdown('<hr style="margin:24px 0; border: none; border-top: 1px solid #e4e2e2;">', unsafe_allow_html=True)
             
             ranked = scored_list
+            import os
+            import requests
             runtime = round(time.time() - st.session_state.get("run_start_time", time.time() - 4.5), 2)
             
-            if st.session_state.get("slack_connected"):
+            # Helper to get webhook
+            def get_wh(key):
+                return st.session_state.get(key, os.environ.get(key, ""))
+            
+            top_candidates_for_slack = []
+            for i, row in enumerate(ranked[:5]):
+                top_candidates_for_slack.append({
+                    "candidate_id": row.get("candidate_id", f"CAND_{i}"),
+                    "rank":         i + 1,
+                    "score":        round(row.get("score", 0), 3),
+                    "name":         row.get("name", row.get("candidate_id", "Unknown")),
+                    "title":        row.get("title", "—"),
+                    "semantic":     round(row.get("semantic",   0), 2),
+                    "skills":       round(row.get("skills",     0), 2),
+                    "career":       round(row.get("career",     0), 2),
+                    "behavioral":   round(row.get("behavioral", 0), 2),
+                    "domain":       round(row.get("domain",     0), 2),
+                })
+            
+            # Slack Trigger
+            if get_wh("SLACK_WEBHOOK_URL"):
+                # Use standard slack_notifier or direct webhook if simple
                 from slack_notifier import send_ranking_complete
-                top_candidates_for_slack = []
-                for i, row in enumerate(ranked[:5]):
-                    top_candidates_for_slack.append({
-                        "candidate_id": row.get("candidate_id", f"CAND_{i}"),
-                        "rank":         i + 1,
-                        "score":        round(row.get("score", 0), 3),
-                        "name":         row.get("name", row.get("candidate_id", "Unknown")),
-                        "title":        row.get("title", "—"),
-                        "semantic":     round(row.get("semantic",   0), 2),
-                        "skills":       round(row.get("skills",     0), 2),
-                        "career":       round(row.get("career",     0), 2),
-                        "behavioral":   round(row.get("behavioral", 0), 2),
-                        "domain":       round(row.get("domain",     0), 2),
-                    })
+                # Temporary override config inside the module if possible, or just pass it in
+                # since send_ranking_complete uses config.SLACK_WEBHOOK_URL
+                import integrations.config as cfg
+                cfg.SLACK_WEBHOOK_URL = get_wh("SLACK_WEBHOOK_URL")
+                
                 slack_result = send_ranking_complete(
                     top_candidates=top_candidates_for_slack,
                     job_title=job_title,
@@ -1865,6 +1879,26 @@ if st.session_state.scored_candidates is not None:
                 )
                 if slack_result.get("success"):
                     st.toast("📨 Top 5 sent to Slack #recruiting", icon="✅")
+                    
+            # Greenhouse Webhook
+            gh_url = get_wh("GREENHOUSE_WEBHOOK_URL")
+            if gh_url:
+                try:
+                    payload = {"job": job_title, "shortlist": top_candidates_for_slack, "source": "Calipr"}
+                    res = requests.post(gh_url, json=payload, timeout=5)
+                    if res.ok: st.toast("📨 Shortlist synced to Greenhouse", icon="✅")
+                except Exception:
+                    pass
+
+            # Workday Webhook
+            wd_url = get_wh("WORKDAY_WEBHOOK_URL")
+            if wd_url:
+                try:
+                    payload = {"job": job_title, "shortlist": top_candidates_for_slack, "source": "Calipr"}
+                    res = requests.post(wd_url, json=payload, timeout=5)
+                    if res.ok: st.toast("📨 Shortlist synced to Workday", icon="✅")
+                except Exception:
+                    pass
                 
             if st.session_state.get("sheets_connected"):
                 from integrations.sheets import export_to_sheets

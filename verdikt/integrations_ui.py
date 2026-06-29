@@ -1085,6 +1085,26 @@ def pipeline_sync_dialog(platform_name):
         time.sleep(1.5)
         st.rerun()
 
+@st.dialog("Webhook Setup")
+def generic_webhook_dialog(platform_name, state_key):
+    st.markdown(f"### Configure {platform_name}")
+    st.markdown(f"Enter the destination webhook URL where Calipr should send candidate payloads.")
+    
+    current_val = st.session_state.get(state_key, "")
+    new_url = st.text_input("Webhook URL", value=current_val, placeholder="https://hooks.slack.com/services/...")
+    
+    if st.button("Save & Connect", type="primary", use_container_width=True):
+        st.session_state[state_key] = new_url
+        if new_url:
+            from integrations.activity_log import log_activity
+            log_activity(platform_name, "🔗", f"Connected {platform_name} webhook", "success")
+            st.success(f"Connected to {platform_name} successfully!")
+        else:
+            st.warning("Webhook URL cleared. Integration disconnected.")
+            st.session_state[f"conn_{platform_name.lower()}"] = False
+        time.sleep(1)
+        st.rerun()
+
 
 def integrations_page():
     # Session state initialization
@@ -1166,7 +1186,7 @@ def integrations_page():
             from slack_notifier import send_test_notification
 
             SANDBOX_URL = "https://huggingface.co/spaces/Aumus/calipr"
-            slack_configured = bool(os.environ.get("SLACK_WEBHOOK_URL", ""))
+            slack_configured = bool(st.session_state.get("SLACK_WEBHOOK_URL", os.environ.get("SLACK_WEBHOOK_URL", "")))
 
             # Last notification time (store in session state after each send)
             if "slack_last_sent" not in st.session_state:
@@ -1238,15 +1258,8 @@ def integrations_page():
                     st.info("To disconnect, remove SLACK_WEBHOOK_URL from HuggingFace Space secrets.")
 
             else:
-                st.markdown("""
-                <a href="https://api.slack.com/messaging/webhooks" target="_blank"
-                   style="display:inline-flex; align-items:center; gap:8px;
-                          padding:10px 20px; background:#0A0A0A; color:#FFFFFF;
-                          border-radius:8px; font-size:14px; font-weight:600;
-                          text-decoration:none; transition:background 0.15s ease;">
-                  Set Up Slack Integration ↗
-                </a>
-                """, unsafe_allow_html=True)
+                if st.button("Set Up Slack Integration", use_container_width=True, type="primary"):
+                    generic_webhook_dialog("Slack", "SLACK_WEBHOOK_URL")
 
         with col2:
             from integrations.sheets import get_sheet_url, export_to_sheets
@@ -1513,10 +1526,11 @@ def integrations_page():
             </div>
             """, unsafe_allow_html=True)
             if st.session_state.get("conn_greenhouse"):
-                st.button("Connected", key="btn_conn_greenhouse", disabled=True, use_container_width=True)
+                if st.button("Configure Webhook", key="btn_config_greenhouse", use_container_width=True):
+                    generic_webhook_dialog("Greenhouse", "GREENHOUSE_WEBHOOK_URL")
             else:
-                if st.button("Connect for Free", key="btn_req_greenhouse", use_container_width=True):
-                    pipeline_sync_dialog("Greenhouse")
+                if st.button("Connect Webhook", key="btn_req_greenhouse", use_container_width=True, type="primary"):
+                    generic_webhook_dialog("Greenhouse", "GREENHOUSE_WEBHOOK_URL")
 
 
     # 7. TIER 4 — ENTERPRISE
@@ -1542,12 +1556,17 @@ def integrations_page():
                         <span class="int-enterprise-tag">Custom Scoring</span>
                         <span class="int-enterprise-tag">Dedicated Support</span>
                     </div>
+                    </div>
                 </div>
-                <a href="mailto:sales@calipr.ai" class="int-enterprise-btn" style="text-decoration:none;">Contact Sales &nbsp;&nbsp;&nbsp;→</a>
+                <div>
+                    <button id="btn_req_workday" style="display:none;"></button>
+                </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
-
+        
+        if st.button("Configure Workday Webhook", key="btn_config_workday"):
+            generic_webhook_dialog("Workday", "WORKDAY_WEBHOOK_URL")
 
     # 8. ACTIVITY FEED
     st.markdown("""
