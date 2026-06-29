@@ -2115,28 +2115,4 @@ with p_col4:
     </div>
     """, unsafe_allow_html=True)
 
-# Section 5 — Sponsors Strip
-st.markdown("""
-<div style="padding:24px 0;border-top:1px solid #e4e2e2;border-bottom:1px solid #e4e2e2;
-            text-align:center;margin:40px 0;">
-    <div class="section-label" style="margin-bottom:16px;">
-        Hackathon Sponsor &amp; Technology Partners
-    </div>
-    <div style="display:flex;gap:32px;justify-content:center;align-items:center;flex-wrap:wrap;">
-        <span style="font-size:16px;font-weight:800;color:#4A90FF;font-family:'Open Runde', sans-serif;">
-            redrob<span style="color:#4A90FF">AI</span>
-        </span>
-        <span style="color:#e4e2e2;">·</span>
-        <span style="font-size:15px;font-weight:600;color:#757170;">Google Gemini</span>
-        <span style="color:#e4e2e2;">·</span>
-        <span style="font-size:15px;font-weight:600;color:#757170;">Supabase</span>
-        <span style="color:#e4e2e2;">·</span>
-        <span style="font-size:15px;font-weight:600;color:#757170;">Hugging Face</span>
-        <span style="color:#e4e2e2;">·</span>
-        <span style="font-size:15px;font-weight:600;color:#757170;">Groq</span>
-        <span style="color:#e4e2e2;">·</span>
-        <span style="font-size:15px;font-weight:600;color:#757170;">FAISS</span>
-    </div>
-</div>
-""", unsafe_allow_html=True)
 
