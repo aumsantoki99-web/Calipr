@@ -73,7 +73,7 @@ font-family:Inter,-apple-system,sans-serif;">
 
 def send_email_digest(ranked_candidates, job_title="Senior AI Engineer",
                       runtime=0.0, to_email=None):
-    from integrations.config import SMTP_SERVER, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, RECRUITER_EMAIL
+    from integrations.config import SMTP_SERVER, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, RECRUITER_EMAIL, SMTP_FROM_EMAIL
     
     recipient = to_email or RECRUITER_EMAIL
     if not recipient or not SMTP_SERVER:
@@ -85,7 +85,7 @@ def send_email_digest(ranked_candidates, job_title="Senior AI Engineer",
         
         msg = MIMEMultipart("alternative")
         msg["Subject"] = f"🏆 Calipr — {len(ranked_candidates):,} ranked for {job_title}"
-        msg["From"] = "noreply@calipr.ai"
+        msg["From"] = SMTP_FROM_EMAIL
         msg["To"] = recipient
         
         if not SMTP_PASSWORD:
