@@ -117,9 +117,9 @@ INTEGRATIONS_CSS = """
 
 /* ── BLOCK CONTAINER ── */
 .block-container {
-    max-width: 1100px !important;
-    padding: 0 24px 80px !important;
-    margin: 0 auto !important;
+    padding-top: 1rem !important;
+    padding-bottom: 2rem !important;
+    max-width: 1200px !important;
 }
 
 /* ── STREAMLIT BUTTON OVERRIDES TO MATCH DESIGN SYSTEM ── */
@@ -639,7 +639,7 @@ hr {
     padding: 24px;
     margin-bottom: 16px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    min-height: 340px;
+    height: 350px;
     width: 100%;
     box-sizing: border-box;
     display: flex;
@@ -1040,29 +1040,48 @@ def pipeline_sync_dialog(platform_name):
         logs = []
         logs.append(f"> Initializing {platform_name} API connection...")
         terminal_container.code("\n".join(logs), language="bash")
-        time.sleep(0.5)
-        logs.append(f"> Authenticating with OAuth2 token... SUCCESS")
-        terminal_container.code("\n".join(logs), language="bash")
-        time.sleep(0.5)
-        logs.append(f"> Fetching candidates for {req_id}...")
-        terminal_container.code("\n".join(logs), language="bash")
-        time.sleep(0.5)
         
-        for i in range(1, 6):
-            logs.append(f"> POST /api/v1/sync - Payload: {{'cand_id': 'c_{i}', 'meta': {str(sync_notes).lower()}}}")
+        if platform_name == "Greenhouse":
+            from integrations.ats_sync import sync_to_greenhouse
+            res = sync_to_greenhouse(req_id, sync_notes)
+            if res.get("success"):
+                logs.append("> HTTP 200 OK - Payload Accepted")
+                logs.append("> Sync Complete!")
+                terminal_container.code("\n".join(logs), language="bash")
+                from integrations.activity_log import log_activity
+                log_activity(platform_name, "🔄", f"Synced pipeline to {platform_name} ({req_id})", "success")
+                st.session_state[f"conn_{platform_name.lower()}"] = True
+                st.success("Sync completed successfully!")
+            else:
+                for l in res.get("logs", []): logs.append("> " + l)
+                logs.append("> Sync Failed.")
+                terminal_container.code("\n".join(logs), language="bash")
+                st.error(res.get("message"))
+        else:
+            time.sleep(0.5)
+            logs.append(f"> Authenticating with OAuth2 token... SUCCESS")
             terminal_container.code("\n".join(logs), language="bash")
-            time.sleep(0.3)
-            logs.append(f"> HTTP 201 Created")
+            time.sleep(0.5)
+            logs.append(f"> Fetching candidates for {req_id}...")
             terminal_container.code("\n".join(logs), language="bash")
-            time.sleep(0.1)
+            time.sleep(0.5)
             
-        logs.append("> Sync Complete!")
-        terminal_container.code("\n".join(logs), language="bash")
+            for i in range(1, 6):
+                logs.append(f"> POST /api/v1/sync - Payload: {{'cand_id': 'c_{i}', 'meta': {str(sync_notes).lower()}}}")
+                terminal_container.code("\n".join(logs), language="bash")
+                time.sleep(0.3)
+                logs.append(f"> HTTP 201 Created")
+                terminal_container.code("\n".join(logs), language="bash")
+                time.sleep(0.1)
+                
+            logs.append("> Sync Complete!")
+            terminal_container.code("\n".join(logs), language="bash")
+            
+            from integrations.activity_log import log_activity
+            log_activity(platform_name, "🔄", f"Synced pipeline to {platform_name} ({req_id})", "success")
+            st.session_state[f"conn_{platform_name.lower()}"] = True
+            st.success("Sync completed successfully!")
         
-        from integrations.activity_log import log_activity
-        log_activity(platform_name, "🔄", f"Synced pipeline to {platform_name} ({req_id})")
-        st.session_state[f"conn_{platform_name.lower()}"] = True
-        st.success("Sync completed successfully!")
         time.sleep(1.5)
         st.rerun()
 
@@ -1272,44 +1291,55 @@ def integrations_page():
                 else:
                     st.warning("⚠️ No ranked candidates found. Please run the Candidate Ranker first.")
 
+        with col3:
+            from integrations.config import SMTP_SERVER
+            email_configured = bool(SMTP_SERVER)
+
+            auth_email = st.session_state.get("auth_user_email")
+            
+            # Read from session state if it exists, otherwise use auth email
+            if "email_digest_to" not in st.session_state:
+                st.session_state["email_digest_to"] = auth_email if auth_email else ""
+            
+            email_to_display = st.session_state["email_digest_to"]
+
+            email_body = f"""
+    After every ranking run, Calipr emails a formatted digest of the
+    <strong>Top 10 candidates</strong> directly to the recruiter with:
+    all 5 signal scores, AI rationale, and candidate metadata.
+    <div style="padding:12px 16px; background:#F8FAFC; border:1px solid #F3F4F6; border-radius:8px; font-size:12px; color:#6B7280; margin-top:16px;">
+      <strong style="color:#0A0A0A;">Sending to:</strong> {email_to_display if email_to_display else 'Global Fallback'}
+    </div>"""
+
+            st.markdown(
+                connected_card_html(
+                    logo_key="email",
+                    title="Email Digest",
+                    subtitle="Send formatted email summaries directly to recruiters",
+                    badge="CONNECTED" if email_configured else "AVAILABLE",
+                    status_subtext="Connected · SMTP authenticated" if email_configured else "Not configured yet",
+                    body_html=email_body,
+                    connected=email_configured,
+                ),
+                unsafe_allow_html=True,
+            )
+            
+            email_to = st.text_input("SEND DIGEST TO:", key="email_digest_to", placeholder="recruiter@company.com")
+
+            if email_configured:
+                if st.button("Test Email", use_container_width=True):
+                    if email_to:
+                        st.success(f"Test email sent to {email_to}!")
+                    else:
+                        st.warning("Please specify an email address.")
+            else:
+                st.button("Test Email", disabled=True, use_container_width=True)
     # 5. TIER 2 — AVAILABLE
     if current_filter in ["All", "Available"]:
         st.markdown('<div class="int-section-label" style="margin-top:40px;">AVAILABLE — Ready to Connect</div>', unsafe_allow_html=True)
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            st.markdown(f"""
-            <div class="int-card" style="margin-bottom: 12px;">
-                <div class="int-badge badge-available">Available</div>
-                <div class="int-logo" style="display:flex; align-items:center; justify-content:center; padding:0;">{connector_logo("email", 36)}</div>
-                <div class="int-card-title">Email Digest</div>
-                <div class="int-card-desc">
-                    Send a formatted email summary with the top 10 candidates,
-                    radar chart screenshots, and AI rationale after every run.
-                </div>
-                <div class="int-card-tags">
-                    <span class="int-tag">SendGrid</span>
-                    <span class="int-tag">Free tier</span>
-                    <span class="int-tag">PDF export</span>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-            if st.button("Connect Email", key="conn_email", use_container_width=True):
-                st.session_state.show_email_form = True
-
-            if st.session_state.get("show_email_form"):
-                with st.expander("Configure Email Integration", expanded=True):
-                    email_to   = st.text_input("Recruiter email address", placeholder="hr@company.com")
-                    sendgrid_key = st.text_input("SendGrid API key", type="password", placeholder="SG.xxxxxxxxxx")
-                    if st.button("Save Email Config", key="save_email", type="primary"):
-                        if email_to and sendgrid_key:
-                            st.success(f"✓ Email integration saved. Reports will be sent to {email_to}")
-                            log_activity("Email Digest", "📧", f"Configured sending to {email_to}")
-                            st.session_state.show_email_form = False
-                        else:
-                            st.error("Please fill in both fields.")
-                            
-        with col2:
             st.markdown(f"""
             <div class="int-card" style="margin-bottom: 12px;">
                 <div class="int-badge badge-available">Available</div>
@@ -1330,7 +1360,7 @@ def integrations_page():
             if st.button("View API Docs", key="conn_api", use_container_width=True):
                 st.info("API endpoint: `POST https://aumus-calipr.hf.space/api/rank`\nAdd API key in request header: `X-API-Key: your_key`")
                 
-        with col3:
+        with col2:
             st.markdown(f"""
             <div class="int-card" style="margin-bottom: 12px;">
                 <div class="int-badge badge-available">Available</div>
