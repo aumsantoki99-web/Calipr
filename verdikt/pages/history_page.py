@@ -7,6 +7,16 @@ def render_history_page():
     
     if not st.session_state.get("user"):
         st.warning("Please sign in to view your ranking history.")
+        try:
+            auth_page = st.session_state.get("auth_page", "signin")
+            if auth_page == "signin":
+                from auth.signin_page import render_signin_page
+                render_signin_page()
+            else:
+                from auth.signup_page import render_signup_page
+                render_signup_page()
+        except ImportError:
+            pass
         return
         
     runs = fetch_past_runs(st.session_state["user"].id)
