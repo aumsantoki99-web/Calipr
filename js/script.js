@@ -16,8 +16,8 @@ const PRODUCT_URLS = {
   pro: 'https://aumus-calipr.hf.space'
 };
 
-const SUPABASE_URL = 'https://vvakfljeslxhwceidxvi.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2YWtmbGplc2x4aHdjZWlkeHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4MzA4MDAsImV4cCI6MjA5NzQwNjgwMH0.faZg4fylypLfjVcswbWQrC47nIvI-CDIO3nHU5Fvyho';
+const SUPABASE_URL = 'https://biyegvtyhwjvzydgaxtr.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpeWVndnR5aHdqdnp5ZGdheHRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5OTYxNDgsImV4cCI6MjA5MzU3MjE0OH0.y63y2ogAGVoFZAnmEaJG_73g-IhXZB2U2eo6CshLdGM';
 const STORAGE_KEYS = {
   plan: 'calipr_pending_plan',
   target: 'calipr_pending_target',
