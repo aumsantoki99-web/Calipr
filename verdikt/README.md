@@ -81,6 +81,11 @@ The platform includes several core workflows engineered to streamline candidate 
 *   **Google Sheets Exporter:** Dynamically writes candidate scores, metadata, and AI rationales to a configured spreadsheet using `gspread`. Includes an **Open Last Export** button linking directly to the live sheet, and a **Re-export** button to trigger manual syncs.
 *   **Twilio WhatsApp API:** Supports simulated SMS/WhatsApp routing using active Twilio REST API credentials.
 
+### 5. Generative AI Capabilities (Gemini 2.5 Flash)
+*   **Auto-JD Generation:** Instantly draft comprehensive, professional job descriptions with structured responsibilities and requirements directly from a simple job title or prompt.
+*   **AI Interview Prep:** Automatically generates 5 personalized, deep-dive interview questions for each candidate by cross-referencing their resume against the specific JD requirements.
+*   **Interactive Chat with Resume:** Chat directly with a candidate's resume using an AI assistant to quickly query specific experiences, missing skills, or career gaps.
+
 ---
 
 ## Mathematical Breakdown of the 5 Scoring Signals
@@ -180,6 +185,9 @@ TWILIO_PHONE = "+1..."
 
 # API Authorization
 CALIPR_API_KEY = "calipr_live_..."
+
+# Gemini API Integration
+GEMINI_API_KEY = "AIzaSy..."
 ```
 
 ---
