@@ -16,14 +16,21 @@ def generate_jd(prompt, api_key):
         return "Error: No GEMINI_API_KEY configured."
     
     try:
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel('gemini-1.5-flash')
         response = model.generate_content(
             f"Write a professional, 5-paragraph job description for the following role: '{prompt}'. "
             f"Include an overview, key responsibilities, required skills, and nice-to-haves. Keep it concise."
         )
         return response.text
     except Exception as e:
-        return f"Failed to generate JD: {str(e)}"
+        available_models = []
+        try:
+            for m in genai.list_models():
+                if 'generateContent' in m.supported_generation_methods:
+                    available_models.append(m.name)
+        except:
+            pass
+        return f"Failed to generate JD: {str(e)}\n\nAvailable models on your API key: {', '.join(available_models)}"
 
 def generate_interview_questions(candidate_json, job_title, api_key):
     genai = get_genai(api_key)
@@ -33,7 +40,7 @@ def generate_interview_questions(candidate_json, job_title, api_key):
         return ["Error: No API key configured."]
     
     try:
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel('gemini-1.5-flash')
         prompt = (
             f"You are an expert technical recruiter hiring a {job_title}. "
             f"Review this candidate's profile:\n{json.dumps(candidate_json)}\n\n"
@@ -59,7 +66,7 @@ def chat_with_resume(candidate_json, chat_history, new_question, api_key):
         return "Error: No API key configured."
     
     try:
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel('gemini-1.5-flash')
         
         # Build context
         context = f"You are a helpful AI recruiting assistant. You are analyzing this candidate:\n{json.dumps(candidate_json)}\n\n"
