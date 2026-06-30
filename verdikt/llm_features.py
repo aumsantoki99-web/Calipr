@@ -16,7 +16,7 @@ def generate_jd(prompt, api_key):
         return "Error: No GEMINI_API_KEY configured."
     
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-2.5-flash')
         response = model.generate_content(
             f"Write a professional, 5-paragraph job description for the following role: '{prompt}'. "
             f"Include an overview, key responsibilities, required skills, and nice-to-haves. Keep it concise."
@@ -40,7 +40,7 @@ def generate_interview_questions(candidate_json, job_title, api_key):
         return ["Error: No API key configured."]
     
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-2.5-flash')
         prompt = (
             f"You are an expert technical recruiter hiring a {job_title}. "
             f"Review this candidate's profile:\n{json.dumps(candidate_json)}\n\n"
@@ -66,7 +66,7 @@ def chat_with_resume(candidate_json, chat_history, new_question, api_key):
         return "Error: No API key configured."
     
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-2.5-flash')
         
         # Build context
         context = f"You are a helpful AI recruiting assistant. You are analyzing this candidate:\n{json.dumps(candidate_json)}\n\n"
