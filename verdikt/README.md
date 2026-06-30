@@ -20,6 +20,9 @@ Calipr AI (powered by the Verdikt Offline Ranker) is a candidate discovery, scor
 The scoring engine processes candidate pools using a multi-phase pipeline that filters, tokenizes, embeds, and scores profiles against target job specifications, automatically synchronizing results to collaborative channels upon completion:
 
 ```
+  [Optional: Auto-JD Generation via Gemini 2.5 Flash]
+                 │
+                 ▼
   [106K Candidate Profiles (JSONL)]
                  │
                  ▼
@@ -41,14 +44,14 @@ The scoring engine processes candidate pools using a multi-phase pipeline that f
                  │ (Scored candidate pool)
                  ▼
   ┌─────────────────────────────┐
-  │ Phase 4: Post-Filters &     │  ◄── Notice period penalties, Open-To-Work multipliers,
-  │          Agentic Re-Ranking │      and alphabetical tie-breakers
+  │ Phase 4: Post-Filters &     │  ◄── Bias Mitigation (Blind Mode), Notice penalties,
+  │          Agentic Re-Ranking │      Open-To-Work multipliers, and tie-breakers
   └──────────────┬──────────────┘
                  │
                  ▼
            [Top 100 Shortlist]
                  │
-                 ├──► Generate submission.csv
+                 ├──► Deep Dive: Chat with Resume & Interview Prep (Gemini 2.5 Flash)
                  ├──► Auto-fire Slack notification (Top 5 Block Kit payload)
                  └──► Auto-sync to Google Sheets (gspread authorizer)
 ```
@@ -60,10 +63,11 @@ The scoring engine processes candidate pools using a multi-phase pipeline that f
 The platform includes several core workflows engineered to streamline candidate evaluation and collaborative decision-making:
 
 ### 1. Interactive Candidate Ranker
-*   **Dual-Tab Detail View:** Recruiters can toggle between **Evaluation & Insights** (Plotly radar charts, score breakdowns, and AI rationales) and the **Original Resume** view.
-*   **A4 Resume PDF Viewer:** Renders a browser-style PDF reader canvas. It features a grey toolbar with document titles (`Resume_[Name].pdf`), mock page counts, zoom controls, print/download icons, and a white, highly styled A4-formatted page displaying the candidate's actual profile, summary, experience timeline, education, and skills.
+*   **Multi-Tab Detail View:** Recruiters can toggle between **Evaluation & Insights** (Plotly radar charts, score rationales), **Original Resume** (A4 rendering), **Email Drafts**, **Interview Prep**, and **Chat with Resume**.
+*   **A4 Resume PDF Viewer:** Renders a browser-style PDF reader canvas. It features a grey toolbar with document titles, mock page counts, and a styled A4-formatted page displaying the candidate's profile.
 *   **Quick-Action Buttons:** Recruiters can **Shortlist (✓)** or **Reject (✗)** candidates directly from their detail panel. 
-*   **Dynamic Sidebar Styling:** Sidebar candidate cards update instantly. Shortlisted candidates receive a green left-border and a checkmark (`✓`), while rejected candidates fade out (`opacity: 0.55`) and receive a cross (`✗`).
+*   **Bias Mitigation (Blind Audition Mode):** A toggleable mode that fully sanitizes Personally Identifiable Information (PII)—hiding names and current titles—allowing recruiters to evaluate candidates purely on skill and experience.
+*   **Dynamic Sidebar Styling:** Sidebar candidate cards update instantly. Shortlisted candidates receive a green left-border and a checkmark (`✓`), while rejected candidates fade out.
 
 ### 2. Recruiter Memory & Active Calibration
 *   **Memory Feed:** Tracks learned hiring preferences and weight adjustments (e.g., skill assessment thresholds, notice period penalties).
