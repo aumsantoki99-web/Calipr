@@ -1824,7 +1824,7 @@ if st.session_state.scored_candidates is not None:
         st.markdown('<hr style="margin:16px 0; border: none; border-top: 1px solid #e4e2e2;">', unsafe_allow_html=True)
 
         # Tabs layout for Evaluation and Resume
-        detail_tabs = st.tabs(["📊 Evaluation & Insights", "📄 Original Resume", "📧 Email Drafts", "📝 Interview Prep", "🤖 Chat with Resume"])
+        detail_tabs = st.tabs(["Evaluation & Insights", "Original Resume", "Email Drafts", "Interview Prep", "Chat with Resume"])
         
         with detail_tabs[0]:
             # Radar Chart Plotly
