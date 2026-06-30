@@ -1290,7 +1290,7 @@ st.sidebar.markdown("""
 """, unsafe_allow_html=True)
 
 st.sidebar.markdown('<div class="section-label">Job Description</div>', unsafe_allow_html=True)
-jd_input_method = st.sidebar.radio("Choose input method", ["Use Hackathon JD", "Paste custom JD", "Upload Document"], label_visibility="collapsed")
+jd_input_method = st.sidebar.radio("Choose input method", ["Use Hackathon JD", "Paste custom JD", "Upload Document", "✨ Auto-Generate JD"], label_visibility="collapsed")
 
 jd_text = ""
 if jd_input_method == "Use Hackathon JD":
@@ -1308,6 +1308,15 @@ if jd_input_method == "Use Hackathon JD":
     """, unsafe_allow_html=True)
 elif jd_input_method == "Paste custom JD":
     jd_text = st.sidebar.text_area("Paste JD text here", height=200, placeholder="Enter job description text...")
+elif jd_input_method == "✨ Auto-Generate JD":
+    jd_prompt = st.sidebar.text_input("Role to generate:", placeholder="e.g., Senior Python Dev", key="jd_prompt_input")
+    if st.sidebar.button("Generate JD", use_container_width=True, type="primary"):
+        with st.spinner("Generating..."):
+            from llm_features import generate_jd
+            from integrations.config import get_secret
+            api_key = get_secret("GEMINI_API_KEY", get_secret("CALIPR_API_KEY", ""))
+            st.session_state["generated_jd"] = generate_jd(jd_prompt, api_key)
+    jd_text = st.sidebar.text_area("Generated JD", value=st.session_state.get("generated_jd", ""), height=200)
 else:
     uploaded_jd = st.sidebar.file_uploader("Upload job description", type=["docx", "pdf", "txt"], label_visibility="collapsed")
     if uploaded_jd:
@@ -1814,7 +1823,7 @@ if st.session_state.scored_candidates is not None:
         st.markdown('<hr style="margin:16px 0; border: none; border-top: 1px solid #e4e2e2;">', unsafe_allow_html=True)
 
         # Tabs layout for Evaluation and Resume
-        detail_tabs = st.tabs(["📊 Evaluation & Insights", "📄 Original Resume", "📧 Email Drafts"])
+        detail_tabs = st.tabs(["📊 Evaluation & Insights", "📄 Original Resume", "📧 Email Drafts", "📝 Interview Prep", "🤖 Chat with Resume"])
         
         with detail_tabs[0]:
             # Radar Chart Plotly
@@ -2195,6 +2204,47 @@ Best regards,
 The Recruiting Team
 """
             st.text_area("Copy Email Text:", value=email_body, height=250)
+
+        with detail_tabs[3]:
+            st.markdown('<h3 style="font-family:Inter; font-size:16px; margin-bottom:8px; color:#1f2937;">📝 AI Interview Prep</h3>', unsafe_allow_html=True)
+            st.write("Generate tailored interview questions targeting this candidate's weak spots.")
+            if st.button("Generate Interview Questions", key=f"gen_iq_{selected_cand['candidate_id']}", type="primary"):
+                with st.spinner("Analyzing candidate profile..."):
+                    from llm_features import generate_interview_questions
+                    from integrations.config import get_secret
+                    api_key = get_secret("GEMINI_API_KEY", get_secret("CALIPR_API_KEY", ""))
+                    iqs = generate_interview_questions(selected_cand['_profile'], job_title, api_key)
+                    st.session_state[f"iq_{selected_cand['candidate_id']}"] = iqs
+            
+            if f"iq_{selected_cand['candidate_id']}" in st.session_state:
+                st.markdown("---")
+                st.markdown("#### Suggested Questions:")
+                for i, q in enumerate(st.session_state[f"iq_{selected_cand['candidate_id']}"]):
+                    st.info(f"**{i+1}.** {q}")
+
+        with detail_tabs[4]:
+            st.markdown('<h3 style="font-family:Inter; font-size:16px; margin-bottom:8px; color:#1f2937;">🤖 Chat with Resume</h3>', unsafe_allow_html=True)
+            chat_key = f"chat_{selected_cand['candidate_id']}"
+            if chat_key not in st.session_state:
+                st.session_state[chat_key] = []
+                
+            for msg in st.session_state[chat_key]:
+                with st.chat_message(msg["role"]):
+                    st.write(msg["content"])
+                    
+            if chat_input := st.chat_input("Ask a question about this candidate..."):
+                st.session_state[chat_key].append({"role": "user", "content": chat_input})
+                with st.chat_message("user"):
+                    st.write(chat_input)
+                    
+                with st.chat_message("assistant"):
+                    with st.spinner("Thinking..."):
+                        from llm_features import chat_with_resume
+                        from integrations.config import get_secret
+                        api_key = get_secret("GEMINI_API_KEY", get_secret("CALIPR_API_KEY", ""))
+                        response = chat_with_resume(selected_cand['_profile'], st.session_state[chat_key][:-1], chat_input, api_key)
+                        st.write(response)
+                        st.session_state[chat_key].append({"role": "assistant", "content": response})
 
 # Section 2 — Stats Row
 col1, col2, col3, col4 = st.columns(4)
