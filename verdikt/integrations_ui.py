@@ -1337,7 +1337,7 @@ def integrations_page():
                 unsafe_allow_html=True,
             )
             
-            email_to = st.text_input("SEND DIGEST TO:", key="email_digest_to", placeholder="recruiter@company.com")
+            email_to = st.text_input("SEND DIGEST TO:", key="email_digest_to", placeholder="recruiter@company.com", label_visibility="collapsed")
 
             if email_configured:
                 if st.button("Test Email", use_container_width=True):
