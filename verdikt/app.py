@@ -1460,7 +1460,8 @@ if run_pipeline:
                 c_title = c.get("profile", {}).get("current_title", "Developer")
                 
                 if blind_mode:
-                    c_name = f"Candidate {str(c['candidate_id'])[:6]}"
+                    cand_num = str(c['candidate_id']).split('_')[-1].lstrip('0')
+                    c_name = f"Candidate #{cand_num if cand_num else '0'}"
                     c_title = "Sanitized Title"
                     
                 scored_list.append({
