@@ -112,7 +112,7 @@ A composite score reflecting candidate availability, responsiveness, and complet
 *   **Responsiveness (25%)**: Aggregated response rates and interview completion metrics.
 *   **GitHub Activity (15%)**: Open-source contributions.
 *   **Acceptance Rate (10%)**: Historical offer acceptance rates.
-*   **Notice Period (10%)**: Scaled notice period score: $\max(0.0, 1.0 - \frac{\text{notice\_period\_days}}{180})$.
+*   **Notice Period (10%)**: Scaled notice period score: $\max(0.0, 1.0 - \frac{\text{notice period days}}{180})$.
 *   **Open to Work (5%)** and **Verification Status (5%)**.
 *   **Relocation Bonus**: Adds a flat `+0.05` bonus if the candidate is willing to relocate or open to remote work.
 
