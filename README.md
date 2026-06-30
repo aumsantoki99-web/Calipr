@@ -1,13 +1,4 @@
----
-title: Calipr AI
-emoji: 🏆
-colorFrom: indigo
-colorTo: purple
-sdk: streamlit
-sdk_version: 1.38.0
-app_file: app.py
-pinned: false
----
+
 
 # Calipr AI — Redrob Candidate Discovery & Ranking Sandbox
 
