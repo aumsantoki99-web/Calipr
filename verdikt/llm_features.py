@@ -69,7 +69,12 @@ def chat_with_resume(candidate_json, chat_history, new_question, api_key):
         model = genai.GenerativeModel('gemini-2.5-flash')
         
         # Build context
-        context = f"You are a helpful AI recruiting assistant. You are analyzing this candidate:\n{json.dumps(candidate_json)}\n\n"
+        context = (
+            f"You are a strict, helpful AI recruiting assistant. You are analyzing this candidate:\n{json.dumps(candidate_json)}\n\n"
+            f"CRITICAL INSTRUCTION: You must ONLY answer based on the provided candidate JSON. "
+            f"If the recruiter asks about a skill, job, or detail not explicitly found in the JSON, you MUST reply: 'Not specified in resume.' "
+            f"Do not guess, infer, or hallucinate any qualifications.\n\n"
+        )
         
         # Build history
         history_text = ""

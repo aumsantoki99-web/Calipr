@@ -2,7 +2,9 @@ import os, json
 import streamlit as st
 
 def get_secret(key, default=""):
-    # First check st.secrets, then os.environ
+    # First check session_state, then st.secrets, then os.environ
+    if key in st.session_state and st.session_state[key]:
+        return st.session_state[key]
     try:
         return st.secrets.get(key, os.environ.get(key, default))
     except Exception:

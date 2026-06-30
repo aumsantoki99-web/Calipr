@@ -226,6 +226,16 @@ python validate_submission.py outputs/submission.csv
 
 ---
 
+## Production & Scale Roadmap (V2 Architecture)
+
+While this sandbox demonstrates the core AI logic, the following architectural upgrades are planned for a true enterprise SaaS deployment:
+1. **Frontend Migration:** Transition the Streamlit UI to a **Next.js / React** frontend for better state management and concurrent user handling.
+2. **Backend API:** Separate the ranking engine into a highly concurrent **FastAPI** microservice.
+3. **Vector Database:** Move from in-memory NumPy cosine similarity (CPU) to a scalable vector database like **Pinecone, Milvus, or pgvector** to instantly query millions of candidates without memory bloat.
+4. **Active Learning (ML):** Upgrade the Recruiter Memory from a session-based heuristic weight-adjuster to a persistent **Direct Preference Optimization (DPO)** pipeline that fine-tunes a smaller, company-specific embedding model based on historical shortlist/reject clicks.
+
+---
+
 ## Deployment to Hugging Face Spaces
 
 This repository is configured for direct deployment to Hugging Face Spaces using the Streamlit SDK.
