@@ -73,23 +73,27 @@ The platform includes several core workflows engineered to streamline candidate 
 *   **Bias Mitigation (Blind Audition Mode):** A toggleable mode that fully sanitizes Personally Identifiable Information (PII)—hiding names and current titles—allowing recruiters to evaluate candidates purely on skill and experience.
 *   **Dynamic Sidebar Styling:** Sidebar candidate cards update instantly. Shortlisted candidates receive a green left-border and a checkmark (`✓`), while rejected candidates fade out.
 
-### 2. Recruiter Memory & Active Calibration
+### 2. Compare Shortlists (A/B Testing)
+*   **Weight Configuration Testing:** Allows recruiters to save different ranking states (e.g., "Heavy Skills Weight" vs. "Heavy Experience Weight") and compare the resulting candidate shortlists side-by-side.
+*   **Impact Analysis:** Instantly visualizes how tweaking the 5-signal weights shifts the top 10 candidates in the pool, ensuring the most accurate model calibration for a specific job role.
+
+### 3. Recruiter Memory & Active Calibration
 *   **Memory Feed:** Tracks learned hiring preferences and weight adjustments (e.g., skill assessment thresholds, notice period penalties).
 *   **Real-time Decision Counter:** Captures manual shortlist and reject clicks, incrementing the total candidate decisions metric in real time.
 *   **Active Confidence Engine:** Dynamically increases the **Memory Confidence** calibration rating by `+2%` for each manual action (up to a `+10%` boost), demonstrating active learning from recruiter feedback.
 *   **Bias Transparency Report:** Interactive Plotly bar chart displaying the magnitude of score adjustments to ensure override transparency.
 
-### 3. Analytics Dashboard
+### 4. Analytics Dashboard
 *   **Score Distribution Histogram:** Displays score spreads of the overall candidate pool vs. the top 100 shortlisted candidates, confirming clear scoring separation.
 *   **Radial Cluster Web:** Plotly Scatterpolar chart showing candidate alignment across the five scoring dimensions.
 *   **Availability Pool:** Visualizes candidate readiness (active, passive, notice period spreads).
 
-### 4. Integrations Hub
+### 5. Integrations Hub
 *   **Slack Webhook Integration:** Formats and delivers the top 5 candidates as a styled Slack Block Kit payload immediately upon ranking completion.
 *   **Google Sheets Exporter:** Dynamically writes candidate scores, metadata, and AI rationales to a configured spreadsheet using `gspread`. Includes an **Open Last Export** button linking directly to the live sheet, and a **Re-export** button to trigger manual syncs.
 *   **Twilio WhatsApp API:** Supports simulated SMS/WhatsApp routing using active Twilio REST API credentials.
 
-### 5. Generative AI Capabilities (Gemini 2.5 Flash)
+### 6. Generative AI Capabilities (Gemini 2.5 Flash)
 *   **Auto-JD Generation:** Instantly draft comprehensive, professional job descriptions with structured responsibilities and requirements directly from a simple job title or prompt.
 *   **AI Interview Prep:** Automatically generates 5 personalized, deep-dive interview questions for each candidate by cross-referencing their resume against the specific JD requirements.
 *   **Interactive Chat with Resume:** Chat directly with a candidate's resume using an AI assistant to quickly query specific experiences, missing skills, or career gaps.
