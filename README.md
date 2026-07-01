@@ -50,9 +50,13 @@ The scoring engine processes candidate pools using a multi-phase pipeline that f
 
 The platform includes several core workflows engineered to streamline candidate evaluation and collaborative decision-making:
 
-### 1. Interactive Candidate Ranker
-*   **Dual-Tab Detail View:** Recruiters can toggle between **Evaluation & Insights** (Plotly radar charts, score breakdowns, and AI rationales) and the **Original Resume** view.
-*   **A4 Resume PDF Viewer:** Renders a browser-style PDF reader canvas. It features a grey toolbar with document titles (`Resume_[Name].pdf`), mock page counts, zoom controls, print/download icons, and a white, highly styled A4-formatted page displaying the candidate's actual profile, summary, experience timeline, education, and skills.
+### 1. Interactive Candidate Ranker & Detail View
+*   **Multi-Tab Detail View:** When a recruiter selects a candidate, they gain access to a comprehensive 5-tab workspace:
+    *   📊 **Evaluation & Insights:** Displays a Plotly Scatterpolar radar chart plotting the candidate's 5-signal scores, alongside a detailed breakdown and AI-generated rationale justifying the match.
+    *   📄 **Original Resume:** A custom-built A4 PDF viewer simulation that renders the candidate's raw JSON data (summary, timeline, education, skills) into a clean, printable browser canvas.
+    *   ✉️ **Email Drafts:** Instantly generates templated outreach emails (e.g., Interview Requests, Rejections, Follow-ups) tailored to the candidate's name and role, ready to copy-paste.
+    *   🎯 **Interview Prep:** Uses Gemini 2.5 Flash to cross-reference the JD with the candidate's resume, generating 3 highly specific, challenging interview questions designed to probe potential weaknesses or gaps.
+    *   🤖 **Chat with Resume:** An interactive chat interface powered by Gemini 2.5 Flash with strict anti-hallucination guardrails. Recruiters can ask direct questions like "Does this candidate have experience scaling Postgres?" and get instant answers based *only* on the resume context.
 *   **Quick-Action Buttons:** Recruiters can **Shortlist (✓)** or **Reject (✗)** candidates directly from their detail panel. 
 *   **Dynamic Sidebar Styling:** Sidebar candidate cards update instantly. Shortlisted candidates receive a green left-border and a checkmark (`✓`), while rejected candidates fade out (`opacity: 0.55`) and receive a cross (`✗`).
 
