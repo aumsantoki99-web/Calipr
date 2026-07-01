@@ -1,5 +1,16 @@
 
 
+---
+title: Calipr AI
+emoji: 🏆
+colorFrom: indigo
+colorTo: purple
+sdk: streamlit
+sdk_version: 1.38.0
+app_file: app.py
+pinned: false
+---
+
 # Calipr AI — Redrob Candidate Discovery & Ranking Sandbox
 
 Calipr AI (powered by the Verdikt Offline Ranker) is a candidate discovery, scoring, and ranking platform built for the Redrob Intelligent Candidate Discovery Challenge. The sandbox provides a visual dashboard to evaluate, calibrate, and monitor candidate suitability against complex job descriptions (JDs) in a CPU-optimized, zero-latency, and privacy-preserving environment.
