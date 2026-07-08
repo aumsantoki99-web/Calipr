@@ -1196,7 +1196,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # The functional navigation bar pulled UP into the HTML via negative margin
-selected_page = st.radio("Navigation", ["Candidate Ranker", "Compare Shortlists", "Recruiter Memory", "Analytics", "Integrations"], horizontal=True, label_visibility="collapsed")
+selected_page = st.radio("Navigation", ["Ranker", "Compare", "Memory", "Analytics", "Integrations"], horizontal=True, label_visibility="collapsed")
 
 # ── ROUTING LOGIC ──
 if selected_page == "Integrations":
@@ -1209,7 +1209,7 @@ if selected_page == "Integrations":
     from integrations_ui import integrations_page
     integrations_page()
     st.stop()
-elif selected_page == "Compare Shortlists":
+elif selected_page == "Compare":
     st.markdown("""
     <style>
     [data-testid="stSidebar"] { display: none !important; }
@@ -1219,7 +1219,7 @@ elif selected_page == "Compare Shortlists":
     from pages.compare_page import render_compare_page
     render_compare_page()
     st.stop()
-elif selected_page == "Recruiter Memory":
+elif selected_page == "Memory":
     st.markdown("""
     <style>
     [data-testid="stSidebar"] { display: none !important; }
