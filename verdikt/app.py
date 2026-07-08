@@ -99,7 +99,7 @@ st.markdown("""
 }
 
 /* ── HIDE STREAMLIT CHROME ── */
-#MainMenu, footer, header { visibility: hidden !important; pointer-events: none !important; }
+#MainMenu, footer, [data-testid="stHeader"] { visibility: hidden !important; pointer-events: none !important; }
 .stDeployButton { display: none !important; }
 [data-testid="stToolbar"] { display: none !important; }
 
