@@ -105,7 +105,7 @@ st.markdown("""
 
 /* ── MAIN CONTAINER ── */
 .block-container {
-    max-width: 1200px !important;
+    max-width: 1350px !important;
     padding: 0 24px 80px !important;
     margin: 0 auto !important;
 }
@@ -1151,13 +1151,13 @@ st.markdown("""
 }
 .main div[role="radiogroup"] {
     justify-content: center;
-    gap: 32px;
+    gap: 16px;
 }
 .main div[role="radiogroup"] > label {
     cursor: pointer;
     font-family: 'Inter', sans-serif;
     font-weight: 500;
-    font-size: 14.5px;
+    font-size: 14px;
     color: #757170;
     padding-bottom: 8px;
     text-transform: none !important;
